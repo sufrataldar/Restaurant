@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>سفرة الدار | Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root { --primary: #ff6600; --dark: #121212; --card: #1e1e1e; --text: #ffffff; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Cairo', sans-serif; background-color: var(--dark); color: var(--text); margin: 0; padding-bottom: 100px; }
+        
+        .app-header { position: sticky; top: 0; background: rgba(18, 18, 18, 0.95); padding: 10px 15px; z-index: 100; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 800; color: #fff; }
+        .logo img { height: 45px; width: 45px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
+
+        .tabs { display: flex; background: #1e1e1e; margin: 10px; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+        .tab-btn { flex: 1; padding: 12px; background: transparent; border: none; color: #888; font-family: 'Cairo'; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .tab-btn.active { background: var(--primary); color: #000; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .category-scroll { display: flex; overflow-x: auto; padding: 15px 10px; gap: 10px; scrollbar-width: none; }
+        .cat-chip { background: #2a2a2a; color: #fff; padding: 8px 20px; border-radius: 50px; white-space: nowrap; border: 1px solid #333; cursor: pointer; }
+        .cat-chip.active { background: var(--primary); color: #000; font-weight: bold; }
+        
+        .menu-list { padding: 10px; }
+        .item-card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
+        .item-info h3 { margin: 0 0 5px 0; font-size: 1rem; }
+        .item-price { color: var(--primary); font-weight: 700; }
+        
+        .qty-control { display: flex; align-items: center; background: #2a2a2a; border-radius: 12px; padding: 5px; }
+        .qty-btn { width: 35px; height: 35px; border-radius: 8px; border: none; background: #333; color: #fff; font-size: 1.2rem; cursor: pointer; }
+        .qty-btn.add { background: var(--primary); color: #000; }
+        .qty-display { width: 30px; text-align: center; font-weight: bold; }
+
+        .floating-bar { position: fixed; bottom: 20px; left: 5%; width: 90%; background: var(--primary); border-radius: 20px; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(255,102,0,0.4); z-index: 1000; color: #000; font-weight: bold; transform: translateY(150%); transition: 0.3s; cursor: pointer;}
+        .floating-bar.show { transform: translateY(0); }
+
+        .checkout-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; display: none; flex-direction: column; }
+        .modal-header { padding: 20px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { padding: 20px; flex: 1; overflow-y: auto; }
+        
+        .input-group { margin-bottom: 25px; }
+        .input-group label { display: block; margin-bottom: 10px; font-size: 0.95rem; color: #ddd; font-weight: bold; }
+        .input-group input, .input-group select, .input-group textarea { 
+            width: 100%; padding: 15px; background: #1a1a1a; 
+            border: 1px solid #333; border-radius: 10px; color: #fff; 
+            outline: none; font-family: 'Cairo', sans-serif; transition: border-color 0.3s; 
+        }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--primary); }
+        .input-group textarea { resize: vertical; min-height: 80px; }
+
+        .time-selector { display: flex; gap: 10px; margin-bottom: 10px; }
+        .time-btn { flex: 1; padding: 15px; background: #2a2a2a; border: 1px solid #333; color: #fff; border-radius: 10px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .time-btn.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 10px rgba(255,102,0,0.3); }
+        .hidden-input { display: none; margin-top: 10px; animation: fadeIn 0.3s; }
+        .hidden-input.show { display: block; }
+        @keyframes fadeIn { from {opacity:0; transform:translateY(-5px);} to {opacity:1; transform:translateY(0);} }
+
+        .bill-summary { background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        .bill-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .send-btn { width: 100%; padding: 18px; background: var(--primary); color: #000; font-weight: 900; border: none; border-radius: 15px; cursor: pointer; font-size: 1.1rem; }
+
+        .sent-orders-list { padding: 10px; }
+        .sent-order-card { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 15px; margin-bottom: 15px; position: relative; }
+        .sent-header { display: flex; justify-content: space-between; border-bottom: 1px dashed #333; padding-bottom: 10px; margin-bottom: 10px; }
+        .sent-id { color: var(--primary); font-weight: bold; font-size: 1.2rem; }
+        .sent-status { font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; background: #333; }
+        .sent-body p { margin: 5px 0; color: #ccc; font-size: 0.9rem; }
+        .edit-btn { background: #33b5e5; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; margin-top: 10px; width: 100%; font-family: 'Cairo'; font-weight: bold; }
+        .edit-badge { background: var(--primary); color: black; padding: 5px 10px; border-radius: 5px; font-weight: bold; display:none; margin-bottom: 10px; text-align: center;}
+
+    </style>
+</head>
+<body>
+
+    <div class="app-header">
+        <div class="logo">
+            <img src="https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg" alt="Logo">
+            <span>سفرة الدار</span>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('new')">طلب جديد</button>
+        <button class="tab-btn" onclick="switchTab('sent')">الطلبات المرسلة</button>
+    </div>
+
+    <div id="tab-new" class="tab-content active">
+        <div class="edit-badge" id="edit-mode-badge">⚠️ أنت الآن تقوم بتعديل الطلب رقم <span id="editing-id-display"></span></div>
+        <div class="category-scroll" id="category-container"></div>
+        <div class="menu-list" id="menu-container"></div>
+    </div>
+
+    <div id="tab-sent" class="tab-content">
+        <div id="loading-sent" style="text-align:center; padding:20px;">جاري تحميل الطلبات...</div>
+        <div class="sent-orders-list" id="sent-orders-container"></div>
+    </div>
+
+    <div class="floating-bar" id="floating-bar" onclick="openCheckout()">
+        <span id="cart-count">0</span>
+        <span>مراجعة الطلب <i class="fas fa-arrow-left"></i></span>
+        <span id="cart-total">0.000</span>
+    </div>
+
+    <div class="checkout-modal" id="checkout-modal">
+        <div class="modal-header">
+            <h2>إتمام الطلب</h2>
+            <i class="fas fa-times" onclick="closeCheckout()" style="cursor:pointer; font-size:1.5rem"></i>
+        </div>
+        <div class="modal-body">
+            <div class="bill-summary" id="bill-details"></div>
+            
+            <div class="input-group">
+                <label for="c-type">نوع العميل</label>
+                <select id="c-type">
+                    <option value="" disabled selected>اختر النوع (Old/New)</option>
+                    <option value="Old CX">Old CX</option>
+                    <option value="New CX">New CX</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>توقيت التجهيز</label>
+                <div class="time-selector">
+                    <button id="btn-now" class="time-btn active" onclick="setDeliveryMode('now')"><i class="fas fa-fire"></i> فوري</button>
+                    <button id="btn-later" class="time-btn" onclick="setDeliveryMode('later')"><i class="fas fa-clock"></i> وقت محدد</button>
+                </div>
+                <input type="time" id="c-time" class="hidden-input">
+            </div>
+            
+            <div class="input-group">
+                <label for="c-phone">رقم الهاتف</label>
+                <input type="tel" id="c-phone" placeholder="مثال: 60000000" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            </div>
+            
+            <div class="input-group">
+                <label for="c-loc">رابط الموقع (Location Link)</label>
+                <input type="text" id="c-loc" dir="ltr" placeholder="https://maps.google.com/...">
+            </div>
+
+            <div class="input-group">
+                <label for="c-details">تفاصيل العنوان (اختياري)</label>
+                <input type="text" id="c-details" placeholder="قطعة، شارع، منزل...">
+            </div>
+
+            <div class="input-group">
+                <label for="c-notes">ملاحظات إضافية (اختياري)</label>
+                <textarea id="c-notes" rows="3" placeholder="بدون بصل، كثر صوص..."></textarea>
+            </div>
+            
+            <button class="send-btn" onclick="submitOrder()">إرسال للمطبخ 🚀</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwk4uhpzz44XU3TPfbFLvAroKkMdo263si_g0SQegfhPLJrfdNM4Pbq69MxXXxjxxE/exec';
+        
+        const menuData = {
+            "اللحم العربي": [ 
+                {id: 1, name: "مجبوس لحم (عربي)", price: 6.000}, {id: 2, name: "مقلوبة لحم (عربي)", price: 6.000}, 
+                {id: 3, name: "مشوي جدر لحم (عربي)", price: 6.000}, {id: 4, name: "مرق سبزي (عربي)", price: 6.500}, 
+                {id: 5, name: "بريه لحم (عربي)", price: 6.000}, {id: 6, name: "برياني لحم (عربي)", price: 6.000} 
+            ],
+            "اللحم الاسترالي": [ 
+                {id: 7, name: "مجبوس لحم (استرالي)", price: 3.750}, {id: 8, name: "مقلوبة لحم (استرالي)", price: 4.250}, 
+                {id: 9, name: "مشوي جدر لحم (استرالي)", price: 4.250}, {id: 10, name: "مرق سبزي (استرالي)", price: 4.500}, 
+                {id: 11, name: "برياني لحم (استرالي)", price: 4.250} 
+            ],
+            "الدجاج": [ 
+                {id: 12, name: "مجبوس دجاج", price: 2.750}, {id: 13, name: "دجاج 65", price: 2.750}, 
+                {id: 14, name: "بخاري دجاج", price: 3.000}, {id: 15, name: "برياني دجاج", price: 3.000}, 
+                {id: 16, name: "مقلوبة دجاج", price: 3.500}, {id: 17, name: "بتر جكن", price: 3.000}, 
+                {id: 18, name: "برياني الديره", price: 3.500} 
+            ],
+            "الأطباق الجانبية": [
+                {id: 43, name: "تشريبه دجاج", price: 1.500}, {id: 44, name: "مرقوق لحم", price: 2.500},
+                {id: 45, name: "تشريبه لحم", price: 2.500}, {id: 46, name: "هريس", price: 1.500},
+                {id: 47, name: "جريش", price: 1.500}
+            ],
+            "الصواني (بحري)": [
+                {id: 48, name: "مربين (صواني)", price: 20.000}, {id: 49, name: "برياني ربيان (صواني)", price: 20.000},
+                {id: 50, name: "مطبق سيباس (صواني)", price: 28.000}, {id: 51, name: "سيباس مشوي (صواني)", price: 28.000},
+                {id: 52, name: "مطبق هامور (صواني)", price: 30.000}, {id: 53, name: "مرق هامور (صواني)", price: 30.000},
+                {id: 54, name: "مكس مطبق بحري", price: 35.000}, {id: 55, name: "زبيدي (صواني)", price: 30.000},
+                {id: 56, name: "زبيدي ملكي مع ربيان (صواني)", price: 35.000}
+            ],
+            "الصواني (دجاج)": [
+                {id: 57, name: "دجاج 65 (صواني)", price: 13.000}, {id: 58, name: "مجبوس الدجاج (صواني)", price: 13.000},
+                {id: 59, name: "برياني دجاج (صواني)", price: 14.000}, {id: 60, name: "بخاري دجاج (صواني)", price: 14.000},
+                {id: 61, name: "برياني الديره (صواني)", price: 15.000}, {id: 62, name: "بتر جكن (صواني)", price: 14.000},
+                {id: 63, name: "مقلوبة دجاج (صواني)", price: 15.000}
+            ],
+            "الصواني (لحم)": [
+                {id: 64, name: "مجبوس لحم استرالي (صواني)", price: 18.000}, {id: 65, name: "مجبوس لحم نعيمي (صواني)", price: 25.000},
+                {id: 66, name: "برياني لحم استرالي (صواني)", price: 20.000}, {id: 67, name: "برياني لحم نعيمي (صواني)", price: 25.000},
+                {id: 68, name: "مقلوبة لحم استرالي (صواني)", price: 20.000}, {id: 69, name: "مقلوبة لحم نعيمي (صواني)", price: 25.000},
+                {id: 70, name: "مشوي جدر لحم استرالي (صواني)", price: 20.000}, {id: 71, name: "مشوي جدر لحم نعيمي (صواني)", price: 25.000},
+                {id: 72, name: "بريه لحم نعيمي (صواني)", price: 25.000}, {id: 73, name: "برياني لحم سفرة الدار استرالي (صواني)", price: 20.000},
+                {id: 74, name: "برياني لحم سفرة الدار نعيمي (صواني)", price: 25.000}, {id: 75, name: "شبزي استرالي (صواني)", price: 21.500},
+                {id: 76, name: "شبزي نعيمي (صواني)", price: 26.500}
+            ],
+            "الذبايح": [ 
+                {id: 19, name: "ربع خروف (استرالي)", price: 30.000}, {id: 20, name: "نصف خروف (استرالي)", price: 60.000}, 
+                {id: 21, name: "خروف كامل (استرالي)", price: 120.000}, {id: 22, name: "ربع خروف (عربي)", price: 40.000}, 
+                {id: 23, name: "نصف خروف (عربي)", price: 80.000}, {id: 24, name: "خروف كامل (عربي)", price: 145.000} 
+            ],
+            "السمك": [ 
+                {id: 25, name: "مطبق زبيدي", price: 7.000}, {id: 26, name: "سيباس مشوي", price: 6.500}, 
+                {id: 27, name: "مطبق زبيدي ملكي", price: 8.000}, {id: 28, name: "برياني ربيان", price: 4.500}, 
+                {id: 29, name: "مرق هامور", price: 5.000}, {id: 30, name: "مربين", price: 4.500}, 
+                {id: 31, name: "مموش ربيان", price: 4.500}, {id: 32, name: "مطبق سيباس", price: 6.500} 
+            ],
+            "السلطات": [ 
+                {id: 33, name: "سلطة خضراء", price: 0.750}, {id: 34, name: "سلطة جرجير رمان", price: 1.000}, 
+                {id: 35, name: "ورق عنب", price: 1.500}, {id: 36, name: "روب وخيار", price: 0.750}, 
+                {id: 37, name: "تبولة", price: 1.000}, {id: 38, name: "فتوش", price: 1.000} 
+            ],
+            "المشروبات": [ 
+                {id: 39, name: "لبن", price: 0.150}, {id: 40, name: "لبن نعناع", price: 0.150}, 
+                {id: 41, name: "مشروبات غازية", price: 0.150}, {id: 42, name: "ماء صغير", price: 0.150} 
+            ]
+        };
+
+        let cart = {};
+        let deliveryMode = 'now';
+        let editingOrderId = null; 
+
+        function init() {
+            const catContainer = document.getElementById('category-container');
+            let isFirst = true;
+            for(const cat in menuData) {
+                const chip = document.createElement('div');
+                chip.className = `cat-chip ${isFirst ? 'active' : ''}`;
+                chip.innerText = cat;
+                chip.onclick = (e) => {
+                    document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+                    e.target.classList.add('active');
+                    renderMenu(cat);
+                };
+                catContainer.appendChild(chip);
+                if(isFirst) renderMenu(cat);
+                isFirst = false;
+            }
+        }
+
+        function renderMenu(category) {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = '';
+            menuData[category].forEach(item => {
+                const qty = cart[item.id] ? cart[item.id].qty : 0;
+                container.innerHTML += `
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>${item.name}</h3>
+                            <div class="item-price">${item.price.toFixed(3)} KD</div>
+                        </div>
+                        <div class="qty-control">
+                            <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
+                            <div class="qty-display" id="qty-${item.id}">${qty}</div>
+                            <button class="qty-btn add" onclick="updateQty(${item.id}, 1)">+</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function updateQty(id, change) {
+            let item = null;
+            for(const cat in menuData) {
+                const found = menuData[cat].find(i => i.id === id);
+                if(found) { item = found; break; }
+            }
+            if(!cart[id]) cart[id] = { ...item, qty: 0 };
+            cart[id].qty += change;
+            if(cart[id].qty <= 0) delete cart[id];
+            
+            const el = document.getElementById(`qty-${id}`);
+            if(el) el.innerText = cart[id] ? cart[id].qty : 0;
+            updateUI();
+        }
+
+        function updateUI() {
+            let totalQty = 0, totalPrice = 0;
+            for(const id in cart) {
+                totalQty += cart[id].qty;
+                totalPrice += cart[id].qty * cart[id].price;
+            }
+            document.getElementById('cart-count').innerText = `${totalQty} صنف`;
+            document.getElementById('cart-total').innerText = `${totalPrice.toFixed(3)} KD`;
+            const bar = document.getElementById('floating-bar');
+            totalQty > 0 ? bar.classList.add('show') : bar.classList.remove('show');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if(tab === 'new') {
+                document.querySelector('button[onclick="switchTab(\'new\')"]').classList.add('active');
+                document.getElementById('tab-new').classList.add('active');
+                document.getElementById('floating-bar').style.display = 'flex';
+            } else {
+                document.querySelector('button[onclick="switchTab(\'sent\')"]').classList.add('active');
+                document.getElementById('tab-sent').classList.add('active');
+                document.getElementById('floating-bar').style.display = 'none';
+                loadSentOrders(); 
+            }
+        }
+
+        async function loadSentOrders() {
+            const container = document.getElementById('sent-orders-container');
+            container.innerHTML = '';
+            document.getElementById('loading-sent').style.display = 'block';
+
+            try {
+                const res = await fetch(API_URL);
+                const orders = await res.json();
+                document.getElementById('loading-sent').style.display = 'none';
+
+                if(orders.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; color:#666;">لا توجد طلبات سابقة</div>';
+                    return;
+                }
+
+                orders.forEach(order => {
+                    const div = document.createElement('div');
+                    div.className = 'sent-order-card';
+                    div.innerHTML = `
+                        <div class="sent-header">
+                            <span class="sent-id">#${order.id}</span>
+                            <span class="sent-status">${order.status || 'New'}</span>
+                        </div>
+                        <div class="sent-body">
+                            <p><strong>العميل:</strong> ${order.phone} (${order.type})</p>
+                            <p><strong>الأصناف:</strong> ${order.items}</p>
+                            <p><strong>الملاحظات:</strong> ${order.notes || 'لا يوجد'}</p>
+                            <p><strong>المجموع:</strong> ${order.total} KD</p>
+                            <button class="edit-btn" onclick='editOrder(${JSON.stringify(order)})'>تعديل الطلب <i class="fas fa-edit"></i></button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+
+            } catch(e) {
+                container.innerHTML = '<div style="color:red; text-align:center;">خطأ في تحميل البيانات</div>';
+            }
+        }
+
+        function editOrder(order) {
+            editingOrderId = order.id;
+            document.getElementById('edit-mode-badge').style.display = 'block';
+            document.getElementById('editing-id-display').innerText = order.id;
+            document.querySelector('.send-btn').innerText = `تحديث الطلب #${order.id} 🔄`;
+
+            cart = {};
+            
+            const itemsParts = order.items.split(' + ');
+            itemsParts.forEach(part => {
+                const match = part.match(/(.+) \(x(\d+)\)/);
+                if(match) {
+                    const name = match[1].trim();
+                    const qty = parseInt(match[2]);
+                    
+                    let foundId = null;
+                    let foundPrice = 0;
+                    for(const cat in menuData) {
+                        const item = menuData[cat].find(i => i.name === name);
+                        if(item) { foundId = item.id; foundPrice = item.price; break; }
+                    }
+
+                    if(foundId) {
+                        cart[foundId] = { id: foundId, name: name, price: foundPrice, qty: qty };
+                    }
+                }
+            });
+
+            updateUI();
+            
+            document.getElementById('c-type').value = order.type;
+            document.getElementById('c-phone').value = order.phone;
+            document.getElementById('c-loc').value = order.location;
+            document.getElementById('c-details').value = order.details;
+            document.getElementById('c-notes').value = order.notes || ""; // تعبئة الملاحظات
+
+            if(order.pickupTime && order.pickupTime.includes('فوري')) {
+                setDeliveryMode('now');
+            } else {
+                setDeliveryMode('later');
+            }
+
+            switchTab('new');
+            const activeChip = document.querySelector('.cat-chip.active');
+            if(activeChip) renderMenu(activeChip.innerText);
+
+            Swal.fire({
+                icon: 'info',
+                title: 'وضع التعديل',
+                text: 'تم استرجاع بيانات الطلب للتعديل.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+
+        function openCheckout() {
+            const modal = document.getElementById('checkout-modal');
+            const summary = document.getElementById('bill-details');
+            summary.innerHTML = '';
+            let total = 0;
+            for(const id in cart) {
+                const i = cart[id];
+                total += i.qty * i.price;
+                summary.innerHTML += `<div class="bill-row"><span>${i.name} (x${i.qty})</span><span>${(i.qty*i.price).toFixed(3)}</span></div>`;
+            }
+            summary.innerHTML += `<div class="bill-row" style="border:none; margin-top:10px; color:#ff6600; font-weight:bold;"><span>المجموع</span><span>${total.toFixed(3)} KD</span></div>`;
+            modal.style.display = 'flex';
+        }
+
+        function closeCheckout() { document.getElementById('checkout-modal').style.display = 'none'; }
+
+        function setDeliveryMode(mode) {
+            deliveryMode = mode;
+            const btnNow = document.getElementById('btn-now');
+            const btnLater = document.getElementById('btn-later');
+            const timeInput = document.getElementById('c-time');
+
+            if(mode === 'now') {
+                btnNow.classList.add('active');
+                btnLater.classList.remove('active');
+                timeInput.classList.remove('show');
+                timeInput.value = ''; 
+            } else {
+                btnLater.classList.add('active');
+                btnNow.classList.remove('active');
+                timeInput.classList.add('show');
+            }
+        }
+
+        function submitOrder() {
+            const type = document.getElementById('c-type').value;
+            const phone = document.getElementById('c-phone').value;
+            const location = document.getElementById('c-loc').value;
+            const details = document.getElementById('c-details').value;
+            const notes = document.getElementById('c-notes').value;
+            
+            let pickupTime = 'فوري';
+            if(deliveryMode === 'later') {
+                const timeVal = document.getElementById('c-time').value;
+                if(!timeVal && !editingOrderId) { 
+                     if(!timeVal) { Swal.fire('تنبيه', 'حدد الوقت', 'warning'); return; }
+                }
+                if(timeVal) {
+                    const [hours, minutes] = timeVal.split(':');
+                    const suffix = hours >= 12 ? "PM" : "AM";
+                    const h = (hours % 12) || 12;
+                    pickupTime = `${h}:${minutes} ${suffix}`;
+                }
+            }
+
+            if(!type) { Swal.fire('تنبيه', 'اختر نوع العميل', 'warning'); return; }
+            if(!phone) { Swal.fire('تنبيه', 'رقم الهاتف مطلوب', 'warning'); return; }
+
+            const btn = document.querySelector('.send-btn');
+            const originalBtnText = btn.innerText;
+            btn.innerText = "جاري المعالجة...";
+            btn.disabled = true;
+
+            let itemsArr = [];
+            let total = 0;
+            for(const id in cart) {
+                itemsArr.push(`${cart[id].name} (x${cart[id].qty})`);
+                total += cart[id].qty * cart[id].price;
+            }
+
+            const params = new URLSearchParams();
+            
+            if (editingOrderId) {
+                params.append('action', 'update');
+                params.append('id', editingOrderId);
+            } else {
+                params.append('action', 'create');
+            }
+
+            params.append('type', type);
+            params.append('name', 'عميل'); 
+            params.append('phone', phone);
+            params.append('location', location);
+            params.append('details', details);
+            params.append('pickupTime', pickupTime); 
+            params.append('items', itemsArr.join(' + '));
+            params.append('total', total.toFixed(3));
+            params.append('notes', notes); // إرسال الملاحظات
+            
+            fetch(API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
+            })
+            .then(() => {
+                Swal.fire({
+                    icon: 'success', 
+                    title: editingOrderId ? 'تم التحديث' : 'تم الإرسال',
+                    text: editingOrderId ? 'تم تحديث بيانات الطلب بنجاح' : 'تم تسجيل الطلب الجديد',
+                    background: '#222', color: '#fff'
+                });
+                
+                cart = {};
+                updateUI();
+                document.querySelectorAll('.qty-display').forEach(d => d.innerText = '0');
+                closeCheckout();
+                
+                editingOrderId = null;
+                document.getElementById('edit-mode-badge').style.display = 'none';
+                
+                document.getElementById('c-type').value = "";
+                document.getElementById('c-phone').value = "";
+                document.getElementById('c-loc').value = "";
+                document.getElementById('c-details').value = "";
+                document.getElementById('c-notes').value = "";
+                setDeliveryMode('now');
+                
+                btn.innerText = "إرسال للمطبخ 🚀"; 
+                btn.disabled = false;
+            })
+            .catch(err => {
+                alert("فشل العملية: " + err);
+                btn.innerText = originalBtnText;
+                btn.disabled = false;
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>
