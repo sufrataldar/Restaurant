@@ -165,18 +165,22 @@
             "اللحم العربي": [ 
                 {id: 1, name: "مجبوس لحم (عربي)", price: 6.000}, {id: 2, name: "مقلوبة لحم (عربي)", price: 6.000}, 
                 {id: 3, name: "مشوي جدر لحم (عربي)", price: 6.000}, {id: 4, name: "مرق سبزي (عربي)", price: 6.500}, 
-                {id: 5, name: "بريه لحم (عربي)", price: 6.000}, {id: 6, name: "برياني لحم (عربي)", price: 6.000} 
+                {id: 5, name: "بريه لحم (عربي)", price: 6.000}, {id: 6, name: "برياني لحم (عربي)", price: 6.000},
+                {id: 77, name: "مموش لحم (عربي)", price: 6.500} 
             ],
             "اللحم الاسترالي": [ 
                 {id: 7, name: "مجبوس لحم (استرالي)", price: 3.750}, {id: 8, name: "مقلوبة لحم (استرالي)", price: 4.250}, 
                 {id: 9, name: "مشوي جدر لحم (استرالي)", price: 4.250}, {id: 10, name: "مرق سبزي (استرالي)", price: 4.500}, 
-                {id: 11, name: "برياني لحم (استرالي)", price: 4.250} 
+                {id: 11, name: "برياني لحم (استرالي)", price: 4.250},
+                {id: 78, name: "مموش لحم (استرالي)", price: 4.500}
             ],
             "الدجاج": [ 
                 {id: 12, name: "مجبوس دجاج", price: 2.750}, {id: 13, name: "دجاج 65", price: 2.750}, 
                 {id: 14, name: "بخاري دجاج", price: 3.000}, {id: 15, name: "برياني دجاج", price: 3.000}, 
                 {id: 16, name: "مقلوبة دجاج", price: 3.500}, {id: 17, name: "بتر جكن", price: 3.000}, 
-                {id: 18, name: "برياني الديره", price: 3.500} 
+                {id: 18, name: "برياني الديره", price: 3.500},
+                {id: 79, name: "مرق دجاج", price: 2.750},
+                {id: 80, name: "مشوي جدر دجاج", price: 3.500}
             ],
             "الأطباق الجانبية": [
                 {id: 43, name: "تشريبه دجاج", price: 1.500}, {id: 44, name: "مرقوق لحم", price: 2.500},
@@ -223,7 +227,10 @@
             ],
             "المشروبات": [ 
                 {id: 39, name: "لبن", price: 0.150}, {id: 40, name: "لبن نعناع", price: 0.150}, 
-                {id: 41, name: "مشروبات غازية", price: 0.150}, {id: 42, name: "ماء صغير", price: 0.150} 
+                {id: 81, name: "بيبسي", price: 0.150}, 
+                {id: 82, name: "سفن اب", price: 0.150},
+                {id: 83, name: "ميرندا", price: 0.150},
+                {id: 42, name: "ماء صغير", price: 0.150} 
             ]
         };
 
@@ -275,6 +282,8 @@
                 const found = menuData[cat].find(i => i.id === id);
                 if(found) { item = found; break; }
             }
+            if(!item) return; // لضمان عدم وجود أخطاء إذا لم يتم العثور على الصنف
+            
             if(!cart[id]) cart[id] = { ...item, qty: 0 };
             cart[id].qty += change;
             if(cart[id].qty <= 0) delete cart[id];
@@ -391,6 +400,17 @@
                 setDeliveryMode('now');
             } else {
                 setDeliveryMode('later');
+                if (order.pickupTime) {
+                    // تحويل وقت PM/AM إلى تنسيق HH:MM لإدخال نوع time
+                    const [timePart, ampm] = order.pickupTime.split(' ');
+                    if (timePart) {
+                        let [h, m] = timePart.split(':').map(Number);
+                        if (ampm === 'PM' && h !== 12) h += 12;
+                        if (ampm === 'AM' && h === 12) h = 0; // Midnight 12AM is 00
+                        const timeString = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                        document.getElementById('c-time').value = timeString;
+                    }
+                }
             }
 
             switchTab('new');
