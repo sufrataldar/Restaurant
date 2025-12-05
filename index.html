@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>سفرة الدار | Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -73,7 +73,47 @@
         .sent-body p { margin: 5px 0; color: #ccc; font-size: 0.9rem; }
         .edit-btn { background: #33b5e5; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; margin-top: 10px; width: 100%; font-family: 'Cairo'; font-weight: bold; }
         .edit-badge { background: var(--primary); color: black; padding: 5px 10px; border-radius: 5px; font-weight: bold; display:none; margin-bottom: 10px; text-align: center;}
-
+        
+        /* ----------------------------------- */
+        /* أنماط مخصصة لرقم الهاتف */
+        /* ----------------------------------- */
+        .phone-input-container {
+            display: flex;
+            align-items: center;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 10px;
+            transition: border-color 0.3s;
+        }
+        .phone-input-container:focus-within { 
+            border-color: var(--primary);
+        }
+        .country-code {
+            padding: 15px 10px;
+            background: #2a2a2a;
+            color: var(--primary);
+            font-weight: bold;
+            /* يتم تطبيق الحواف اليمنى ليتناسب مع اتجاه RTL */
+            border-top-right-radius: 9px; 
+            border-bottom-right-radius: 9px;
+            white-space: nowrap;
+            user-select: none;
+            border-left: 1px solid #333;
+        }
+        .phone-input-container input#c-phone {
+            flex-grow: 1;
+            width: auto;
+            padding: 15px;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            text-align: right;
+            min-width: 0; 
+        }
+        .phone-input-container input#c-phone:focus {
+            border-color: transparent; 
+        }
+        /* ----------------------------------- */
     </style>
 </head>
 <body>
@@ -134,8 +174,11 @@
             </div>
             
             <div class="input-group">
-                <label for="c-phone">رقم الهاتف</label>
-                <input type="tel" id="c-phone" placeholder="مثال: 60000000" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <label for="c-phone">رقم الهاتف (8 أرقام)</label>
+                <div class="phone-input-container"> 
+                    <span class="country-code">+965</span>
+                    <input type="tel" id="c-phone" placeholder="مثال: 60000000">
+                </div>
             </div>
             
             <div class="input-group">
@@ -282,7 +325,7 @@
                 const found = menuData[cat].find(i => i.id === id);
                 if(found) { item = found; break; }
             }
-            if(!item) return; // لضمان عدم وجود أخطاء إذا لم يتم العثور على الصنف
+            if(!item) return;
             
             if(!cart[id]) cart[id] = { ...item, qty: 0 };
             cart[id].qty += change;
@@ -391,22 +434,25 @@
             updateUI();
             
             document.getElementById('c-type').value = order.type;
-            document.getElementById('c-phone').value = order.phone;
+            
+            // تعديل تعبئة رقم الهاتف: إزالة +965 قبل تعبئته في الحقل
+            const rawPhone = order.phone.replace('+965', '').trim();
+            document.getElementById('c-phone').value = rawPhone;
+
             document.getElementById('c-loc').value = order.location;
             document.getElementById('c-details').value = order.details;
-            document.getElementById('c-notes').value = order.notes || ""; // تعبئة الملاحظات
+            document.getElementById('c-notes').value = order.notes || "";
 
             if(order.pickupTime && order.pickupTime.includes('فوري')) {
                 setDeliveryMode('now');
             } else {
                 setDeliveryMode('later');
                 if (order.pickupTime) {
-                    // تحويل وقت PM/AM إلى تنسيق HH:MM لإدخال نوع time
                     const [timePart, ampm] = order.pickupTime.split(' ');
                     if (timePart) {
                         let [h, m] = timePart.split(':').map(Number);
                         if (ampm === 'PM' && h !== 12) h += 12;
-                        if (ampm === 'AM' && h === 12) h = 0; // Midnight 12AM is 00
+                        if (ampm === 'AM' && h === 12) h = 0;
                         const timeString = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
                         document.getElementById('c-time').value = timeString;
                     }
@@ -471,7 +517,7 @@
             if(deliveryMode === 'later') {
                 const timeVal = document.getElementById('c-time').value;
                 if(!timeVal && !editingOrderId) { 
-                     if(!timeVal) { Swal.fire('تنبيه', 'حدد الوقت', 'warning'); return; }
+                    if(!timeVal) { Swal.fire('تنبيه', 'حدد الوقت', 'warning'); return; }
                 }
                 if(timeVal) {
                     const [hours, minutes] = timeVal.split(':');
@@ -482,7 +528,12 @@
             }
 
             if(!type) { Swal.fire('تنبيه', 'اختر نوع العميل', 'warning'); return; }
-            if(!phone) { Swal.fire('تنبيه', 'رقم الهاتف مطلوب', 'warning'); return; }
+            
+            // التحقق من أن رقم الهاتف 8 أرقام بالضبط
+            if (!phone || phone.length !== 8) {
+                Swal.fire('تنبيه', 'أدخل 8 أرقام بالضبط بعد مفتاح الدولة', 'warning');
+                return;
+            }
 
             const btn = document.querySelector('.send-btn');
             const originalBtnText = btn.innerText;
@@ -507,13 +558,13 @@
 
             params.append('type', type);
             params.append('name', 'عميل'); 
-            params.append('phone', phone);
+            params.append('phone', '+965' + phone); // إرسال الرقم مع مفتاح الدولة
             params.append('location', location);
             params.append('details', details);
             params.append('pickupTime', pickupTime); 
             params.append('items', itemsArr.join(' + '));
             params.append('total', total.toFixed(3));
-            params.append('notes', notes); // إرسال الملاحظات
+            params.append('notes', notes);
             
             fetch(API_URL, {
                 method: 'POST',
@@ -555,6 +606,22 @@
         }
 
         init();
+        
+        // **وظيفة جديدة للتحكم بمدخلات رقم الهاتف (8 أرقام فقط)**
+        document.addEventListener('DOMContentLoaded', () => {
+            const phoneInput = document.getElementById('c-phone');
+            if (phoneInput) {
+                phoneInput.oninput = function() {
+                    // تصفية جميع الأحرف غير الرقمية
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    
+                    // تقييد الطول بـ 8 خانات
+                    if (this.value.length > 8) {
+                        this.value = this.value.slice(0, 8);
+                    }
+                };
+            }
+        });
     </script>
 </body>
 </html>
