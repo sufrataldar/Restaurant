@@ -9,7 +9,18 @@
     <link rel="apple-touch-icon" href="https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg">
     <link rel="icon" href="https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg">
     <style>
-        :root { --primary: #ff6600; --dark: #121212; --card: #1e1e1e; --text: #ffffff; }
+        :root { 
+            --primary: #ff6600; 
+            --dark: #121212; 
+            --card: #1e1e1e; 
+            --text: #ffffff;
+            --success: #00c851;
+            --info: #33b5e5;
+            --warning: #ffbb33;
+            --danger: #ff4444;
+            --old-customer: #ff9800;
+            --new-customer: #4CAF50;
+        }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Cairo', sans-serif; background-color: var(--dark); color: var(--text); margin: 0; padding-bottom: 100px; }
         
@@ -81,11 +92,21 @@
         .sent-status { font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; background: #333; }
         .sent-body p { margin: 5px 0; color: #ccc; font-size: 0.9rem; }
         .edit-btn { background: #33b5e5; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; margin-top: 10px; width: 100%; font-family: 'Cairo'; font-weight: bold; }
+        .delete-btn {
+            background: #ff4444;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 5px;
+            width: 100%;
+            font-family: 'Cairo';
+            font-weight: bold;
+        }
         .edit-badge { background: var(--primary); color: black; padding: 5px 10px; border-radius: 5px; font-weight: bold; display:none; margin-bottom: 10px; text-align: center;}
         
-        /* ----------------------------------- */
         /* أنماط مخصصة لرقم الهاتف */
-        /* ----------------------------------- */
         .phone-input-container {
             display: flex;
             align-items: center;
@@ -121,7 +142,234 @@
         .phone-input-container input#c-phone:focus {
             border-color: transparent; 
         }
-        /* ----------------------------------- */
+        
+        /* إشعار العميل المحسن */
+        .customer-notification {
+            background: rgba(255, 152, 0, 0.15);
+            border: 2px solid var(--old-customer);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .customer-notification.show {
+            display: block;
+        }
+        
+        .customer-notification.new-customer {
+            background: rgba(76, 175, 80, 0.15);
+            border-color: var(--new-customer);
+        }
+        
+        .customer-notification.old-customer {
+            background: rgba(255, 152, 0, 0.2);
+            border-color: var(--old-customer);
+            box-shadow: 0 0 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        .customer-notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .customer-notification-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .customer-notification-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .badge-new {
+            background: var(--new-customer);
+            color: #000;
+        }
+        
+        .badge-old {
+            background: var(--old-customer);
+            color: #000;
+            animation: pulse 2s infinite;
+        }
+        
+        .customer-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .customer-detail-item {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .customer-detail-label {
+            color: #aaa;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .customer-detail-value {
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .customer-history {
+            background: rgba(255, 152, 0, 0.1);
+            border: 1px solid rgba(255, 152, 0, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .customer-history i {
+            color: var(--old-customer);
+            margin-left: 8px;
+        }
+        
+        .auto-fill-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, #ff8c00 100%);
+            color: #000;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo';
+            font-weight: bold;
+            margin-top: 15px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .auto-fill-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.4);
+        }
+        
+        .customer-icon {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 2rem;
+            opacity: 0.1;
+        }
+        
+        .old-customer-icon {
+            color: var(--old-customer);
+        }
+        
+        .new-customer-icon {
+            color: var(--new-customer);
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        /* أنماط التبويب الجديد للعملاء */
+        .customer-card {
+            background: var(--card);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px;
+            border: 1px solid #333;
+        }
+        
+        .customer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .customer-id {
+            color: var(--info);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .customer-phone {
+            font-family: monospace;
+            color: #aaa;
+        }
+        
+        .customer-stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        
+        /* زر إغلاق الإشعار */
+        .close-notification-btn {
+            background: none;
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+        
+        .close-notification-btn:hover {
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -129,17 +377,39 @@
     <div class="app-header">
         <div class="logo">
             <img src="https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg" alt="Logo">
-            <span>سفرة الدار</span>
+            <span>سفرة الدار | نظام العملاء</span>
         </div>
     </div>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('new')">طلب جديد</button>
         <button class="tab-btn" onclick="switchTab('sent')">الطلبات المرسلة</button>
+        <button class="tab-btn" onclick="switchTab('customers')">قاعدة العملاء</button>
     </div>
 
     <div id="tab-new" class="tab-content active">
         <div class="edit-badge" id="edit-mode-badge">⚠️ أنت الآن تقوم بتعديل الطلب رقم <span id="editing-id-display"></span></div>
+        
+        <!-- إشعار العميل المحسن -->
+        <div class="customer-notification" id="customer-notification">
+            <i class="fas fa-user-circle customer-icon old-customer-icon" id="customer-main-icon"></i>
+            <div class="customer-notification-header">
+                <div class="customer-notification-title">
+                    <i class="fas fa-user-check" id="customer-icon"></i>
+                    <span id="customer-notification-text">تم التعرف على العميل</span>
+                    <span class="customer-notification-badge" id="customer-type-badge">Old CX</span>
+                </div>
+                <button class="close-notification-btn" onclick="closeCustomerNotification()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="customer-details-container"></div>
+            <div id="customer-history-container"></div>
+            <button class="auto-fill-btn" onclick="autoFillCustomerDetails()">
+                <i class="fas fa-magic"></i> تعبئة البيانات تلقائياً
+            </button>
+        </div>
+        
         <div class="category-scroll" id="category-container"></div>
         <div class="menu-list" id="menu-container"></div>
     </div>
@@ -147,6 +417,11 @@
     <div id="tab-sent" class="tab-content">
         <div id="loading-sent" style="text-align:center; padding:20px;">جاري تحميل الطلبات...</div>
         <div class="sent-orders-list" id="sent-orders-container"></div>
+    </div>
+
+    <div id="tab-customers" class="tab-content">
+        <div id="loading-customers" style="text-align:center; padding:20px;">جاري تحميل قاعدة العملاء...</div>
+        <div id="customers-container"></div>
     </div>
 
     <div class="floating-bar" id="floating-bar" onclick="openCheckout()">
@@ -197,8 +472,9 @@
                 <label for="c-phone">رقم الهاتف (8 أرقام)</label>
                 <div class="phone-input-container"> 
                     <span class="country-code">+965</span>
-                    <input type="tel" id="c-phone" placeholder="مثال: 60000000">
+                    <input type="tel" id="c-phone" placeholder="مثال: 60000000" oninput="checkCustomerByPhone()">
                 </div>
+                <small style="color:#666; margin-top:5px; display:block;">سيتم البحث عن العميل تلقائياً عند إدخال الرقم</small>
             </div>
             
             <div class="input-group">
@@ -222,7 +498,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyGYGtfPd1ynGGhxtEtI6frTHXM4ZtD18t9f6HNStPfzBHNgivBAmyUhJbtS6UMiD7S/exec';
+        // استخدم رابط Google Apps Script الخاص بك هنا
+        const API_URL = 'https://script.google.com/macros/s/AKfycbw5sY1ZMub1RgQ_c_bIJSNEUOi_z5T-rcI8Hi_-nTSsD9KFvbihvdmxexh0atq77OkJ/exec';
         
         const menuData = {
             "اللحم العربي": [ 
@@ -286,21 +563,26 @@
             "السلطات": [ 
                 {id: 33, name: "سلطة خضراء", price: 0.750}, {id: 34, name: "سلطة جرجير رمان", price: 1.000}, 
                 {id: 35, name: "ورق عنب", price: 1.500}, {id: 36, name: "روب وخيار", price: 0.750}, 
-                {id: 37, name: "تبولة", price: 1.000}, {id: 38, name: "فتوش", price: 1.000} 
+                {id: 37, name: "تبولة", price: 1.000}, {id: 38, name: "فتوش", price: 1.000},
+                {id: 86, name: "روب", price: 0.200}
             ],
             "المشروبات": [ 
                 {id: 39, name: "لبن", price: 0.150}, {id: 40, name: "لبن نعناع", price: 0.150}, 
                 {id: 81, name: "بيبسي", price: 0.150}, 
                 {id: 82, name: "سفن اب", price: 0.150},
                 {id: 83, name: "ميرندا", price: 0.150},
-                {id: 42, name: "ماء صغير", price: 0.150} 
+                {id: 42, name: "ماء صغير", price: 0.150},
+                {id: 84, name: "بيبسي (دايت)", price: 0.150},
+                {id: 85, name: "سفن اب (دايت)", price: 0.150}
             ]
         };
 
         let cart = {};
         let deliveryMode = 'now';
-        let paymentMethod = null; // متغير جديد لتخزين طريقة الدفع
-        let editingOrderId = null; 
+        let paymentMethod = null;
+        let editingOrderId = null;
+        let currentCustomer = null;
+        let customerNotificationTimeout = null;
 
         function init() {
             const catContainer = document.getElementById('category-container');
@@ -377,12 +659,248 @@
                 document.querySelector('button[onclick="switchTab(\'new\')"]').classList.add('active');
                 document.getElementById('tab-new').classList.add('active');
                 document.getElementById('floating-bar').style.display = 'flex';
-            } else {
+            } else if(tab === 'sent') {
                 document.querySelector('button[onclick="switchTab(\'sent\')"]').classList.add('active');
                 document.getElementById('tab-sent').classList.add('active');
                 document.getElementById('floating-bar').style.display = 'none';
-                loadSentOrders(); 
+                loadSentOrders();
+            } else if(tab === 'customers') {
+                document.querySelector('button[onclick="switchTab(\'customers\')"]').classList.add('active');
+                document.getElementById('tab-customers').classList.add('active');
+                document.getElementById('floating-bar').style.display = 'none';
+                loadCustomers();
             }
+        }
+
+        async function checkCustomerByPhone() {
+            const phoneInput = document.getElementById('c-phone');
+            const phone = phoneInput.value.trim();
+            
+            // تنظيف الرقم من أي أحرف غير رقمية
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            
+            if (cleanPhone.length !== 8) {
+                hideCustomerNotification();
+                return;
+            }
+            
+            // تحديث حقل الإدخال بالرقم النظيف
+            phoneInput.value = cleanPhone;
+            
+            if (customerNotificationTimeout) {
+                clearTimeout(customerNotificationTimeout);
+            }
+            
+            // تقليل وقت التأخير ليكون أسرع
+            customerNotificationTimeout = setTimeout(async () => {
+                try {
+                    const params = new URLSearchParams();
+                    params.append('action', 'findCustomer');
+                    params.append('phone', cleanPhone);
+                    
+                    console.log('جاري البحث عن العميل برقم:', cleanPhone);
+                    
+                    const response = await fetch(`${API_URL}?${params.toString()}`);
+                    const result = await response.json();
+                    
+                    console.log('نتيجة البحث:', result);
+                    
+                    if (result.result === 'success' && result.customer) {
+                        currentCustomer = result.customer;
+                        console.log('تم العثور على عميل:', currentCustomer);
+                        showCustomerNotification(currentCustomer);
+                    } else {
+                        currentCustomer = null;
+                        console.log('لم يتم العثور على عميل');
+                        showNewCustomerNotification();
+                    }
+                } catch (error) {
+                    console.error('خطأ في البحث عن العميل:', error);
+                    currentCustomer = null;
+                    hideCustomerNotification();
+                }
+            }, 300); // تقليل وقت التأخير إلى 300 مللي ثانية
+        }
+
+        function showCustomerNotification(customer) {
+            const notification = document.getElementById('customer-notification');
+            const notificationText = document.getElementById('customer-notification-text');
+            const typeBadge = document.getElementById('customer-type-badge');
+            const detailsContainer = document.getElementById('customer-details-container');
+            const historyContainer = document.getElementById('customer-history-container');
+            const mainIcon = document.getElementById('customer-main-icon');
+            const customerIcon = document.getElementById('customer-icon');
+            
+            console.log('عرض إشعار العميل:', customer);
+            
+            const isOldCustomer = customer.totalOrders > 1 || customer.type === 'Old CX';
+            
+            console.log('هل العميل قديم؟', isOldCustomer, 'عدد الطلبات:', customer.totalOrders);
+            
+            if (isOldCustomer) {
+                notification.className = 'customer-notification old-customer show';
+                mainIcon.className = 'fas fa-crown customer-icon old-customer-icon';
+                customerIcon.className = 'fas fa-crown';
+                notificationText.innerHTML = '<i class="fas fa-crown"></i> عميل قديم';
+                typeBadge.textContent = 'Old CX';
+                typeBadge.className = 'customer-notification-badge badge-old';
+                
+                historyContainer.innerHTML = `
+                    <div class="customer-history">
+                        <i class="fas fa-history"></i>
+                        هذا العميل قام بـ ${customer.totalOrders} طلب سابق بإجمالي ${customer.totalSpent.toFixed(3)} د.ك
+                    </div>
+                `;
+            } else {
+                notification.className = 'customer-notification new-customer show';
+                mainIcon.className = 'fas fa-user-plus customer-icon new-customer-icon';
+                customerIcon.className = 'fas fa-user-plus';
+                notificationText.innerHTML = '<i class="fas fa-user-plus"></i> عميل موجود';
+                typeBadge.textContent = 'New CX';
+                typeBadge.className = 'customer-notification-badge badge-new';
+                
+                historyContainer.innerHTML = `
+                    <div class="customer-history">
+                        <i class="fas fa-info-circle"></i>
+                        هذا العميل قام بطلب واحد سابق
+                    </div>
+                `;
+            }
+            
+            const firstOrderDate = new Date(customer.firstOrder);
+            const lastOrderDate = new Date(customer.lastOrder);
+            const firstOrderFormatted = firstOrderDate.toLocaleDateString('ar-SA');
+            const lastOrderFormatted = lastOrderDate.toLocaleDateString('ar-SA');
+            
+            detailsContainer.innerHTML = `
+                <div class="customer-details-grid">
+                    <div class="customer-detail-item">
+                        <div class="customer-detail-label">رقم العميل</div>
+                        <div class="customer-detail-value">${customer.id}</div>
+                    </div>
+                    <div class="customer-detail-item">
+                        <div class="customer-detail-label">عدد الطلبات</div>
+                        <div class="customer-detail-value">${customer.totalOrders}</div>
+                    </div>
+                    <div class="customer-detail-item">
+                        <div class="customer-detail-label">إجمالي المشتريات</div>
+                        <div class="customer-detail-value">${customer.totalSpent.toFixed(3)} KD</div>
+                    </div>
+                    <div class="customer-detail-item">
+                        <div class="customer-detail-label">أول طلب</div>
+                        <div class="customer-detail-value">${firstOrderFormatted}</div>
+                    </div>
+                    <div class="customer-detail-item">
+                        <div class="customer-detail-label">آخر طلب</div>
+                        <div class="customer-detail-value">${lastOrderFormatted}</div>
+                    </div>
+                </div>
+                <div style="margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                    <div><strong>العنوان المسجل:</strong> ${customer.addressDetails || 'غير محدد'}</div>
+                    <div><strong>الموقع المسجل:</strong> ${customer.location ? 'تم تسجيل موقع' : 'غير محدد'}</div>
+                </div>
+            `;
+            
+            // إظهار إشعار SweetAlert للعميل القديم
+            if (isOldCustomer) {
+                setTimeout(() => {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-start',
+                        icon: 'info',
+                        title: 'عميل قديم تم التعرف عليه',
+                        text: `قام بـ ${customer.totalOrders} طلبات سابقة`,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        background: '#222',
+                        color: '#fff'
+                    });
+                }, 500);
+            }
+        }
+
+        function showNewCustomerNotification() {
+            const notification = document.getElementById('customer-notification');
+            const notificationText = document.getElementById('customer-notification-text');
+            const typeBadge = document.getElementById('customer-type-badge');
+            const detailsContainer = document.getElementById('customer-details-container');
+            const historyContainer = document.getElementById('customer-history-container');
+            const mainIcon = document.getElementById('customer-main-icon');
+            const customerIcon = document.getElementById('customer-icon');
+            
+            notification.className = 'customer-notification new-customer show';
+            mainIcon.className = 'fas fa-user-plus customer-icon new-customer-icon';
+            customerIcon.className = 'fas fa-user-plus';
+            notificationText.innerHTML = '<i class="fas fa-user-plus"></i> عميل جديد';
+            typeBadge.textContent = 'New CX';
+            typeBadge.className = 'customer-notification-badge badge-new';
+            
+            detailsContainer.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <p style="font-size: 1.1rem; margin-bottom: 10px;">هذا العميل يطلب للمرة الأولى</p>
+                    <p style="color: #aaa;">سيتم حفظ بياناته بعد إتمام الطلب</p>
+                </div>
+            `;
+            
+            historyContainer.innerHTML = '';
+        }
+
+        function hideCustomerNotification() {
+            const notification = document.getElementById('customer-notification');
+            notification.classList.remove('show');
+            currentCustomer = null;
+        }
+
+        function closeCustomerNotification() {
+            hideCustomerNotification();
+        }
+
+        function autoFillCustomerDetails() {
+            if (!currentCustomer) {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-start',
+                    icon: 'warning',
+                    title: 'لم يتم التعرف على عميل',
+                    text: 'الرجاء إدخال رقم هاتف صحيح أولاً',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    background: '#222',
+                    color: '#fff'
+                });
+                return;
+            }
+            
+            // تعبئة رابط الموقع
+            if (currentCustomer.location) {
+                document.getElementById('c-loc').value = currentCustomer.location;
+            }
+            
+            // تعبئة تفاصيل العنوان
+            if (currentCustomer.addressDetails) {
+                document.getElementById('c-details').value = currentCustomer.addressDetails;
+            }
+            
+            // تعبئة نوع العميل
+            if (currentCustomer.totalOrders > 1) {
+                document.getElementById('c-type').value = 'Old CX';
+            } else if (currentCustomer.type) {
+                document.getElementById('c-type').value = currentCustomer.type;
+            }
+            
+            hideCustomerNotification();
+            
+            Swal.fire({
+                toast: true,
+                position: 'top-start',
+                icon: 'success',
+                title: 'تم تعبئة بيانات العميل تلقائياً',
+                text: 'تم ملء جميع الحوافظ بالمعلومات المحفوظة',
+                showConfirmButton: false,
+                timer: 2500,
+                background: '#222',
+                color: '#fff'
+            });
         }
 
         async function loadSentOrders() {
@@ -404,8 +922,8 @@
                     const div = document.createElement('div');
                     div.className = 'sent-order-card';
                     
-                    // عرض طريقة الدفع إذا كانت موجودة
                     const paymentInfo = order.paymentMethod ? `<p><strong>طريقة الدفع:</strong> ${order.paymentMethod === 'cash' ? 'Cash' : 'Link'}</p>` : '';
+                    const customerInfo = order.customerId ? `<p><strong>رقم العميل:</strong> ${order.customerId}</p>` : '';
                     
                     div.innerHTML = `
                         <div class="sent-header">
@@ -414,11 +932,13 @@
                         </div>
                         <div class="sent-body">
                             <p><strong>العميل:</strong> ${order.phone} (${order.type})</p>
+                            ${customerInfo}
                             ${paymentInfo}
                             <p><strong>الأصناف:</strong> ${order.items}</p>
                             <p><strong>الملاحظات:</strong> ${order.notes || 'لا يوجد'}</p>
                             <p><strong>المجموع:</strong> ${order.total} KD</p>
                             <button class="edit-btn" onclick='editOrder(${JSON.stringify(order)})'>تعديل الطلب <i class="fas fa-edit"></i></button>
+                            <button class="delete-btn" onclick='deleteOrder(${JSON.stringify(order)})'>حذف الطلب <i class="fas fa-trash-alt"></i></button>
                         </div>
                     `;
                     container.appendChild(div);
@@ -427,6 +947,158 @@
             } catch(e) {
                 container.innerHTML = '<div style="color:red; text-align:center;">خطأ في تحميل البيانات</div>';
             }
+        }
+
+        async function loadCustomers() {
+            const container = document.getElementById('customers-container');
+            container.innerHTML = '';
+            document.getElementById('loading-customers').style.display = 'block';
+
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'getCustomers');
+                
+                const response = await fetch(`${API_URL}?${params.toString()}`);
+                const customers = await response.json();
+                
+                document.getElementById('loading-customers').style.display = 'none';
+
+                if(customers.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; color:#666; margin-top: 50px;">لا توجد عملاء مسجلين بعد</div>';
+                    return;
+                }
+
+                customers.forEach(customer => {
+                    const div = document.createElement('div');
+                    div.className = 'customer-card';
+                    
+                    const firstOrderDate = new Date(customer.firstOrder);
+                    const lastOrderDate = new Date(customer.lastOrder);
+                    const firstOrderFormatted = firstOrderDate.toLocaleDateString('ar-SA');
+                    const lastOrderFormatted = lastOrderDate.toLocaleDateString('ar-SA');
+                    
+                    div.innerHTML = `
+                        <div class="customer-header">
+                            <div>
+                                <div class="customer-id">${customer.id}</div>
+                                <div class="customer-phone">${customer.phone}</div>
+                            </div>
+                            <span style="color: ${customer.type === 'Old CX' ? '#ff9800' : '#4CAF50'}; font-weight: bold;">
+                                ${customer.type}
+                            </span>
+                        </div>
+                        
+                        <div><strong>الاسم:</strong> ${customer.name || 'غير محدد'}</div>
+                        <div><strong>العنوان:</strong> ${customer.addressDetails || 'غير محدد'}</div>
+                        ${customer.location ? `<div><strong>الموقع:</strong> <a href="${customer.location}" target="_blank" style="color:#33b5e5;">فتح الخريطة</a></div>` : ''}
+                        ${customer.notes ? `<div><strong>ملاحظات:</strong> ${customer.notes}</div>` : ''}
+                        
+                        <div class="customer-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">${customer.totalOrders}</div>
+                                <div class="stat-label">عدد الطلبات</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${customer.totalSpent.toFixed(3)}</div>
+                                <div class="stat-label">إجمالي المشتريات</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${firstOrderFormatted}</div>
+                                <div class="stat-label">أول طلب</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${lastOrderFormatted}</div>
+                                <div class="stat-label">آخر طلب</div>
+                            </div>
+                        </div>
+                        
+                        <button class="edit-btn" onclick="useCustomerForOrder('${customer.id}')" style="margin-top: 15px;">
+                            <i class="fas fa-shopping-cart"></i> استخدام هذا العميل لطلب جديد
+                        </button>
+                    `;
+                    container.appendChild(div);
+                });
+
+            } catch(e) {
+                console.error('Error loading customers:', e);
+                container.innerHTML = '<div style="color:red; text-align:center;">خطأ في تحميل قاعدة العملاء</div>';
+            }
+        }
+
+        function useCustomerForOrder(customerId) {
+            switchTab('new');
+            
+            Swal.fire({
+                title: 'استخدام عميل محدد',
+                text: 'ارجو إدخال رقم هاتف العميل للبحث عنه',
+                input: 'text',
+                inputPlaceholder: 'رقم الهاتف (8 أرقام)',
+                showCancelButton: true,
+                confirmButtonText: 'بحث',
+                cancelButtonText: 'إلغاء',
+                background: '#222',
+                color: '#fff',
+                inputValidator: (value) => {
+                    const cleanValue = value.replace(/[^0-9]/g, '');
+                    if (!cleanValue || cleanValue.length !== 8) {
+                        return 'الرجاء إدخال 8 أرقام صحيحة';
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const cleanPhone = result.value.replace(/[^0-9]/g, '');
+                    document.getElementById('c-phone').value = cleanPhone;
+                    checkCustomerByPhone();
+                }
+            });
+        }
+
+        function deleteOrder(order) {
+            Swal.fire({
+                title: 'هل أنت متأكد؟',
+                text: `سيتم حذف الطلب رقم #${order.id} نهائياً. لا يمكن التراجع عن هذا الإجراء!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff4444',
+                cancelButtonColor: '#33b5e5',
+                confirmButtonText: 'نعم، احذفه',
+                cancelButtonText: 'إلغاء',
+                background: '#222',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const params = new URLSearchParams();
+                    params.append('action', 'delete');
+                    params.append('id', order.id);
+                    
+                    fetch(API_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: params
+                    })
+                    .then(() => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'تم الحذف',
+                            text: `تم حذف الطلب رقم #${order.id} بنجاح`,
+                            background: '#222',
+                            color: '#fff'
+                        });
+                        
+                        loadSentOrders();
+                    })
+                    .catch(err => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'خطأ',
+                            text: 'فشل في حذف الطلب: ' + err,
+                            background: '#222',
+                            color: '#fff'
+                        });
+                    });
+                }
+            });
         }
 
         function editOrder(order) {
@@ -461,17 +1133,14 @@
             
             document.getElementById('c-type').value = order.type;
             
-            // تعيين طريقة الدفع إذا كانت موجودة
             if (order.paymentMethod) {
                 setPaymentMethod(order.paymentMethod);
             } else {
-                // إعادة تعيين طريقة الدفع
                 paymentMethod = null;
                 document.getElementById('btn-cash').classList.remove('active');
                 document.getElementById('btn-link').classList.remove('active');
             }
             
-            // تعديل تعبئة رقم الهاتف: إزالة +965 قبل تعبئته في الحقل
             const rawPhone = order.phone.replace('+965', '').trim();
             document.getElementById('c-phone').value = rawPhone;
 
@@ -499,6 +1168,10 @@
             const activeChip = document.querySelector('.cat-chip.active');
             if(activeChip) renderMenu(activeChip.innerText);
 
+            setTimeout(() => {
+                checkCustomerByPhone();
+            }, 500);
+
             Swal.fire({
                 icon: 'info',
                 title: 'وضع التعديل',
@@ -522,7 +1195,9 @@
             modal.style.display = 'flex';
         }
 
-        function closeCheckout() { document.getElementById('checkout-modal').style.display = 'none'; }
+        function closeCheckout() { 
+            document.getElementById('checkout-modal').style.display = 'none'; 
+        }
 
         function setDeliveryMode(mode) {
             deliveryMode = mode;
@@ -577,15 +1252,16 @@
                 }
             }
 
-            if(!type) { Swal.fire('تنبيه', 'اختر نوع العميل', 'warning'); return; }
+            if(!type) { 
+                Swal.fire('تنبيه', 'اختر نوع العميل', 'warning'); 
+                return; 
+            }
             
-            // التحقق من اختيار طريقة الدفع (إجباري)
             if (!paymentMethod) {
                 Swal.fire('تنبيه', 'اختر طريقة الدفع', 'warning');
                 return;
             }
             
-            // التحقق من أن رقم الهاتف 8 أرقام بالضبط
             if (!phone || phone.length !== 8) {
                 Swal.fire('تنبيه', 'أدخل 8 أرقام بالضبط بعد مفتاح الدولة', 'warning');
                 return;
@@ -613,15 +1289,15 @@
             }
 
             params.append('type', type);
-            params.append('name', 'عميل'); 
-            params.append('phone', '+965' + phone); // إرسال الرقم مع مفتاح الدولة
+            params.append('name', 'عميل'); // اسم افتراضي
+            params.append('phone', '+965' + phone);
             params.append('location', location);
             params.append('details', details);
             params.append('pickupTime', pickupTime); 
             params.append('items', itemsArr.join(' + '));
             params.append('total', total.toFixed(3));
             params.append('notes', notes);
-            params.append('paymentMethod', paymentMethod); // إضافة طريقة الدفع
+            params.append('paymentMethod', paymentMethod);
             
             fetch(API_URL, {
                 method: 'POST',
@@ -630,11 +1306,22 @@
                 body: params
             })
             .then(() => {
+                let message = editingOrderId ? 'تم تحديث بيانات الطلب بنجاح' : 'تم تسجيل الطلب الجديد';
+                
+                if (!editingOrderId && currentCustomer) {
+                    if (currentCustomer.totalOrders > 1) {
+                        message += ' - تم تحديث بيانات العميل القديم';
+                    } else {
+                        message += ' - تم إنشاء عميل جديد';
+                    }
+                }
+                
                 Swal.fire({
                     icon: 'success', 
                     title: editingOrderId ? 'تم التحديث' : 'تم الإرسال',
-                    text: editingOrderId ? 'تم تحديث بيانات الطلب بنجاح' : 'تم تسجيل الطلب الجديد',
-                    background: '#222', color: '#fff'
+                    text: message,
+                    background: '#222', 
+                    color: '#fff'
                 });
                 
                 cart = {};
@@ -643,21 +1330,27 @@
                 closeCheckout();
                 
                 editingOrderId = null;
-                paymentMethod = null; // إعادة تعيين طريقة الدفع
+                currentCustomer = null;
+                paymentMethod = null;
                 document.getElementById('edit-mode-badge').style.display = 'none';
+                hideCustomerNotification();
                 
                 document.getElementById('c-type').value = "";
                 document.getElementById('c-phone').value = "";
                 document.getElementById('c-loc').value = "";
                 document.getElementById('c-details').value = "";
                 document.getElementById('c-notes').value = "";
-                // إعادة تعيين أزرار طريقة الدفع
                 document.getElementById('btn-cash').classList.remove('active');
                 document.getElementById('btn-link').classList.remove('active');
                 setDeliveryMode('now');
                 
                 btn.innerText = "إرسال للمطبخ 🚀"; 
                 btn.disabled = false;
+                
+                setTimeout(() => {
+                    loadSentOrders();
+                    loadCustomers();
+                }, 1000);
             })
             .catch(err => {
                 alert("فشل العملية: " + err);
@@ -668,15 +1361,11 @@
 
         init();
         
-        // **وظيفة جديدة للتحكم بمدخلات رقم الهاتف (8 أرقام فقط)**
         document.addEventListener('DOMContentLoaded', () => {
             const phoneInput = document.getElementById('c-phone');
             if (phoneInput) {
                 phoneInput.oninput = function() {
-                    // تصفية جميع الأحرف غير الرقمية
                     this.value = this.value.replace(/[^0-9]/g, '');
-                    
-                    // تقييد الطول بـ 8 خانات
                     if (this.value.length > 8) {
                         this.value = this.value.slice(0, 8);
                     }
