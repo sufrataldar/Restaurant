@@ -20,6 +20,10 @@
             --danger: #ff4444;
             --old-customer: #ff9800;
             --new-customer: #4CAF50;
+            --notification-received: #33b5e5;
+            --notification-updated: #aa00ff;
+            --notification-cancelled: #ff4444;
+            --notification-unread: #ff4444;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Cairo', sans-serif; background-color: var(--dark); color: var(--text); margin: 0; padding-bottom: 100px; }
@@ -27,6 +31,301 @@
         .app-header { position: sticky; top: 0; background: rgba(18, 18, 18, 0.95); padding: 10px 15px; z-index: 100; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
         .logo { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 800; color: #fff; }
         .logo img { height: 45px; width: 45px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
+
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .notification-bell:hover {
+            background: rgba(255, 102, 0, 0.1);
+            transform: scale(1.1);
+        }
+        
+        .notification-bell.active {
+            color: var(--primary);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--notification-unread);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 2px solid var(--dark);
+            box-shadow: 0 0 5px rgba(255, 68, 68, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        .notification-dropdown {
+            position: fixed;
+            top: 60px;
+            right: 15px;
+            width: 400px;
+            max-height: 500px;
+            background: var(--dark);
+            border: 1px solid #333;
+            border-radius: 10px;
+            z-index: 1002;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+        
+        .notification-dropdown.show {
+            display: flex;
+        }
+        
+        .notification-header {
+            padding: 15px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .notification-header h3 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .notification-clear {
+            background: transparent;
+            border: 1px solid #333;
+            color: #888;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+        
+        .notification-clear:hover {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+        
+        .notification-list {
+            flex: 1;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        
+        .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        
+        .notification-item:hover {
+            background: #1a1a1a;
+        }
+        
+        .notification-item.unread {
+            background: rgba(255, 68, 68, 0.05);
+            border-right: 3px solid var(--notification-unread);
+        }
+        
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .notification-icon.received {
+            background: rgba(51, 181, 229, 0.2);
+            color: var(--notification-received);
+        }
+        
+        .notification-icon.updated {
+            background: rgba(170, 0, 255, 0.2);
+            color: var(--notification-updated);
+        }
+        
+        .notification-icon.cancelled {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--notification-cancelled);
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+        
+        .notification-time {
+            color: #888;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .notification-message {
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .notification-footer {
+            padding: 10px 15px;
+            background: #1a1a1a;
+            border-top: 1px solid #333;
+            text-align: center;
+        }
+        
+        .notification-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .notification-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .notification-empty {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+        
+        .notification-empty i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+        
+        .permission-request {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 20px;
+            z-index: 2000;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(255, 102, 0, 0.3);
+            display: none;
+            animation: slideDown 0.5s ease;
+        }
+        
+        .permission-request.show {
+            display: block;
+        }
+        
+        .permission-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .permission-body {
+            margin-bottom: 20px;
+            color: #ccc;
+            line-height: 1.5;
+        }
+        
+        .permission-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .permission-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Cairo';
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        
+        .permission-btn.allow {
+            background: var(--primary);
+            color: #000;
+        }
+        
+        .permission-btn.allow:hover {
+            background: #ff8c00;
+        }
+        
+        .permission-btn.deny {
+            background: #333;
+            color: #ccc;
+            border: 1px solid #444;
+        }
+        
+        .permission-btn.deny:hover {
+            background: #444;
+        }
+        
+        .permission-steps {
+            background: rgba(255, 102, 0, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+        
+        .permission-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .permission-step:last-child {
+            margin-bottom: 0;
+        }
+        
+        .step-number {
+            background: var(--primary);
+            color: #000;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
 
         .tabs { display: flex; background: #1e1e1e; margin: 10px; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
         .tab-btn { flex: 1; padding: 12px; background: transparent; border: none; color: #888; font-family: 'Cairo'; font-weight: bold; cursor: pointer; transition: 0.3s; }
@@ -64,6 +363,10 @@
         }
         .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--primary); }
         .input-group textarea { resize: vertical; min-height: 80px; }
+        
+        .required-field { border: 2px solid var(--danger) !important; }
+        .field-error { color: var(--danger); font-size: 0.85rem; margin-top: 5px; display: none; }
+        .field-error.show { display: block; }
 
         .time-selector { display: flex; gap: 10px; margin-bottom: 10px; }
         .time-btn { flex: 1; padding: 15px; background: #2a2a2a; border: 1px solid #333; color: #fff; border-radius: 10px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;}
@@ -84,6 +387,7 @@
         .bill-summary { background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
         .bill-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
         .send-btn { width: 100%; padding: 18px; background: var(--primary); color: #000; font-weight: 900; border: none; border-radius: 15px; cursor: pointer; font-size: 1.1rem; }
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .sent-orders-list { padding: 10px; }
         .sent-order-card { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 15px; margin-bottom: 15px; position: relative; }
@@ -106,7 +410,6 @@
         }
         .edit-badge { background: var(--primary); color: black; padding: 5px 10px; border-radius: 5px; font-weight: bold; display:none; margin-bottom: 10px; text-align: center;}
         
-        /* أنماط مخصصة لرقم الهاتف */
         .phone-input-container {
             display: flex;
             align-items: center;
@@ -143,7 +446,6 @@
             border-color: transparent; 
         }
         
-        /* إشعار العميل المحسن */
         .customer-notification {
             background: rgba(255, 152, 0, 0.15);
             border: 2px solid var(--old-customer);
@@ -306,7 +608,6 @@
             100% { opacity: 1; }
         }
         
-        /* أنماط التبويب الجديد للعملاء */
         .customer-card {
             background: var(--card);
             border-radius: 10px;
@@ -357,7 +658,6 @@
             color: #aaa;
         }
         
-        /* زر إغلاق الإشعار */
         .close-notification-btn {
             background: none;
             border: none;
@@ -370,16 +670,433 @@
         .close-notification-btn:hover {
             color: #fff;
         }
+        
+        .admin-notification-container {
+            position: fixed;
+            top: 80px;
+            right: 15px;
+            width: 350px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        
+        .admin-notification {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            border-left: 5px solid var(--primary);
+            animation: slideInRight 0.3s ease forwards;
+            opacity: 0;
+            transform: translateX(100px);
+            pointer-events: auto;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .admin-notification.received {
+            border-left-color: var(--notification-received);
+            background: linear-gradient(135deg, #1e1e1e 0%, #1a2b3c 100%);
+        }
+        
+        .admin-notification.updated {
+            border-left-color: var(--notification-updated);
+            background: linear-gradient(135deg, #1e1e1e 0%, #2a1b3c 100%);
+        }
+        
+        .admin-notification.cancelled {
+            border-left-color: var(--notification-cancelled);
+            background: linear-gradient(135deg, #1e1e1e 0%, #3c1b1b 100%);
+        }
+        
+        .admin-notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .admin-notification-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .admin-notification-time {
+            font-size: 0.8rem;
+            color: #888;
+        }
+        
+        .admin-notification-body {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        .close-admin-notification {
+            background: none;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 5px;
+        }
+        
+        .admin-notification-progress {
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .admin-notification-progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 100%;
+            transition: width 0.1s linear;
+        }
+        
+        .admin-notification.received .admin-notification-progress-bar {
+            background: var(--notification-received);
+        }
+        
+        .admin-notification.updated .admin-notification-progress-bar {
+            background: var(--notification-updated);
+        }
+        
+        .admin-notification.cancelled .admin-notification-progress-bar {
+            background: var(--notification-cancelled);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .admin-notification.removing {
+            animation: slideOutRight 0.3s ease forwards;
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+        
+        .notification-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1001;
+            display: none;
+        }
+        
+        .notification-overlay.show {
+            display: block;
+        }
+        
+        /* نظام الملاحظات الجديد */
+        .notes-section {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+        }
+        
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .notes-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .add-note-btn {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Cairo';
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        
+        .add-note-btn:hover {
+            background: #ff8c00;
+            transform: translateY(-2px);
+        }
+        
+        .notes-container {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        
+        .notes-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .note-item {
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .note-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .note-content {
+            flex: 1;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .note-content::before {
+            content: "•";
+            color: var(--primary);
+            font-size: 1.5rem;
+            position: absolute;
+            right: -15px;
+            top: 0;
+        }
+        
+        .note-text {
+            color: #fff;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+        
+        .note-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        
+        .note-btn {
+            background: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 5px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+        
+        .note-btn.edit:hover {
+            color: var(--primary);
+            background: rgba(255, 102, 0, 0.1);
+        }
+        
+        .note-btn.delete:hover {
+            color: var(--danger);
+            background: rgba(255, 68, 68, 0.1);
+        }
+        
+        .empty-notes {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .empty-notes i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+        
+        .note-input-container {
+            display: none;
+            margin-top: 15px;
+            animation: slideDown 0.3s ease;
+        }
+        
+        .note-input-container.show {
+            display: block;
+        }
+        
+        .note-input-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .note-input {
+            flex: 1;
+            padding: 12px;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Cairo';
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .note-input:focus {
+            border-color: var(--primary);
+        }
+        
+        .note-save-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo';
+            font-weight: bold;
+            transition: 0.3s;
+            min-width: 80px;
+        }
+        
+        .note-save-btn:hover {
+            background: #00a842;
+            transform: translateY(-2px);
+        }
+        
+        .note-cancel-btn {
+            background: #333;
+            color: #ccc;
+            border: 1px solid #444;
+            padding: 0 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo';
+            transition: 0.3s;
+        }
+        
+        .note-cancel-btn:hover {
+            background: #444;
+            color: #fff;
+        }
+        
+        .notes-count {
+            background: var(--primary);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
 
+    <div class="notification-overlay" id="notification-overlay" onclick="closeNotificationDropdown()"></div>
+
+    <div class="permission-request" id="permission-request">
+        <div class="permission-header">
+            <i class="fas fa-bell fa-2x"></i>
+            <h3 style="margin: 0;">تفعيل الإشعارات</h3>
+        </div>
+        <div class="permission-body">
+            للحصول على أفضل تجربة مع نظام سفرة الدار، يرجى السماح بالإشعارات لتتمكن من:
+            <ul style="margin: 10px 0; padding-right: 20px;">
+                <li>استقبال إشعارات الطلبات الجديدة مباشرة</li>
+                <li>تلقي تنبيهات بالمطبخ فور استلام الطلبات</li>
+                <li>الحصول على إشعارات عند إلغاء الطلبات</li>
+            </ul>
+        </div>
+        
+        <div class="permission-steps">
+            <div class="permission-step">
+                <div class="step-number">1</div>
+                <div>انقر على زر "السماح بالإشعارات"</div>
+            </div>
+            <div class="permission-step">
+                <div class="step-number">2</div>
+                <div>في النافذة المنبثقة، اختر "السماح" أو "Allow"</div>
+            </div>
+            <div class="permission-step">
+                <div class="step-number">3</div>
+                <div>في حالة الآيفون، انتقل إلى الإعدادات → سفرة الدار → الإشعارات → تفعيل الإشعارات</div>
+            </div>
+        </div>
+        
+        <div class="permission-actions">
+            <button class="permission-btn deny" onclick="denyPermission()">لاحقاً</button>
+            <button class="permission-btn allow" onclick="requestNotificationPermission()">السماح بالإشعارات</button>
+        </div>
+    </div>
+
     <div class="app-header">
         <div class="logo">
             <img src="https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg" alt="Logo">
-            <span>سفرة الدار | نظام العملاء</span>
+            <span>سفرة الدار | Admin</span>
+        </div>
+        <div class="header-right">
+            <div class="notification-bell" id="notification-bell" onclick="toggleNotificationDropdown(event)">
+                <i class="fas fa-bell" style="font-size: 1.2rem;"></i>
+                <span class="notification-badge" id="notification-count" style="display: none;">0</span>
+            </div>
         </div>
     </div>
+
+    <div class="notification-dropdown" id="notification-dropdown">
+        <div class="notification-header">
+            <h3>الإشعارات</h3>
+            <button class="notification-clear" onclick="clearAllNotifications()">مسح الكل</button>
+        </div>
+        <div class="notification-list" id="notification-list">
+            <div class="notification-empty">
+                <i class="far fa-bell-slash"></i>
+                <p>لا توجد إشعارات جديدة</p>
+            </div>
+        </div>
+        <div class="notification-footer">
+            <a href="javascript:void(0)" onclick="refreshNotifications()">تحديث الإشعارات</a>
+        </div>
+    </div>
+
+    <div class="admin-notification-container" id="admin-notification-container"></div>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('new')">طلب جديد</button>
@@ -390,7 +1107,6 @@
     <div id="tab-new" class="tab-content active">
         <div class="edit-badge" id="edit-mode-badge">⚠️ أنت الآن تقوم بتعديل الطلب رقم <span id="editing-id-display"></span></div>
         
-        <!-- إشعار العميل المحسن -->
         <div class="customer-notification" id="customer-notification">
             <i class="fas fa-user-circle customer-icon old-customer-icon" id="customer-main-icon"></i>
             <div class="customer-notification-header">
@@ -439,12 +1155,13 @@
             <div class="bill-summary" id="bill-details"></div>
             
             <div class="input-group">
-                <label for="c-type">نوع العميل</label>
-                <select id="c-type">
+                <label for="c-type">نوع العميل *</label>
+                <select id="c-type" onchange="removeFieldError('c-type')">
                     <option value="" disabled selected>اختر النوع (Old/New)</option>
                     <option value="Old CX">Old CX</option>
                     <option value="New CX">New CX</option>
                 </select>
+                <div class="field-error" id="c-type-error">يجب اختيار نوع العميل</div>
             </div>
 
             <div class="input-group">
@@ -466,20 +1183,23 @@
                         <i class="fas fa-link"></i> Link
                     </button>
                 </div>
+                <div class="field-error" id="payment-error">يجب اختيار طريقة الدفع</div>
             </div>
             
             <div class="input-group">
-                <label for="c-phone">رقم الهاتف (8 أرقام)</label>
+                <label for="c-phone">رقم الهاتف (8 أرقام) *</label>
                 <div class="phone-input-container"> 
                     <span class="country-code">+965</span>
-                    <input type="tel" id="c-phone" placeholder="مثال: 60000000" oninput="checkCustomerByPhone()">
+                    <input type="tel" id="c-phone" placeholder="مثال: 60000000" oninput="checkCustomerByPhone()" onchange="removeFieldError('c-phone')">
                 </div>
+                <div class="field-error" id="c-phone-error">يجب إدخال رقم هاتف صحيح مكون من 8 أرقام</div>
                 <small style="color:#666; margin-top:5px; display:block;">سيتم البحث عن العميل تلقائياً عند إدخال الرقم</small>
             </div>
             
             <div class="input-group">
-                <label for="c-loc">رابط الموقع (Location Link)</label>
-                <input type="text" id="c-loc" dir="ltr" placeholder="https://maps.google.com/...">
+                <label for="c-loc">رابط الموقع (Location Link) *</label>
+                <input type="text" id="c-loc" dir="ltr" placeholder="https://maps.google.com/..." onchange="removeFieldError('c-loc')">
+                <div class="field-error" id="c-loc-error">رابط الموقع حقل إجباري. الرجاء إدخال رابط الموقع</div>
             </div>
 
             <div class="input-group">
@@ -487,19 +1207,56 @@
                 <input type="text" id="c-details" placeholder="قطعة، شارع، منزل...">
             </div>
 
-            <div class="input-group">
-                <label for="c-notes">ملاحظات إضافية (اختياري)</label>
-                <textarea id="c-notes" rows="3" placeholder="بدون بصل، كثر صوص..."></textarea>
+            <!-- نظام الملاحظات الجديد -->
+            <div class="notes-section" id="notes-section">
+                <div class="notes-header">
+                    <div class="notes-title">
+                        <i class="fas fa-sticky-note"></i>
+                        الملاحظات (اختياري)
+                        <span class="notes-count" id="notes-count">0</span>
+                    </div>
+                    <button class="add-note-btn" id="add-note-btn" onclick="toggleNoteInput()">
+                        <i class="fas fa-plus"></i> إضافة ملاحظة
+                    </button>
+                </div>
+                
+                <div class="notes-container" id="notes-container">
+                    <div class="empty-notes" id="empty-notes">
+                        <i class="far fa-sticky-note"></i>
+                        <p>لا توجد ملاحظات مضافة</p>
+                    </div>
+                    <ul class="notes-list" id="notes-list"></ul>
+                </div>
+                
+                <div class="note-input-container" id="note-input-container">
+                    <div class="note-input-wrapper">
+                        <input type="text" class="note-input" id="note-input" placeholder="اكتب الملاحظة هنا (مثال: بدون بصل، صوص إضافي، هدية...)" maxlength="200">
+                        <button class="note-save-btn" onclick="saveNote()">حفظ</button>
+                        <button class="note-cancel-btn" onclick="cancelNote()">إلغاء</button>
+                    </div>
+                    <small style="color:#666; margin-top:5px; display:block; text-align:center;">ستظهر الملاحظات على شكل نقاط في المطبخ</small>
+                </div>
             </div>
             
-            <button class="send-btn" onclick="submitOrder()">إرسال للمطبخ 🚀</button>
+            <button class="send-btn" onclick="validateAndSubmitOrder()">إرسال للمطبخ 🚀</button>
         </div>
     </div>
 
+    <audio id="admin-notification-sound-received" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="admin-notification-sound-updated" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2864/2864-preview.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="admin-notification-sound-cancelled" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/954/954-preview.mp3" type="audio/mpeg">
+    </audio>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // استخدم رابط Google Apps Script الخاص بك هنا
-        const API_URL = 'https://script.google.com/macros/s/AKfycbw5sY1ZMub1RgQ_c_bIJSNEUOi_z5T-rcI8Hi_-nTSsD9KFvbihvdmxexh0atq77OkJ/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyODqeHSPLtkn_Q-uPqawQxnw1oi3XCx-Sn-s-J8uxxy5qjBdHUmuSLEGCpuln51Vcq/exec';
         
         const menuData = {
             "اللحم العربي": [ 
@@ -541,10 +1298,10 @@
                 {id: 63, name: "مقلوبة دجاج (صواني)", price: 15.000}
             ],
             "الصواني (لحم)": [
-                {id: 64, name: "مجبوس لحم استرالي (صواني)", price: 18.000}, {id: 65, name: "مجبوس لحم نعيمي (صواني)", price: 25.000},
-                {id: 66, name: "برياني لحم استرالي (صواني)", price: 20.000}, {id: 67, name: "برياني لحم نعيمي (صواني)", price: 25.000},
+                {id: 64, name: "مجبوس لحم استرالي (صواني)", price: 18.000}, {id: 65, name: "مجبوس لحم نعيمي (صوانi)", price: 25.000},
+                {id: 66, name: "برياني لحم استرالي (صواني)", price: 20.000}, {id: 67, name: "برياني لحم نعيمي (صوانi)", price: 25.000},
                 {id: 68, name: "مقلوبة لحم استرالي (صواني)", price: 20.000}, {id: 69, name: "مقلوبة لحم نعيمي (صواني)", price: 25.000},
-                {id: 70, name: "مشوي جدر لحم استرالي (صواني)", price: 20.000}, {id: 71, name: "مشوي جدر لحم نعيمي (صواني)", price: 25.000},
+                {id: 70, name: "مشوي جدر لحم استرالي (صواني)", price: 20.000}, {id: 71, name: "مشوي جدر لحم نعيمي (صوانi)", price: 25.000},
                 {id: 72, name: "بريه لحم نعيمي (صواني)", price: 25.000}, {id: 73, name: "برياني لحم سفرة الدار استرالي (صواني)", price: 20.000},
                 {id: 74, name: "برياني لحم سفرة الدار نعيمي (صواني)", price: 25.000}, {id: 75, name: "شبزي استرالي (صواني)", price: 21.500},
                 {id: 76, name: "شبزي نعيمي (صواني)", price: 26.500}
@@ -561,7 +1318,7 @@
                 {id: 31, name: "مموش ربيان", price: 4.500}, {id: 32, name: "مطبق سيباس", price: 6.500} 
             ],
             "السلطات": [ 
-                {id: 33, name: "سلطة خضراء", price: 0.750}, {id: 34, name: "سلطة جرجير رمان", price: 1.000}, 
+                {id: 33, name: "سلطة خضراء", price: 0.750}, {id: 34, name: "سلطة ججرير رمان", price: 1.000}, 
                 {id: 35, name: "ورق عنب", price: 1.500}, {id: 36, name: "روب وخيار", price: 0.750}, 
                 {id: 37, name: "تبولة", price: 1.000}, {id: 38, name: "فتوش", price: 1.000},
                 {id: 86, name: "روب", price: 0.200}
@@ -583,6 +1340,17 @@
         let editingOrderId = null;
         let currentCustomer = null;
         let customerNotificationTimeout = null;
+        let adminNotifications = [];
+        let notificationInterval = null;
+        let isNotificationPollingActive = false;
+        let lastPollTime = 0;
+        let notificationsList = [];
+        let notificationPermission = null;
+        let serviceWorkerRegistration = null;
+        
+        // نظام الملاحظات الجديد
+        let notesList = [];
+        let editingNoteIndex = -1;
 
         function init() {
             const catContainer = document.getElementById('category-container');
@@ -600,6 +1368,759 @@
                 if(isFirst) renderMenu(cat);
                 isFirst = false;
             }
+            
+            // بدء نظام استطلاع الإشعارات
+            startNotificationPolling();
+            
+            // تهيئة الأصوات
+            initNotificationSounds();
+            
+            // فحص صلاحيات الإشعارات
+            checkNotificationPermission();
+            
+            // محاولة تسجيل Service Worker
+            registerServiceWorker();
+            
+            // تحميل الإشعارات المخزنة محلياً
+            loadStoredNotifications();
+            
+            // تحديث عرض الإشعارات
+            updateNotificationDisplay();
+        }
+
+        // === نظام الملاحظات الجديد ===
+        function toggleNoteInput() {
+            const inputContainer = document.getElementById('note-input-container');
+            const noteInput = document.getElementById('note-input');
+            
+            if (inputContainer.classList.contains('show')) {
+                inputContainer.classList.remove('show');
+                noteInput.value = '';
+                editingNoteIndex = -1;
+            } else {
+                inputContainer.classList.add('show');
+                noteInput.focus();
+            }
+        }
+
+        function saveNote() {
+            const noteInput = document.getElementById('note-input');
+            const noteText = noteInput.value.trim();
+            
+            if (!noteText) {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-start',
+                    icon: 'warning',
+                    title: 'الملاحظة فارغة',
+                    text: 'يرجى كتابة ملاحظة قبل الحفظ',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    background: '#222',
+                    color: '#fff'
+                });
+                return;
+            }
+            
+            if (editingNoteIndex > -1) {
+                // تعديل ملاحظة موجودة
+                notesList[editingNoteIndex] = noteText;
+                Swal.fire({
+                    toast: true,
+                    position: 'top-start',
+                    icon: 'success',
+                    title: 'تم تعديل الملاحظة',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    background: '#222',
+                    color: '#fff'
+                });
+            } else {
+                // إضافة ملاحظة جديدة
+                notesList.push(noteText);
+                Swal.fire({
+                    toast: true,
+                    position: 'top-start',
+                    icon: 'success',
+                    title: 'تم إضافة الملاحظة',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    background: '#222',
+                    color: '#fff'
+                });
+            }
+            
+            // تحديث العرض
+            renderNotes();
+            
+            // إعادة الضبط
+            noteInput.value = '';
+            editingNoteIndex = -1;
+            document.getElementById('note-input-container').classList.remove('show');
+        }
+
+        function cancelNote() {
+            const noteInput = document.getElementById('note-input');
+            noteInput.value = '';
+            editingNoteIndex = -1;
+            document.getElementById('note-input-container').classList.remove('show');
+        }
+
+        function editNote(index) {
+            const noteInput = document.getElementById('note-input');
+            noteInput.value = notesList[index];
+            editingNoteIndex = index;
+            document.getElementById('note-input-container').classList.add('show');
+            noteInput.focus();
+        }
+
+        function deleteNote(index) {
+            Swal.fire({
+                title: 'حذف الملاحظة',
+                text: 'هل أنت متأكد من حذف هذه الملاحظة؟',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff4444',
+                cancelButtonColor: '#33b5e5',
+                confirmButtonText: 'نعم، احذف',
+                cancelButtonText: 'إلغاء',
+                background: '#222',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    notesList.splice(index, 1);
+                    renderNotes();
+                    
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-start',
+                        icon: 'success',
+                        title: 'تم حذف الملاحظة',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        background: '#222',
+                        color: '#fff'
+                    });
+                }
+            });
+        }
+
+        function renderNotes() {
+            const notesListElement = document.getElementById('notes-list');
+            const emptyNotesElement = document.getElementById('empty-notes');
+            const notesCountElement = document.getElementById('notes-count');
+            
+            // تحديث العداد
+            notesCountElement.textContent = notesList.length;
+            
+            if (notesList.length === 0) {
+                emptyNotesElement.style.display = 'block';
+                notesListElement.innerHTML = '';
+                return;
+            }
+            
+            emptyNotesElement.style.display = 'none';
+            
+            let html = '';
+            notesList.forEach((note, index) => {
+                html += `
+                    <li class="note-item">
+                        <div class="note-content">
+                            <div class="note-text">${note}</div>
+                        </div>
+                        <div class="note-actions">
+                            <button class="note-btn edit" onclick="editNote(${index})" title="تعديل">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="note-btn delete" onclick="deleteNote(${index})" title="حذف">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </li>
+                `;
+            });
+            
+            notesListElement.innerHTML = html;
+        }
+
+        function clearNotes() {
+            notesList = [];
+            renderNotes();
+            editingNoteIndex = -1;
+            document.getElementById('note-input-container').classList.remove('show');
+            document.getElementById('note-input').value = '';
+        }
+
+        function checkNotificationPermission() {
+            if ('Notification' in window) {
+                notificationPermission = Notification.permission;
+                
+                if (notificationPermission === 'default') {
+                    // إظهار طلب السماح بالإشعارات بعد 3 ثوانٍ
+                    setTimeout(() => {
+                        showPermissionRequest();
+                    }, 3000);
+                } else if (notificationPermission === 'granted') {
+                    console.log('صلاحية الإشعارات مفعلة بالفعل');
+                } else {
+                    console.log('تم رفض صلاحية الإشعارات');
+                }
+            } else {
+                console.log('المتصفح لا يدعم إشعارات سطح المكتب');
+            }
+        }
+
+        function showPermissionRequest() {
+            const permissionRequest = document.getElementById('permission-request');
+            permissionRequest.classList.add('show');
+        }
+
+        function hidePermissionRequest() {
+            const permissionRequest = document.getElementById('permission-request');
+            permissionRequest.classList.remove('show');
+        }
+
+        function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission().then((permission) => {
+                    notificationPermission = permission;
+                    
+                    if (permission === 'granted') {
+                        console.log('تم السماح بالإشعارات');
+                        showNotification('تم تفعيل الإشعارات', 'سوف تتلقى إشعارات الطلبات الجديدة مباشرة على هاتفك.');
+                        hidePermissionRequest();
+                        
+                        // محاولة تسجيل Service Worker مرة أخرى
+                        registerServiceWorker();
+                    } else if (permission === 'denied') {
+                        console.log('تم رفض الإشعارات');
+                        hidePermissionRequest();
+                        showPermissionInstructions();
+                    }
+                });
+            }
+        }
+
+        function denyPermission() {
+            hidePermissionRequest();
+            notificationPermission = 'denied';
+            localStorage.setItem('notification_permission_denied', 'true');
+        }
+
+        function showPermissionInstructions() {
+            Swal.fire({
+                title: 'تعليمات تفعيل الإشعارات',
+                html: `
+                    <div style="text-align: right;">
+                        <p><strong>لتفعيل الإشعارات لاحقاً:</strong></p>
+                        <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin: 10px 0; text-align: right;">
+                            <p><strong>في الآيفون:</strong></p>
+                            <p>1. انتقل إلى الإعدادات → سفرة الدار</p>
+                            <p>2. اضغط على "الإشعارات"</p>
+                            <p>3. فعّل "السماح بالإشعارات"</p>
+                            <p>4. فعّل "الأصوات" و"العناصر المنبثقة"</p>
+                        </div>
+                        <p>يمكنك طلب السماح بالإشعارات مرة أخرى من خلال زر الجرس أعلى الشاشة</p>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: 'حسناً',
+                background: '#222',
+                color: '#fff'
+            });
+        }
+
+        async function registerServiceWorker() {
+            if ('serviceWorker' in navigator && 'PushManager' in window) {
+                try {
+                    const registration = await navigator.serviceWorker.register('/service-worker.js');
+                    serviceWorkerRegistration = registration;
+                    console.log('Service Worker registered successfully');
+                    
+                    // Subscribe to push notifications
+                    await subscribeToPushNotifications(registration);
+                    
+                } catch (error) {
+                    console.log('Service Worker registration failed:', error);
+                }
+            } else {
+                console.log('Push notifications are not supported');
+            }
+        }
+
+        async function subscribeToPushNotifications(registration) {
+            try {
+                const subscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array('BOJp7YhFZRYCMQtJh8RY9iE9pp4m_H71NZMucxqDIZmSNAg78Jch_XxPO2UCS-Sm63owJ-43APh5D7ND8AjTBNQ')
+                });
+                
+                console.log('Subscribed to push notifications');
+                // Here you would send the subscription to your server
+                // await sendSubscriptionToServer(subscription);
+                
+            } catch (error) {
+                console.log('Failed to subscribe to push notifications:', error);
+            }
+        }
+
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding)
+                .replace(/\-/g, '+')
+                .replace(/_/g, '/');
+            
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            
+            return outputArray;
+        }
+
+        function toggleNotificationDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('notification-dropdown');
+            const overlay = document.getElementById('notification-overlay');
+            
+            if (dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+                overlay.classList.remove('show');
+            } else {
+                dropdown.classList.add('show');
+                overlay.classList.add('show');
+                refreshNotifications();
+            }
+        }
+
+        function closeNotificationDropdown() {
+            const dropdown = document.getElementById('notification-dropdown');
+            const overlay = document.getElementById('notification-overlay');
+            dropdown.classList.remove('show');
+            overlay.classList.remove('show');
+        }
+
+        function refreshNotifications() {
+            // جلب الإشعارات من التخزين المحلي
+            loadStoredNotifications();
+            updateNotificationDisplay();
+        }
+
+        function loadStoredNotifications() {
+            const stored = localStorage.getItem('admin_notifications');
+            if (stored) {
+                notificationsList = JSON.parse(stored);
+            } else {
+                notificationsList = [];
+            }
+        }
+
+        function saveNotifications() {
+            localStorage.setItem('admin_notifications', JSON.stringify(notificationsList));
+            updateNotificationBadge();
+            updateNotificationDisplay();
+        }
+
+        function updateNotificationBadge() {
+            const unreadCount = notificationsList.filter(n => !n.read).length;
+            const badge = document.getElementById('notification-count');
+            
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function updateNotificationDisplay() {
+            const notificationList = document.getElementById('notification-list');
+            
+            if (notificationsList.length === 0) {
+                notificationList.innerHTML = `
+                    <div class="notification-empty">
+                        <i class="far fa-bell-slash"></i>
+                        <p>لا توجد إشعارات جديدة</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            notificationsList.forEach((notification, index) => {
+                const time = new Date(notification.timestamp).toLocaleTimeString('ar-SA', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                const date = new Date(notification.timestamp).toLocaleDateString('ar-SA');
+                
+                let iconClass = 'received';
+                let icon = 'fa-check-circle';
+                let title = 'تم استلام الطلب';
+                
+                if (notification.status === 'Updated') {
+                    iconClass = 'updated';
+                    icon = 'fa-edit';
+                    title = 'تم استلام الطلب المعدل';
+                } else if (notification.status === 'Cancelled') {
+                    iconClass = 'cancelled';
+                    icon = 'fa-times-circle';
+                    title = 'تم استلام إلغاء الطلب';
+                }
+                
+                html += `
+                    <div class="notification-item ${notification.read ? '' : 'unread'}" onclick="markNotificationAsRead(${index})">
+                        <div class="notification-icon ${iconClass}">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">${title}</div>
+                            <div class="notification-message">الطلب رقم <strong>#${notification.orderId}</strong> ${notification.status === 'Updated' ? '(معدل)' : ''} تم استلامه من قبل المطبخ</div>
+                            <div class="notification-time">
+                                <i class="far fa-clock"></i>
+                                ${time} - ${date}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            notificationList.innerHTML = html;
+        }
+
+        function markNotificationAsRead(index) {
+            if (index >= 0 && index < notificationsList.length) {
+                notificationsList[index].read = true;
+                saveNotifications();
+                
+                // إزالة الإشعار من القائمة
+                setTimeout(() => {
+                    const notificationElement = document.querySelector(`.notification-item:nth-child(${index + 1})`);
+                    if (notificationElement) {
+                        notificationElement.classList.remove('unread');
+                    }
+                }, 100);
+            }
+        }
+
+        function clearAllNotifications() {
+            Swal.fire({
+                title: 'مسح جميع الإشعارات',
+                text: 'هل أنت متأكد أنك تريد مسح جميع الإشعارات؟',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff4444',
+                cancelButtonColor: '#33b5e5',
+                confirmButtonText: 'نعم، امسح الكل',
+                cancelButtonText: 'إلغاء',
+                background: '#222',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    notificationsList = [];
+                    saveNotifications();
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'تم المسح',
+                        text: 'تم مسح جميع الإشعارات بنجاح',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        background: '#222',
+                        color: '#fff'
+                    });
+                }
+            });
+        }
+
+        function showNotification(title, body, icon = null) {
+            // إضافة الإشعار إلى القائمة المحلية
+            const newNotification = {
+                id: Date.now(),
+                title: title,
+                body: body,
+                timestamp: Date.now(),
+                read: false
+            };
+            
+            notificationsList.unshift(newNotification);
+            saveNotifications();
+            
+            // عرض إشعار سطح المكتب إذا كان مسموحاً
+            if ('Notification' in window && Notification.permission === 'granted') {
+                const notification = new Notification(title, {
+                    body: body,
+                    icon: icon || 'https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg',
+                    badge: 'https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg',
+                    tag: 'safrat-dar',
+                    requireInteraction: true,
+                    vibrate: [200, 100, 200]
+                });
+                
+                notification.onclick = function() {
+                    window.focus();
+                    this.close();
+                };
+            }
+        }
+
+        function initNotificationSounds() {
+            const sounds = [
+                document.getElementById('admin-notification-sound-received'),
+                document.getElementById('admin-notification-sound-updated'),
+                document.getElementById('admin-notification-sound-cancelled')
+            ];
+            
+            sounds.forEach(sound => {
+                sound.volume = 0.3;
+                // تهيئة الصوت
+                sound.play().then(() => {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }).catch(e => console.log("Sound initialization:", e));
+            });
+        }
+
+        function startNotificationPolling() {
+            if (isNotificationPollingActive) return;
+            
+            isNotificationPollingActive = true;
+            lastPollTime = Date.now();
+            
+            // استطلاع أولي
+            pollForNotifications();
+            
+            // استطلاع كل 3 ثوانٍ
+            notificationInterval = setInterval(pollForNotifications, 3000);
+            
+            console.log("تم تشغيل نظام استطلاع الإشعارات");
+        }
+
+        function stopNotificationPolling() {
+            if (notificationInterval) {
+                clearInterval(notificationInterval);
+                notificationInterval = null;
+            }
+            isNotificationPollingActive = false;
+            console.log("تم إيقاف نظام استطلاع الإشعارات");
+        }
+
+        async function pollForNotifications() {
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'getNotifications');
+                params.append('lastPoll', lastPollTime);
+                
+                const response = await fetch(`${API_URL}?${params.toString()}`);
+                const data = await response.json();
+                
+                if (data.result === 'success' && data.notifications && data.notifications.length > 0) {
+                    console.log('تم استقبال إشعارات جديدة:', data.notifications.length);
+                    
+                    data.notifications.forEach(notification => {
+                        showAdminNotification(notification);
+                        showDesktopNotification(notification);
+                    });
+                    
+                    lastPollTime = Date.now();
+                }
+                
+            } catch (error) {
+                console.error('خطأ في استطلاع الإشعارات:', error);
+            }
+        }
+
+        function showAdminNotification(notification) {
+            const container = document.getElementById('admin-notification-container');
+            const notificationId = 'notification-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            
+            let notificationType = 'received';
+            let notificationTitle = 'تم استلام الطلب';
+            let notificationIcon = 'fas fa-check-circle';
+            let notificationMessage = `الطلب رقم <strong>#${notification.orderId}</strong> تم استلامه من قبل المطبخ`;
+            
+            if (notification.status === 'Updated') {
+                notificationType = 'updated';
+                notificationTitle = 'تم استلام الطلب المعدل';
+                notificationIcon = 'fas fa-edit';
+                notificationMessage = `الطلب رقم <strong>#${notification.orderId}</strong> (معدل) تم استلامه من قبل المطبخ`;
+            } else if (notification.status === 'Cancelled') {
+                notificationType = 'cancelled';
+                notificationTitle = 'تم استلام إلغاء الطلب';
+                notificationIcon = 'fas fa-times-circle';
+                notificationMessage = `تم استلام إلغاء الطلب رقم <strong>#${notification.orderId}</strong> من قبل المطبخ`;
+            }
+            
+            const currentTime = new Date().toLocaleTimeString('ar-SA', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const notificationElement = document.createElement('div');
+            notificationElement.className = `admin-notification ${notificationType}`;
+            notificationElement.id = notificationId;
+            
+            notificationElement.innerHTML = `
+                <div class="admin-notification-header">
+                    <div class="admin-notification-title">
+                        <i class="${notificationIcon}"></i>
+                        ${notificationTitle}
+                    </div>
+                    <div class="admin-notification-time">${currentTime}</div>
+                </div>
+                <div class="admin-notification-body">
+                    ${notificationMessage}
+                </div>
+                <div class="admin-notification-progress">
+                    <div class="admin-notification-progress-bar" id="progress-${notificationId}"></div>
+                </div>
+            `;
+            
+            // إضافة زر الإغلاق
+            const closeButton = document.createElement('button');
+            closeButton.className = 'close-admin-notification';
+            closeButton.innerHTML = '<i class="fas fa-times"></i>';
+            closeButton.onclick = () => removeNotification(notificationId);
+            
+            notificationElement.querySelector('.admin-notification-header').appendChild(closeButton);
+            
+            container.appendChild(notificationElement);
+            
+            // تشغيل الصوت المناسب
+            playNotificationSound(notificationType);
+            
+            // تحديث عداد الإشعارات
+            updateNotificationBadge();
+            
+            // بدء مؤقت التقدم
+            startProgressBar(notificationId);
+            
+            // إضافة إلى قائمة الإشعارات
+            adminNotifications.push({
+                id: notificationId,
+                element: notificationElement,
+                timeout: null
+            });
+            
+            // إعداد الإزالة التلقائية بعد 5 ثوانٍ
+            const removeTimeout = setTimeout(() => {
+                removeNotification(notificationId);
+            }, 5000);
+            
+            // حفظ المؤقت للإزالة اليدوية
+            const notificationIndex = adminNotifications.findIndex(n => n.id === notificationId);
+            if (notificationIndex !== -1) {
+                adminNotifications[notificationIndex].timeout = removeTimeout;
+            }
+        }
+
+        function showDesktopNotification(notification) {
+            let title = 'تم استلام الطلب';
+            let body = `الطلب رقم #${notification.orderId} تم استلامه من قبل المطبخ`;
+            
+            if (notification.status === 'Updated') {
+                title = 'تم استلام الطلب المعدل';
+                body = `الطلب رقم #${notification.orderId} (معدل) تم استلامه من قبل المطبخ`;
+            } else if (notification.status === 'Cancelled') {
+                title = 'تم استلام إلغاء الطلب';
+                body = `تم استلام إلغاء الطلب رقم #${notification.orderId} من قبل المطبخ`;
+            }
+            
+            // إضافة الإشعار إلى القائمة المحلية
+            notificationsList.unshift({
+                id: Date.now(),
+                orderId: notification.orderId,
+                status: notification.status,
+                title: title,
+                body: body,
+                timestamp: Date.now(),
+                read: false
+            });
+            
+            saveNotifications();
+            
+            // عرض إشعار سطح المكتب إذا كان مسموحاً
+            if ('Notification' in window && Notification.permission === 'granted') {
+                const notificationOptions = {
+                    body: body,
+                    icon: 'https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg',
+                    badge: 'https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg',
+                    tag: 'safrat-dar',
+                    requireInteraction: false,
+                    vibrate: [200, 100, 200]
+                };
+                
+                const desktopNotification = new Notification(title, notificationOptions);
+                
+                desktopNotification.onclick = function() {
+                    window.focus();
+                    this.close();
+                };
+                
+                // تشغيل الصوت
+                playNotificationSound(notification.status.toLowerCase());
+            }
+        }
+
+        function startProgressBar(notificationId) {
+            const progressBar = document.getElementById(`progress-${notificationId}`);
+            if (!progressBar) return;
+            
+            let width = 100;
+            const interval = setInterval(() => {
+                width -= 1;
+                if (width <= 0) {
+                    clearInterval(interval);
+                    return;
+                }
+                progressBar.style.width = width + '%';
+            }, 50);
+        }
+
+        function removeNotification(notificationId) {
+            const notificationElement = document.getElementById(notificationId);
+            if (!notificationElement) return;
+            
+            // إضافة class للإزالة المتحركة
+            notificationElement.classList.add('removing');
+            
+            // إزالة من القائمة
+            const notificationIndex = adminNotifications.findIndex(n => n.id === notificationId);
+            if (notificationIndex !== -1) {
+                if (adminNotifications[notificationIndex].timeout) {
+                    clearTimeout(adminNotifications[notificationIndex].timeout);
+                }
+                adminNotifications.splice(notificationIndex, 1);
+            }
+            
+            // إزالة العنصر بعد انتهاء الحركة
+            setTimeout(() => {
+                notificationElement.remove();
+                updateNotificationBadge();
+            }, 300);
+        }
+
+        function playNotificationSound(type) {
+            let sound;
+            switch(type) {
+                case 'received':
+                    sound = document.getElementById('admin-notification-sound-received');
+                    break;
+                case 'updated':
+                    sound = document.getElementById('admin-notification-sound-updated');
+                    break;
+                case 'cancelled':
+                    sound = document.getElementById('admin-notification-sound-cancelled');
+                    break;
+                default:
+                    return;
+            }
+            
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log("Sound play error:", e));
         }
 
         function renderMenu(category) {
@@ -676,7 +2197,6 @@
             const phoneInput = document.getElementById('c-phone');
             const phone = phoneInput.value.trim();
             
-            // تنظيف الرقم من أي أحرف غير رقمية
             const cleanPhone = phone.replace(/[^0-9]/g, '');
             
             if (cleanPhone.length !== 8) {
@@ -684,34 +2204,26 @@
                 return;
             }
             
-            // تحديث حقل الإدخال بالرقم النظيف
             phoneInput.value = cleanPhone;
             
             if (customerNotificationTimeout) {
                 clearTimeout(customerNotificationTimeout);
             }
             
-            // تقليل وقت التأخير ليكون أسرع
             customerNotificationTimeout = setTimeout(async () => {
                 try {
                     const params = new URLSearchParams();
                     params.append('action', 'findCustomer');
                     params.append('phone', cleanPhone);
                     
-                    console.log('جاري البحث عن العميل برقم:', cleanPhone);
-                    
                     const response = await fetch(`${API_URL}?${params.toString()}`);
                     const result = await response.json();
                     
-                    console.log('نتيجة البحث:', result);
-                    
                     if (result.result === 'success' && result.customer) {
                         currentCustomer = result.customer;
-                        console.log('تم العثور على عميل:', currentCustomer);
                         showCustomerNotification(currentCustomer);
                     } else {
                         currentCustomer = null;
-                        console.log('لم يتم العثور على عميل');
                         showNewCustomerNotification();
                     }
                 } catch (error) {
@@ -719,7 +2231,7 @@
                     currentCustomer = null;
                     hideCustomerNotification();
                 }
-            }, 300); // تقليل وقت التأخير إلى 300 مللي ثانية
+            }, 300);
         }
 
         function showCustomerNotification(customer) {
@@ -731,11 +2243,7 @@
             const mainIcon = document.getElementById('customer-main-icon');
             const customerIcon = document.getElementById('customer-icon');
             
-            console.log('عرض إشعار العميل:', customer);
-            
             const isOldCustomer = customer.totalOrders > 1 || customer.type === 'Old CX';
-            
-            console.log('هل العميل قديم؟', isOldCustomer, 'عدد الطلبات:', customer.totalOrders);
             
             if (isOldCustomer) {
                 notification.className = 'customer-notification old-customer show';
@@ -801,7 +2309,6 @@
                 </div>
             `;
             
-            // إظهار إشعار SweetAlert للعميل القديم
             if (isOldCustomer) {
                 setTimeout(() => {
                     Swal.fire({
@@ -871,17 +2378,14 @@
                 return;
             }
             
-            // تعبئة رابط الموقع
             if (currentCustomer.location) {
                 document.getElementById('c-loc').value = currentCustomer.location;
             }
             
-            // تعبئة تفاصيل العنوان
             if (currentCustomer.addressDetails) {
                 document.getElementById('c-details').value = currentCustomer.addressDetails;
             }
             
-            // تعبئة نوع العميل
             if (currentCustomer.totalOrders > 1) {
                 document.getElementById('c-type').value = 'Old CX';
             } else if (currentCustomer.type) {
@@ -1053,7 +2557,7 @@
             });
         }
 
-        function deleteOrder(order) {
+        async function deleteOrder(order) {
             Swal.fire({
                 title: 'هل أنت متأكد؟',
                 text: `سيتم حذف الطلب رقم #${order.id} نهائياً. لا يمكن التراجع عن هذا الإجراء!`,
@@ -1065,40 +2569,144 @@
                 cancelButtonText: 'إلغاء',
                 background: '#222',
                 color: '#fff'
-            }).then((result) => {
+            }).then(async (result) => {
                 if (result.isConfirmed) {
-                    const params = new URLSearchParams();
-                    params.append('action', 'delete');
-                    params.append('id', order.id);
-                    
-                    fetch(API_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: params
-                    })
-                    .then(() => {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'تم الحذف',
-                            text: `تم حذف الطلب رقم #${order.id} بنجاح`,
-                            background: '#222',
-                            color: '#fff'
+                    try {
+                        const params = new URLSearchParams();
+                        params.append('action', 'delete');
+                        params.append('id', order.id);
+                        
+                        const response = await fetch(API_URL, {
+                            method: 'POST',
+                            headers: { 
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: params
                         });
                         
-                        loadSentOrders();
-                    })
-                    .catch(err => {
+                        const result = await response.json();
+                        
+                        if (result.result === 'success') {
+                            await sendCancelledNotification(order.id);
+                            
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'تم الحذف',
+                                text: `تم حذف الطلب رقم #${order.id} بنجاح`,
+                                background: '#222',
+                                color: '#fff',
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            
+                            loadSentOrders();
+                            
+                            showImmediateNotification({
+                                orderId: order.id,
+                                status: 'Cancelled'
+                            });
+                            
+                        } else {
+                            throw new Error(result.message || 'فشل في حذف الطلب');
+                        }
+                    } catch (err) {
+                        console.error('Error deleting order:', err);
                         Swal.fire({
                             icon: 'error',
                             title: 'خطأ',
-                            text: 'فشل في حذف الطلب: ' + err,
+                            text: 'فشل في حذف الطلب: ' + err.message,
                             background: '#222',
                             color: '#fff'
                         });
-                    });
+                    }
                 }
             });
+        }
+
+        function showImmediateNotification(notification) {
+            const notificationId = 'immediate-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            
+            let notificationType = 'cancelled';
+            let notificationTitle = 'تم حذف الطلب';
+            let notificationIcon = 'fas fa-trash-alt';
+            let notificationMessage = `تم حذف الطلب رقم <strong>#${notification.orderId}</strong> بنجاح`;
+            
+            if (notification.status === 'Updated') {
+                notificationType = 'updated';
+                notificationTitle = 'تم تحديث الطلب';
+                notificationIcon = 'fas fa-edit';
+                notificationMessage = `تم تحديث الطلب رقم <strong>#${notification.orderId}</strong> بنجاح`;
+            }
+            
+            const currentTime = new Date().toLocaleTimeString('ar-SA', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const container = document.getElementById('admin-notification-container');
+            
+            const notificationElement = document.createElement('div');
+            notificationElement.className = `admin-notification ${notificationType}`;
+            notificationElement.id = notificationId;
+            
+            notificationElement.innerHTML = `
+                <div class="admin-notification-header">
+                    <div class="admin-notification-title">
+                        <i class="${notificationIcon}"></i>
+                        ${notificationTitle}
+                    </div>
+                    <div class="admin-notification-time">${currentTime}</div>
+                </div>
+                <div class="admin-notification-body">
+                    ${notificationMessage}
+                </div>
+                <div class="admin-notification-progress">
+                    <div class="admin-notification-progress-bar" id="progress-${notificationId}"></div>
+                </div>
+            `;
+            
+            const closeButton = document.createElement('button');
+            closeButton.className = 'close-admin-notification';
+            closeButton.innerHTML = '<i class="fas fa-times"></i>';
+            closeButton.onclick = () => removeNotification(notificationId);
+            
+            notificationElement.querySelector('.admin-notification-header').appendChild(closeButton);
+            
+            container.appendChild(notificationElement);
+            
+            playNotificationSound(notificationType);
+            updateNotificationBadge();
+            startProgressBar(notificationId);
+            
+            adminNotifications.push({
+                id: notificationId,
+                element: notificationElement,
+                timeout: setTimeout(() => {
+                    removeNotification(notificationId);
+                }, 5000)
+            });
+        }
+
+        async function sendCancelledNotification(orderId) {
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'logNotification');
+                params.append('orderId', orderId);
+                params.append('status', 'Cancelled');
+                params.append('kitchenReceived', 'false');
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params
+                });
+                
+                const result = await response.json();
+                
+                console.log('تم إرسال إشعار الإلغاء للطلب:', orderId, 'النتيجة:', result);
+            } catch (error) {
+                console.error('خطأ في إرسال إشعار الإلغاء:', error);
+            }
         }
 
         function editOrder(order) {
@@ -1146,7 +2754,20 @@
 
             document.getElementById('c-loc').value = order.location;
             document.getElementById('c-details').value = order.details;
-            document.getElementById('c-notes').value = order.notes || "";
+            
+            // تحميل الملاحظات القديمة
+            notesList = [];
+            if (order.notes && order.notes.trim() !== "") {
+                // تحويل الملاحظات القديمة إلى قائمة إذا كانت موجودة
+                if (order.notes.includes('•') || order.notes.includes('-') || order.notes.includes('*')) {
+                    // تحويل النقاط إلى قائمة
+                    const oldNotes = order.notes.split(/[•\-\*]/).filter(note => note.trim() !== "");
+                    notesList = oldNotes.map(note => note.trim());
+                } else {
+                    notesList = [order.notes.trim()];
+                }
+            }
+            renderNotes();
 
             if(order.pickupTime && order.pickupTime.includes('فوري')) {
                 setDeliveryMode('now');
@@ -1193,6 +2814,8 @@
             }
             summary.innerHTML += `<div class="bill-row" style="border:none; margin-top:10px; color:#ff6600; font-weight:bold;"><span>المجموع</span><span>${total.toFixed(3)} KD</span></div>`;
             modal.style.display = 'flex';
+            
+            clearFieldErrors();
         }
 
         function closeCheckout() { 
@@ -1225,24 +2848,118 @@
             if(method === 'cash') {
                 btnCash.classList.add('active');
                 btnLink.classList.remove('active');
+                removeFieldError('payment');
             } else if(method === 'link') {
                 btnLink.classList.add('active');
                 btnCash.classList.remove('active');
+                removeFieldError('payment');
             }
         }
 
-        function submitOrder() {
+        function showFieldError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const errorElement = document.getElementById(fieldId + '-error');
+            
+            if (field) {
+                field.classList.add('required-field');
+            }
+            
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.classList.add('show');
+            }
+        }
+
+        function removeFieldError(fieldId) {
+            const field = document.getElementById(fieldId);
+            const errorElement = document.getElementById(fieldId + '-error');
+            
+            if (field) {
+                field.classList.remove('required-field');
+            }
+            
+            if (errorElement) {
+                errorElement.classList.remove('show');
+            }
+        }
+
+        function clearFieldErrors() {
+            removeFieldError('c-type');
+            removeFieldError('payment');
+            removeFieldError('c-phone');
+            removeFieldError('c-loc');
+        }
+
+        function validateAndSubmitOrder() {
+            clearFieldErrors();
+            
+            let isValid = true;
+            let errorMessages = [];
+            
+            const type = document.getElementById('c-type').value;
+            if (!type) {
+                showFieldError('c-type', 'يجب اختيار نوع العميل (قديم/جديد)');
+                isValid = false;
+                errorMessages.push('نوع العميل');
+            }
+            
+            if (!paymentMethod) {
+                showFieldError('payment', 'يجب اختيار طريقة الدفع (Cash أو Link)');
+                isValid = false;
+                errorMessages.push('طريقة الدفع');
+            }
+            
+            const phone = document.getElementById('c-phone').value;
+            if (!phone || phone.length !== 8) {
+                showFieldError('c-phone', 'يجب إدخال رقم هاتف صحيح مكون من 8 أرقام');
+                isValid = false;
+                errorMessages.push('رقم الهاتف');
+            }
+            
+            const location = document.getElementById('c-loc').value;
+            if (!location) {
+                showFieldError('c-loc', 'رابط الموقع حقل إجباري. الرجاء إدخال رابط الموقع');
+                isValid = false;
+                errorMessages.push('رابط الموقع');
+            } else if (!location.startsWith('http')) {
+                showFieldError('c-loc', 'رابط الموقع غير صالح. يجب أن يبدأ بـ http أو https');
+                isValid = false;
+                errorMessages.push('رابط الموقع');
+            }
+            
+            if (!isValid) {
+                const errorList = errorMessages.map((field, index) => `${index + 1}. ${field}`).join('<br>');
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'حقول مطلوبة فارغة',
+                    html: `الرجاء تعبئة الحقول التالية قبل إرسال الطلب:<br><br>${errorList}`,
+                    background: '#222',
+                    color: '#fff',
+                    confirmButtonText: 'حسناً',
+                    confirmButtonColor: '#ff6600'
+                });
+                
+                return;
+            }
+            
+            submitOrder();
+        }
+
+        async function submitOrder() {
             const type = document.getElementById('c-type').value;
             const phone = document.getElementById('c-phone').value;
             const location = document.getElementById('c-loc').value;
             const details = document.getElementById('c-details').value;
-            const notes = document.getElementById('c-notes').value;
             
             let pickupTime = 'فوري';
             if(deliveryMode === 'later') {
                 const timeVal = document.getElementById('c-time').value;
                 if(!timeVal && !editingOrderId) { 
-                    if(!timeVal) { Swal.fire('تنبيه', 'حدد الوقت', 'warning'); return; }
+                    if(!timeVal) { 
+                        Swal.fire('تنبيه', 'حدد الوقت', 'warning'); 
+                        return; 
+                    }
                 }
                 if(timeVal) {
                     const [hours, minutes] = timeVal.split(':');
@@ -1250,21 +2967,6 @@
                     const h = (hours % 12) || 12;
                     pickupTime = `${h}:${minutes} ${suffix}`;
                 }
-            }
-
-            if(!type) { 
-                Swal.fire('تنبيه', 'اختر نوع العميل', 'warning'); 
-                return; 
-            }
-            
-            if (!paymentMethod) {
-                Swal.fire('تنبيه', 'اختر طريقة الدفع', 'warning');
-                return;
-            }
-            
-            if (!phone || phone.length !== 8) {
-                Swal.fire('تنبيه', 'أدخل 8 أرقام بالضبط بعد مفتاح الدولة', 'warning');
-                return;
             }
 
             const btn = document.querySelector('.send-btn');
@@ -1289,75 +2991,143 @@
             }
 
             params.append('type', type);
-            params.append('name', 'عميل'); // اسم افتراضي
+            params.append('name', 'عميل');
             params.append('phone', '+965' + phone);
             params.append('location', location);
             params.append('details', details);
             params.append('pickupTime', pickupTime); 
             params.append('items', itemsArr.join(' + '));
             params.append('total', total.toFixed(3));
-            params.append('notes', notes);
+            
+            // إضافة الملاحظات كقائمة منظمة
+            let notesText = '';
+            if (notesList.length > 0) {
+                notesText = notesList.map(note => `• ${note}`).join('\n');
+            }
+            params.append('notes', notesText);
+            
             params.append('paymentMethod', paymentMethod);
             
-            fetch(API_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: params
-            })
-            .then(() => {
-                let message = editingOrderId ? 'تم تحديث بيانات الطلب بنجاح' : 'تم تسجيل الطلب الجديد';
-                
-                if (!editingOrderId && currentCustomer) {
-                    if (currentCustomer.totalOrders > 1) {
-                        message += ' - تم تحديث بيانات العميل القديم';
-                    } else {
-                        message += ' - تم إنشاء عميل جديد';
-                    }
-                }
-                
-                Swal.fire({
-                    icon: 'success', 
-                    title: editingOrderId ? 'تم التحديث' : 'تم الإرسال',
-                    text: message,
-                    background: '#222', 
-                    color: '#fff'
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params
                 });
                 
-                cart = {};
-                updateUI();
-                document.querySelectorAll('.qty-display').forEach(d => d.innerText = '0');
-                closeCheckout();
+                const result = await response.json();
                 
-                editingOrderId = null;
-                currentCustomer = null;
-                paymentMethod = null;
-                document.getElementById('edit-mode-badge').style.display = 'none';
-                hideCustomerNotification();
+                if (result.result === 'success') {
+                    let message = editingOrderId ? 'تم تحديث بيانات الطلب بنجاح' : 'تم تسجيل الطلب الجديد';
+                    
+                    if (!editingOrderId && currentCustomer) {
+                        if (currentCustomer.totalOrders > 1) {
+                            message += ' - تم تحديث بيانات العميل القديم';
+                        } else {
+                            message += ' - تم إنشاء عميل جديد';
+                        }
+                    }
+                    
+                    Swal.fire({
+                        icon: 'success', 
+                        title: editingOrderId ? 'تم التحديث' : 'تم الإرسال',
+                        text: message,
+                        background: '#222', 
+                        color: '#fff',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    
+                    if (editingOrderId) {
+                        await sendUpdatedNotification(editingOrderId);
+                        
+                        showImmediateNotification({
+                            orderId: editingOrderId,
+                            status: 'Updated'
+                        });
+                    }
+                    
+                    cart = {};
+                    notesList = [];
+                    updateUI();
+                    renderNotes();
+                    document.querySelectorAll('.qty-display').forEach(d => d.innerText = '0');
+                    closeCheckout();
+                    
+                    editingOrderId = null;
+                    currentCustomer = null;
+                    paymentMethod = null;
+                    document.getElementById('edit-mode-badge').style.display = 'none';
+                    hideCustomerNotification();
+                    
+                    document.getElementById('c-type').value = "";
+                    document.getElementById('c-phone').value = "";
+                    document.getElementById('c-loc').value = "";
+                    document.getElementById('c-details').value = "";
+                    document.getElementById('btn-cash').classList.remove('active');
+                    document.getElementById('btn-link').classList.remove('active');
+                    setDeliveryMode('now');
+                    
+                    btn.innerText = "إرسال للمطبخ 🚀"; 
+                    btn.disabled = false;
+                    
+                    setTimeout(() => {
+                        loadSentOrders();
+                        loadCustomers();
+                    }, 1000);
+                    
+                } else {
+                    throw new Error(result.message || 'فشل في إرسال الطلب');
+                }
                 
-                document.getElementById('c-type').value = "";
-                document.getElementById('c-phone').value = "";
-                document.getElementById('c-loc').value = "";
-                document.getElementById('c-details').value = "";
-                document.getElementById('c-notes').value = "";
-                document.getElementById('btn-cash').classList.remove('active');
-                document.getElementById('btn-link').classList.remove('active');
-                setDeliveryMode('now');
-                
-                btn.innerText = "إرسال للمطبخ 🚀"; 
-                btn.disabled = false;
-                
-                setTimeout(() => {
-                    loadSentOrders();
-                    loadCustomers();
-                }, 1000);
-            })
-            .catch(err => {
-                alert("فشل العملية: " + err);
+            } catch (err) {
+                console.error('Error submitting order:', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'خطأ',
+                    text: 'فشل في إرسال الطلب: ' + err.message,
+                    background: '#222',
+                    color: '#fff'
+                });
                 btn.innerText = originalBtnText;
                 btn.disabled = false;
-            });
+            }
         }
+
+        async function sendUpdatedNotification(orderId) {
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'logNotification');
+                params.append('orderId', orderId);
+                params.append('status', 'Updated');
+                params.append('kitchenReceived', 'false');
+                
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params
+                });
+                
+                console.log('تم إرسال إشعار التحديث للطلب:', orderId);
+            } catch (error) {
+                console.error('خطأ في إرسال إشعار التحديث:', error);
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('notification-dropdown');
+            const bell = document.getElementById('notification-bell');
+            
+            if (dropdown.classList.contains('show') && 
+                !dropdown.contains(event.target) && 
+                !bell.contains(event.target)) {
+                closeNotificationDropdown();
+            }
+        });
+
+        document.getElementById('notification-dropdown')?.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
 
         init();
         
@@ -1369,8 +3139,44 @@
                     if (this.value.length > 8) {
                         this.value = this.value.slice(0, 8);
                     }
+                    if (this.value.length === 8) {
+                        removeFieldError('c-phone');
+                    }
                 };
             }
+            
+            const locationInput = document.getElementById('c-loc');
+            if (locationInput) {
+                locationInput.addEventListener('input', function() {
+                    if (this.value.trim() !== '') {
+                        removeFieldError('c-loc');
+                    }
+                });
+            }
+            
+            const typeSelect = document.getElementById('c-type');
+            if (typeSelect) {
+                typeSelect.addEventListener('change', function() {
+                    if (this.value) {
+                        removeFieldError('c-type');
+                    }
+                });
+            }
+            
+            // تفعيل إدخال الملاحظة عند الضغط على Enter
+            const noteInput = document.getElementById('note-input');
+            if (noteInput) {
+                noteInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        saveNote();
+                    }
+                });
+            }
+        });
+
+        window.addEventListener('beforeunload', () => {
+            stopNotificationPolling();
         });
     </script>
 </body>
