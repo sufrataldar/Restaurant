@@ -814,7 +814,6 @@
             display: block;
         }
         
-        /* نظام الملاحظات الجديد */
         .notes-section {
             background: #1a1a1a;
             border-radius: 10px;
@@ -1207,7 +1206,6 @@
                 <input type="text" id="c-details" placeholder="قطعة، شارع، منزل...">
             </div>
 
-            <!-- نظام الملاحظات الجديد -->
             <div class="notes-section" id="notes-section">
                 <div class="notes-header">
                     <div class="notes-title">
@@ -1256,7 +1254,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyODqeHSPLtkn_Q-uPqawQxnw1oi3XCx-Sn-s-J8uxxy5qjBdHUmuSLEGCpuln51Vcq/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbywDlpq9ZHxL1wF0NIGElc8VUS28EDGuS_8doWg7IgLseOBb-Ngrz6fNsUxeQ-FBS9d/exec';
         
         const menuData = {
             "اللحم العربي": [ 
@@ -1348,7 +1346,6 @@
         let notificationPermission = null;
         let serviceWorkerRegistration = null;
         
-        // نظام الملاحظات الجديد
         let notesList = [];
         let editingNoteIndex = -1;
 
@@ -1369,26 +1366,19 @@
                 isFirst = false;
             }
             
-            // بدء نظام استطلاع الإشعارات
             startNotificationPolling();
             
-            // تهيئة الأصوات
             initNotificationSounds();
             
-            // فحص صلاحيات الإشعارات
             checkNotificationPermission();
             
-            // محاولة تسجيل Service Worker
             registerServiceWorker();
             
-            // تحميل الإشعارات المخزنة محلياً
             loadStoredNotifications();
             
-            // تحديث عرض الإشعارات
             updateNotificationDisplay();
         }
 
-        // === نظام الملاحظات الجديد ===
         function toggleNoteInput() {
             const inputContainer = document.getElementById('note-input-container');
             const noteInput = document.getElementById('note-input');
@@ -1423,7 +1413,6 @@
             }
             
             if (editingNoteIndex > -1) {
-                // تعديل ملاحظة موجودة
                 notesList[editingNoteIndex] = noteText;
                 Swal.fire({
                     toast: true,
@@ -1436,7 +1425,6 @@
                     color: '#fff'
                 });
             } else {
-                // إضافة ملاحظة جديدة
                 notesList.push(noteText);
                 Swal.fire({
                     toast: true,
@@ -1450,10 +1438,8 @@
                 });
             }
             
-            // تحديث العرض
             renderNotes();
             
-            // إعادة الضبط
             noteInput.value = '';
             editingNoteIndex = -1;
             document.getElementById('note-input-container').classList.remove('show');
@@ -1510,7 +1496,6 @@
             const emptyNotesElement = document.getElementById('empty-notes');
             const notesCountElement = document.getElementById('notes-count');
             
-            // تحديث العداد
             notesCountElement.textContent = notesList.length;
             
             if (notesList.length === 0) {
@@ -1556,7 +1541,6 @@
                 notificationPermission = Notification.permission;
                 
                 if (notificationPermission === 'default') {
-                    // إظهار طلب السماح بالإشعارات بعد 3 ثوانٍ
                     setTimeout(() => {
                         showPermissionRequest();
                     }, 3000);
@@ -1590,7 +1574,6 @@
                         showNotification('تم تفعيل الإشعارات', 'سوف تتلقى إشعارات الطلبات الجديدة مباشرة على هاتفك.');
                         hidePermissionRequest();
                         
-                        // محاولة تسجيل Service Worker مرة أخرى
                         registerServiceWorker();
                     } else if (permission === 'denied') {
                         console.log('تم رفض الإشعارات');
@@ -1637,7 +1620,6 @@
                     serviceWorkerRegistration = registration;
                     console.log('Service Worker registered successfully');
                     
-                    // Subscribe to push notifications
                     await subscribeToPushNotifications(registration);
                     
                 } catch (error) {
@@ -1656,8 +1638,6 @@
                 });
                 
                 console.log('Subscribed to push notifications');
-                // Here you would send the subscription to your server
-                // await sendSubscriptionToServer(subscription);
                 
             } catch (error) {
                 console.log('Failed to subscribe to push notifications:', error);
@@ -1703,7 +1683,6 @@
         }
 
         function refreshNotifications() {
-            // جلب الإشعارات من التخزين المحلي
             loadStoredNotifications();
             updateNotificationDisplay();
         }
@@ -1796,7 +1775,6 @@
                 notificationsList[index].read = true;
                 saveNotifications();
                 
-                // إزالة الإشعار من القائمة
                 setTimeout(() => {
                     const notificationElement = document.querySelector(`.notification-item:nth-child(${index + 1})`);
                     if (notificationElement) {
@@ -1837,7 +1815,6 @@
         }
 
         function showNotification(title, body, icon = null) {
-            // إضافة الإشعار إلى القائمة المحلية
             const newNotification = {
                 id: Date.now(),
                 title: title,
@@ -1849,7 +1826,6 @@
             notificationsList.unshift(newNotification);
             saveNotifications();
             
-            // عرض إشعار سطح المكتب إذا كان مسموحاً
             if ('Notification' in window && Notification.permission === 'granted') {
                 const notification = new Notification(title, {
                     body: body,
@@ -1876,7 +1852,6 @@
             
             sounds.forEach(sound => {
                 sound.volume = 0.3;
-                // تهيئة الصوت
                 sound.play().then(() => {
                     sound.pause();
                     sound.currentTime = 0;
@@ -1890,10 +1865,8 @@
             isNotificationPollingActive = true;
             lastPollTime = Date.now();
             
-            // استطلاع أولي
             pollForNotifications();
             
-            // استطلاع كل 3 ثوانٍ
             notificationInterval = setInterval(pollForNotifications, 3000);
             
             console.log("تم تشغيل نظام استطلاع الإشعارات");
@@ -1979,7 +1952,6 @@
                 </div>
             `;
             
-            // إضافة زر الإغلاق
             const closeButton = document.createElement('button');
             closeButton.className = 'close-admin-notification';
             closeButton.innerHTML = '<i class="fas fa-times"></i>';
@@ -1989,28 +1961,22 @@
             
             container.appendChild(notificationElement);
             
-            // تشغيل الصوت المناسب
             playNotificationSound(notificationType);
             
-            // تحديث عداد الإشعارات
             updateNotificationBadge();
             
-            // بدء مؤقت التقدم
             startProgressBar(notificationId);
             
-            // إضافة إلى قائمة الإشعارات
             adminNotifications.push({
                 id: notificationId,
                 element: notificationElement,
                 timeout: null
             });
             
-            // إعداد الإزالة التلقائية بعد 5 ثوانٍ
             const removeTimeout = setTimeout(() => {
                 removeNotification(notificationId);
             }, 5000);
             
-            // حفظ المؤقت للإزالة اليدوية
             const notificationIndex = adminNotifications.findIndex(n => n.id === notificationId);
             if (notificationIndex !== -1) {
                 adminNotifications[notificationIndex].timeout = removeTimeout;
@@ -2029,7 +1995,6 @@
                 body = `تم استلام إلغاء الطلب رقم #${notification.orderId} من قبل المطبخ`;
             }
             
-            // إضافة الإشعار إلى القائمة المحلية
             notificationsList.unshift({
                 id: Date.now(),
                 orderId: notification.orderId,
@@ -2042,7 +2007,6 @@
             
             saveNotifications();
             
-            // عرض إشعار سطح المكتب إذا كان مسموحاً
             if ('Notification' in window && Notification.permission === 'granted') {
                 const notificationOptions = {
                     body: body,
@@ -2060,7 +2024,6 @@
                     this.close();
                 };
                 
-                // تشغيل الصوت
                 playNotificationSound(notification.status.toLowerCase());
             }
         }
@@ -2084,10 +2047,8 @@
             const notificationElement = document.getElementById(notificationId);
             if (!notificationElement) return;
             
-            // إضافة class للإزالة المتحركة
             notificationElement.classList.add('removing');
             
-            // إزالة من القائمة
             const notificationIndex = adminNotifications.findIndex(n => n.id === notificationId);
             if (notificationIndex !== -1) {
                 if (adminNotifications[notificationIndex].timeout) {
@@ -2096,7 +2057,6 @@
                 adminNotifications.splice(notificationIndex, 1);
             }
             
-            // إزالة العنصر بعد انتهاء الحركة
             setTimeout(() => {
                 notificationElement.remove();
                 updateNotificationBadge();
@@ -2128,6 +2088,7 @@
             container.innerHTML = '';
             menuData[category].forEach(item => {
                 const qty = cart[item.id] ? cart[item.id].qty : 0;
+                const totalPrice = (item.price * qty).toFixed(3);
                 container.innerHTML += `
                     <div class="item-card">
                         <div class="item-info">
@@ -2426,6 +2387,31 @@
                     const div = document.createElement('div');
                     div.className = 'sent-order-card';
                     
+                    let itemsWithPrices = '';
+                    if (order.items) {
+                        const itemsArray = order.items.split(' + ');
+                        itemsWithPrices = itemsArray.map(item => {
+                            const match = item.match(/(.+)\s+\(x(\d+)\)/);
+                            if (match) {
+                                const itemName = match[1].trim();
+                                const qty = parseInt(match[2]);
+                                
+                                let itemPrice = 0;
+                                for(const cat in menuData) {
+                                    const found = menuData[cat].find(i => i.name === itemName);
+                                    if(found) { 
+                                        itemPrice = found.price; 
+                                        break; 
+                                    }
+                                }
+                                
+                                const totalForItem = (itemPrice * qty).toFixed(3);
+                                return `${itemName} (x${qty}) - ${totalForItem} KD`;
+                            }
+                            return item;
+                        }).join('<br>');
+                    }
+                    
                     const paymentInfo = order.paymentMethod ? `<p><strong>طريقة الدفع:</strong> ${order.paymentMethod === 'cash' ? 'Cash' : 'Link'}</p>` : '';
                     const customerInfo = order.customerId ? `<p><strong>رقم العميل:</strong> ${order.customerId}</p>` : '';
                     
@@ -2438,8 +2424,10 @@
                             <p><strong>العميل:</strong> ${order.phone} (${order.type})</p>
                             ${customerInfo}
                             ${paymentInfo}
-                            <p><strong>الأصناف:</strong> ${order.items}</p>
-                            <p><strong>الملاحظات:</strong> ${order.notes || 'لا يوجد'}</p>
+                            <p><strong>الأصناف:</strong></p>
+                            <div style="margin-right: 15px; color: #aaa;">
+                                ${itemsWithPrices}
+                            </div>
                             <p><strong>المجموع:</strong> ${order.total} KD</p>
                             <button class="edit-btn" onclick='editOrder(${JSON.stringify(order)})'>تعديل الطلب <i class="fas fa-edit"></i></button>
                             <button class="delete-btn" onclick='deleteOrder(${JSON.stringify(order)})'>حذف الطلب <i class="fas fa-trash-alt"></i></button>
@@ -2719,7 +2707,7 @@
             
             const itemsParts = order.items.split(' + ');
             itemsParts.forEach(part => {
-                const match = part.match(/(.+) \(x(\d+)\)/);
+                const match = part.match(/(.+)\s+\(x(\d+)\)/);
                 if(match) {
                     const name = match[1].trim();
                     const qty = parseInt(match[2]);
@@ -2755,12 +2743,9 @@
             document.getElementById('c-loc').value = order.location;
             document.getElementById('c-details').value = order.details;
             
-            // تحميل الملاحظات القديمة
             notesList = [];
             if (order.notes && order.notes.trim() !== "") {
-                // تحويل الملاحظات القديمة إلى قائمة إذا كانت موجودة
                 if (order.notes.includes('•') || order.notes.includes('-') || order.notes.includes('*')) {
-                    // تحويل النقاط إلى قائمة
                     const oldNotes = order.notes.split(/[•\-\*]/).filter(note => note.trim() !== "");
                     notesList = oldNotes.map(note => note.trim());
                 } else {
@@ -2809,8 +2794,9 @@
             let total = 0;
             for(const id in cart) {
                 const i = cart[id];
-                total += i.qty * i.price;
-                summary.innerHTML += `<div class="bill-row"><span>${i.name} (x${i.qty})</span><span>${(i.qty*i.price).toFixed(3)}</span></div>`;
+                const itemTotal = i.qty * i.price;
+                total += itemTotal;
+                summary.innerHTML += `<div class="bill-row"><span>${i.name} (x${i.qty})</span><span>${itemTotal.toFixed(3)} KD</span></div>`;
             }
             summary.innerHTML += `<div class="bill-row" style="border:none; margin-top:10px; color:#ff6600; font-weight:bold;"><span>المجموع</span><span>${total.toFixed(3)} KD</span></div>`;
             modal.style.display = 'flex';
@@ -2977,8 +2963,10 @@
             let itemsArr = [];
             let total = 0;
             for(const id in cart) {
-                itemsArr.push(`${cart[id].name} (x${cart[id].qty})`);
-                total += cart[id].qty * cart[id].price;
+                const item = cart[id];
+                const itemTotal = item.qty * item.price;
+                itemsArr.push(`${item.name} (x${item.qty}) - ${itemTotal.toFixed(3)} KD`);
+                total += itemTotal;
             }
 
             const params = new URLSearchParams();
@@ -2999,7 +2987,6 @@
             params.append('items', itemsArr.join(' + '));
             params.append('total', total.toFixed(3));
             
-            // إضافة الملاحظات كقائمة منظمة
             let notesText = '';
             if (notesList.length > 0) {
                 notesText = notesList.map(note => `• ${note}`).join('\n');
@@ -3163,7 +3150,6 @@
                 });
             }
             
-            // تفعيل إدخال الملاحظة عند الضغط على Enter
             const noteInput = document.getElementById('note-input');
             if (noteInput) {
                 noteInput.addEventListener('keypress', function(e) {
