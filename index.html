@@ -2,13 +2,56 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
     <title>سفرة الدار | Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="apple-touch-icon" href="https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg">
     <link rel="icon" href="https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg">
     <style>
+        /* منع الزوم على جميع المتصفحات */
+        html, body {
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            overflow-x: hidden;
+            width: 100%;
+            position: fixed;
+            height: 100%;
+        }
+        
+        * {
+            -webkit-text-size-adjust: 100%;
+            -moz-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            max-height: 1000000px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* منع الزوم المزدوج على iOS Safari */
+        input, textarea, select {
+            font-size: 16px !important;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        @media screen and (-webkit-min-device-pixel-ratio:0) {
+            select,
+            textarea,
+            input {
+                font-size: 16px !important;
+            }
+        }
+        
         :root { 
             --primary: #ff6600; 
             --dark: #121212; 
@@ -26,11 +69,92 @@
             --notification-unread: #ff4444;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--dark); color: var(--text); margin: 0; padding-bottom: 100px; }
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: var(--dark); 
+            color: var(--text); 
+            margin: 0; 
+            padding-bottom: 100px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            height: 100%;
+        }
         
-        .app-header { position: sticky; top: 0; background: rgba(18, 18, 18, 0.95); padding: 10px 15px; z-index: 100; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 800; color: #fff; }
-        .logo img { height: 45px; width: 45px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
+        /* تحسينات للجوال فقط */
+        @media (min-width: 768px) {
+            body {
+                max-width: 500px;
+                margin: 0 auto;
+                border-left: 1px solid #333;
+                border-right: 1px solid #333;
+                box-shadow: 0 0 30px rgba(0,0,0,0.5);
+                position: relative;
+            }
+            
+            .app-header {
+                max-width: 500px;
+                margin: 0 auto;
+                left: 0;
+                right: 0;
+            }
+            
+            .floating-bar {
+                max-width: 450px;
+                left: 50%;
+                transform: translateX(-50%) translateY(150%);
+            }
+            
+            .floating-bar.show {
+                transform: translateX(-50%) translateY(0);
+            }
+            
+            .checkout-modal {
+                max-width: 500px;
+                margin: 0 auto;
+                left: 0;
+                right: 0;
+            }
+            
+            .notification-dropdown {
+                width: 350px;
+                right: 10px;
+            }
+            
+            .admin-notification-container {
+                width: 350px;
+                right: 10px;
+            }
+        }
+        
+        .app-header { 
+            position: sticky; 
+            top: 0; 
+            background: rgba(18, 18, 18, 0.95); 
+            padding: 10px 15px; 
+            z-index: 100; 
+            border-bottom: 1px solid #333; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            width: 100%;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+        .logo { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            font-size: 1.1rem; 
+            font-weight: 800; 
+            color: #fff; 
+        }
+        .logo img { 
+            height: 45px; 
+            width: 45px; 
+            border-radius: 50%; 
+            border: 2px solid var(--primary); 
+            object-fit: cover; 
+        }
 
         .header-right { display: flex; align-items: center; gap: 20px; }
         
@@ -74,8 +198,9 @@
             position: fixed;
             top: 60px;
             right: 15px;
-            width: 400px;
-            max-height: 500px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
             background: var(--dark);
             border: 1px solid #333;
             border-radius: 10px;
@@ -125,7 +250,8 @@
         .notification-list {
             flex: 1;
             overflow-y: auto;
-            max-height: 400px;
+            max-height: 60vh;
+            -webkit-overflow-scrolling: touch;
         }
         
         .notification-item {
@@ -236,7 +362,8 @@
             border-radius: 10px;
             padding: 20px;
             z-index: 2000;
-            max-width: 400px;
+            max-width: 90%;
+            width: 400px;
             box-shadow: 0 10px 30px rgba(255, 102, 0, 0.3);
             display: none;
             animation: slideDown 0.5s ease;
@@ -327,39 +454,151 @@
             flex-shrink: 0;
         }
 
-        .tabs { display: flex; background: #1e1e1e; margin: 10px; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
-        .tab-btn { flex: 1; padding: 12px; background: transparent; border: none; color: #888; font-family: 'Cairo'; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .tabs { 
+            display: flex; 
+            background: #1e1e1e; 
+            margin: 10px; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            border: 1px solid #333; 
+        }
+        .tab-btn { 
+            flex: 1; 
+            padding: 12px; 
+            background: transparent; 
+            border: none; 
+            color: #888; 
+            font-family: 'Cairo'; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s;
+            font-size: 0.9rem;
+        }
         .tab-btn.active { background: var(--primary); color: #000; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
-        .category-scroll { display: flex; overflow-x: auto; padding: 15px 10px; gap: 10px; scrollbar-width: none; }
-        .cat-chip { background: #2a2a2a; color: #fff; padding: 8px 20px; border-radius: 50px; white-space: nowrap; border: 1px solid #333; cursor: pointer; }
+        .category-scroll { 
+            display: flex; 
+            overflow-x: auto; 
+            padding: 15px 10px; 
+            gap: 10px; 
+            scrollbar-width: none; 
+            -webkit-overflow-scrolling: touch;
+            -ms-overflow-style: none;
+        }
+        .category-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .cat-chip { 
+            background: #2a2a2a; 
+            color: #fff; 
+            padding: 8px 20px; 
+            border-radius: 50px; 
+            white-space: nowrap; 
+            border: 1px solid #333; 
+            cursor: pointer; 
+            font-size: 0.9rem;
+        }
         .cat-chip.active { background: var(--primary); color: #000; font-weight: bold; }
         
         .menu-list { padding: 10px; }
-        .item-card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
-        .item-info h3 { margin: 0 0 5px 0; font-size: 1rem; }
-        .item-price { color: var(--primary); font-weight: 700; }
+        .item-card { 
+            background: var(--card); 
+            border-radius: 15px; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border: 1px solid #333; 
+        }
+        .item-info h3 { margin: 0 0 5px 0; font-size: 0.95rem; }
+        .item-price { color: var(--primary); font-weight: 700; font-size: 0.9rem; }
         
         .qty-control { display: flex; align-items: center; background: #2a2a2a; border-radius: 12px; padding: 5px; }
-        .qty-btn { width: 35px; height: 35px; border-radius: 8px; border: none; background: #333; color: #fff; font-size: 1.2rem; cursor: pointer; }
+        .qty-btn { 
+            width: 35px; 
+            height: 35px; 
+            border-radius: 8px; 
+            border: none; 
+            background: #333; 
+            color: #fff; 
+            font-size: 1.2rem; 
+            cursor: pointer; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         .qty-btn.add { background: var(--primary); color: #000; }
         .qty-display { width: 30px; text-align: center; font-weight: bold; }
 
-        .floating-bar { position: fixed; bottom: 20px; left: 5%; width: 90%; background: var(--primary); border-radius: 20px; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(255,102,0,0.4); z-index: 1000; color: #000; font-weight: bold; transform: translateY(150%); transition: 0.3s; cursor: pointer;}
+        .floating-bar { 
+            position: fixed; 
+            bottom: 20px; 
+            left: 5%; 
+            width: 90%; 
+            background: var(--primary); 
+            border-radius: 20px; 
+            padding: 15px 25px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 10px 30px rgba(255,102,0,0.4); 
+            z-index: 1000; 
+            color: #000; 
+            font-weight: bold; 
+            transform: translateY(150%); 
+            transition: 0.3s; 
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
         .floating-bar.show { transform: translateY(0); }
 
-        .checkout-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; display: none; flex-direction: column; }
-        .modal-header { padding: 20px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-        .modal-body { padding: 20px; flex: 1; overflow-y: auto; }
+        .checkout-modal { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: var(--dark); 
+            z-index: 2000; 
+            display: none; 
+            flex-direction: column; 
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .modal-header { 
+            padding: 20px; 
+            border-bottom: 1px solid #333; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: sticky;
+            top: 0;
+            background: var(--dark);
+            z-index: 1;
+        }
+        .modal-body { 
+            padding: 20px; 
+            flex: 1; 
+            overflow-y: auto;
+            padding-bottom: 100px;
+        }
         
         .input-group { margin-bottom: 25px; }
         .input-group label { display: block; margin-bottom: 10px; font-size: 0.95rem; color: #ddd; font-weight: bold; }
         .input-group input, .input-group select, .input-group textarea { 
-            width: 100%; padding: 15px; background: #1a1a1a; 
-            border: 1px solid #333; border-radius: 10px; color: #fff; 
-            outline: none; font-family: 'Cairo', sans-serif; transition: border-color 0.3s; 
+            width: 100%; 
+            padding: 15px; 
+            background: #1a1a1a; 
+            border: 1px solid #333; 
+            border-radius: 10px; 
+            color: #fff; 
+            outline: none; 
+            font-family: 'Cairo', sans-serif; 
+            transition: border-color 0.3s; 
+            font-size: 16px;
         }
         .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--primary); }
         .input-group textarea { resize: vertical; min-height: 80px; }
@@ -369,33 +608,102 @@
         .field-error.show { display: block; }
 
         .time-selector { display: flex; gap: 10px; margin-bottom: 10px; }
-        .time-btn { flex: 1; padding: 15px; background: #2a2a2a; border: 1px solid #333; color: #fff; border-radius: 10px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .time-btn { 
+            flex: 1; 
+            padding: 15px; 
+            background: #2a2a2a; 
+            border: 1px solid #333; 
+            color: #fff; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-family: 'Cairo'; 
+            font-weight: bold; 
+            transition: 0.3s; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px;
+            font-size: 0.9rem;
+        }
         .time-btn.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 10px rgba(255,102,0,0.3); }
         
         .payment-selector { display: flex; gap: 10px; margin-bottom: 10px; }
-        .payment-btn { flex: 1; padding: 15px; background: #2a2a2a; border: 1px solid #333; color: #fff; border-radius: 10px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .payment-btn { 
+            flex: 1; 
+            padding: 15px; 
+            background: #2a2a2a; 
+            border: 1px solid #333; 
+            color: #fff; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-family: 'Cairo'; 
+            font-weight: bold; 
+            transition: 0.3s; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px;
+            font-size: 0.9rem;
+        }
         .payment-btn.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 10px rgba(255,102,0,0.3); }
         .payment-btn.cash { border-color: #4CAF50; }
         .payment-btn.cash.active { background: #4CAF50; color: #000; border-color: #4CAF50; box-shadow: 0 0 10px rgba(76, 175, 80, 0.3); }
         .payment-btn.link { border-color: #2196F3; }
         .payment-btn.link.active { background: #2196F3; color: #000; border-color: #2196F3; box-shadow: 0 0 10px rgba(33, 150, 243, 0.3); }
         
-        .hidden-input { display: none; margin-top: 10px; animation: fadeIn 0.3s; }
-        .hidden-input.show { display: block; }
+        .hidden-input { 
+            display: none; 
+            margin-top: 10px; 
+            animation: fadeIn 0.3s;
+            width: 100%;
+        }
+        .hidden-input.show { 
+            display: block; 
+        }
+        
+        /* تحسين حقل الوقت ليكون أكثر وضوحًا */
+        #c-time {
+            padding: 15px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+            text-align: center;
+            width: 100%;
+        }
+        
+        #c-time:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
         @keyframes fadeIn { from {opacity:0; transform:translateY(-5px);} to {opacity:1; transform:translateY(0);} }
 
         .bill-summary { background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        .bill-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        .send-btn { width: 100%; padding: 18px; background: var(--primary); color: #000; font-weight: 900; border: none; border-radius: 15px; cursor: pointer; font-size: 1.1rem; }
+        .bill-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; font-size: 0.9rem; }
+        .send-btn { 
+            width: 100%; 
+            padding: 18px; 
+            background: var(--primary); 
+            color: #000; 
+            font-weight: 900; 
+            border: none; 
+            border-radius: 15px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            margin-bottom: 20px;
+        }
         .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .sent-orders-list { padding: 10px; }
         .sent-order-card { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 15px; margin-bottom: 15px; position: relative; }
         .sent-header { display: flex; justify-content: space-between; border-bottom: 1px dashed #333; padding-bottom: 10px; margin-bottom: 10px; }
-        .sent-id { color: var(--primary); font-weight: bold; font-size: 1.2rem; }
+        .sent-id { color: var(--primary); font-weight: bold; font-size: 1.1rem; }
         .sent-status { font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; background: #333; }
-        .sent-body p { margin: 5px 0; color: #ccc; font-size: 0.9rem; }
-        .edit-btn { background: #33b5e5; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; margin-top: 10px; width: 100%; font-family: 'Cairo'; font-weight: bold; }
+        .sent-body p { margin: 5px 0; color: #ccc; font-size: 0.85rem; }
+        .edit-btn { background: #33b5e5; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; margin-top: 10px; width: 100%; font-family: 'Cairo'; font-weight: bold; font-size: 0.9rem; }
         .delete-btn {
             background: #ff4444;
             color: #fff;
@@ -407,8 +715,9 @@
             width: 100%;
             font-family: 'Cairo';
             font-weight: bold;
+            font-size: 0.9rem;
         }
-        .edit-badge { background: var(--primary); color: black; padding: 5px 10px; border-radius: 5px; font-weight: bold; display:none; margin-bottom: 10px; text-align: center;}
+        .edit-badge { background: var(--primary); color: black; padding: 5px 10px; border-radius: 5px; font-weight: bold; display:none; margin-bottom: 10px; text-align: center; font-size: 0.9rem;}
         
         .phone-input-container {
             display: flex;
@@ -431,6 +740,7 @@
             white-space: nowrap;
             user-select: none;
             border-left: 1px solid #333;
+            font-size: 0.9rem;
         }
         .phone-input-container input#c-phone {
             flex-grow: 1;
@@ -441,6 +751,7 @@
             border-radius: 0;
             text-align: right;
             min-width: 0; 
+            font-size: 16px;
         }
         .phone-input-container input#c-phone:focus {
             border-color: transparent; 
@@ -485,7 +796,7 @@
         
         .customer-notification-title {
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -494,7 +805,7 @@
         .customer-notification-badge {
             padding: 5px 12px;
             border-radius: 20px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: bold;
         }
         
@@ -512,21 +823,21 @@
         .customer-details-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
             margin-top: 15px;
         }
         
         .customer-detail-item {
             background: rgba(255, 255, 255, 0.08);
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             border: 1px solid rgba(255,255,255,0.05);
         }
         
         .customer-detail-label {
             color: #aaa;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             margin-bottom: 5px;
             font-weight: 600;
         }
@@ -534,6 +845,7 @@
         .customer-detail-value {
             font-weight: bold;
             color: #fff;
+            font-size: 0.85rem;
         }
         
         .customer-history {
@@ -544,6 +856,7 @@
             margin-top: 15px;
             text-align: center;
             font-weight: bold;
+            font-size: 0.85rem;
         }
         
         .customer-history i {
@@ -566,7 +879,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: all 0.3s;
         }
         
@@ -628,17 +941,18 @@
         .customer-id {
             color: var(--info);
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
         
         .customer-phone {
             font-family: monospace;
             color: #aaa;
+            font-size: 0.85rem;
         }
         
         .customer-stats {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             margin-top: 10px;
         }
         
@@ -648,13 +962,13 @@
         }
         
         .stat-value {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: bold;
             color: var(--primary);
         }
         
         .stat-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #aaa;
         }
         
@@ -675,7 +989,8 @@
             position: fixed;
             top: 80px;
             right: 15px;
-            width: 350px;
+            width: 90%;
+            max-width: 350px;
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -721,19 +1036,19 @@
         
         .admin-notification-title {
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1rem;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         
         .admin-notification-time {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #888;
         }
         
         .admin-notification-body {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #ccc;
         }
         
@@ -814,21 +1129,23 @@
             display: block;
         }
         
+        /* ======================== تحسينات قسم الملاحظات ======================== */
         .notes-section {
-            background: #1a1a1a;
-            border-radius: 10px;
-            padding: 15px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #252525 100%);
+            border-radius: 15px;
+            padding: 18px;
             margin-bottom: 20px;
-            border: 1px solid #333;
+            border: 1px solid #444;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         
         .notes-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #333;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(255, 102, 0, 0.3);
         }
         
         .notes-title {
@@ -837,15 +1154,16 @@
             color: var(--primary);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            padding: 5px 0;
         }
         
         .add-note-btn {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, #ff8c00 100%);
             color: #000;
             border: none;
-            padding: 8px 15px;
-            border-radius: 6px;
+            padding: 10px 18px;
+            border-radius: 8px;
             cursor: pointer;
             font-family: 'Cairo';
             font-weight: bold;
@@ -853,35 +1171,53 @@
             align-items: center;
             gap: 8px;
             transition: 0.3s;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 8px rgba(255, 102, 0, 0.2);
         }
         
         .add-note-btn:hover {
-            background: #ff8c00;
+            background: linear-gradient(135deg, #ff8c00 0%, #ff6600 100%);
             transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 102, 0, 0.3);
         }
         
         .notes-container {
-            max-height: 200px;
+            max-height: 250px;
             overflow-y: auto;
             margin-bottom: 15px;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.2);
+            padding: 12px;
         }
         
         .notes-list {
             list-style: none;
             padding: 0;
             margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
         
         .note-item {
-            background: #2a2a2a;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 10px;
+            background: linear-gradient(135deg, #2a2a2a 0%, #333333 100%);
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 14px;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             animation: fadeIn 0.3s ease;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .note-item:hover {
+            transform: translateX(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.1);
         }
         
         .note-item:last-child {
@@ -890,30 +1226,34 @@
         
         .note-content {
             flex: 1;
-            padding-left: 15px;
+            padding-left: 20px;
             position: relative;
+            min-width: 0; /* لمنع التمدد الزائد */
         }
         
         .note-content::before {
-            content: "•";
-            color: var(--primary);
-            font-size: 1.5rem;
+            content: "📝";
             position: absolute;
-            right: -15px;
+            right: -20px;
             top: 0;
+            font-size: 1.2rem;
+            opacity: 0.5;
         }
         
         .note-text {
             color: #fff;
-            font-size: 0.95rem;
-            line-height: 1.5;
+            font-size: 0.9rem;
+            line-height: 1.6;
             word-break: break-word;
+            overflow-wrap: break-word;
+            padding: 5px 0;
         }
         
         .note-actions {
             display: flex;
             gap: 8px;
             flex-shrink: 0;
+            margin-right: 10px;
         }
         
         .note-btn {
@@ -921,38 +1261,61 @@
             border: none;
             color: #888;
             cursor: pointer;
-            font-size: 0.9rem;
-            padding: 5px;
-            border-radius: 4px;
+            font-size: 0.95rem;
+            padding: 8px;
+            border-radius: 6px;
             transition: 0.2s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .note-btn.edit {
+            background: rgba(51, 181, 229, 0.1);
+            color: var(--info);
+            border: 1px solid rgba(51, 181, 229, 0.3);
         }
         
         .note-btn.edit:hover {
-            color: var(--primary);
-            background: rgba(255, 102, 0, 0.1);
+            background: rgba(51, 181, 229, 0.2);
+            color: #fff;
+            transform: scale(1.1);
+        }
+        
+        .note-btn.delete {
+            background: rgba(255, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 68, 68, 0.3);
         }
         
         .note-btn.delete:hover {
-            color: var(--danger);
-            background: rgba(255, 68, 68, 0.1);
+            background: rgba(255, 68, 68, 0.2);
+            color: #fff;
+            transform: scale(1.1);
         }
         
         .empty-notes {
             text-align: center;
-            padding: 20px;
+            padding: 40px 20px;
             color: #666;
             font-size: 0.9rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            border: 2px dashed #444;
         }
         
         .empty-notes i {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            opacity: 0.5;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            opacity: 0.3;
+            color: var(--primary);
         }
         
         .note-input-container {
             display: none;
-            margin-top: 15px;
+            margin-top: 18px;
             animation: slideDown 0.3s ease;
         }
         
@@ -962,72 +1325,294 @@
         
         .note-input-wrapper {
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+            gap: 12px;
         }
         
         .note-input {
             flex: 1;
-            padding: 12px;
+            padding: 16px;
             background: #2a2a2a;
-            border: 1px solid #333;
-            border-radius: 8px;
+            border: 2px solid #444;
+            border-radius: 10px;
             color: #fff;
             font-family: 'Cairo';
             font-size: 0.95rem;
             outline: none;
             transition: border-color 0.3s;
+            line-height: 1.5;
+            min-height: 60px;
+            resize: vertical;
         }
         
         .note-input:focus {
             border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.2);
+        }
+        
+        .note-input::placeholder {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .note-input-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
         }
         
         .note-save-btn {
-            background: var(--success);
+            background: linear-gradient(135deg, var(--success) 0%, #00a842 100%);
             color: white;
             border: none;
-            padding: 0 20px;
+            padding: 12px 25px;
             border-radius: 8px;
             cursor: pointer;
             font-family: 'Cairo';
             font-weight: bold;
             transition: 0.3s;
-            min-width: 80px;
+            min-width: 100px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(0, 200, 81, 0.2);
         }
         
         .note-save-btn:hover {
-            background: #00a842;
+            background: linear-gradient(135deg, #00a842 0%, #009933 100%);
             transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 200, 81, 0.3);
         }
         
         .note-cancel-btn {
-            background: #333;
+            background: linear-gradient(135deg, #444 0%, #555 100%);
             color: #ccc;
-            border: 1px solid #444;
-            padding: 0 15px;
+            border: 1px solid #555;
+            padding: 12px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-family: 'Cairo';
             transition: 0.3s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .note-cancel-btn:hover {
-            background: #444;
+            background: linear-gradient(135deg, #555 0%, #666 100%);
             color: #fff;
+            transform: translateY(-2px);
         }
         
         .notes-count {
             background: var(--primary);
             color: #000;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: bold;
             margin-right: 5px;
+            box-shadow: 0 2px 4px rgba(255, 102, 0, 0.3);
+        }
+        
+        .note-counter {
+            position: absolute;
+            bottom: 8px;
+            left: 16px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .note-char-limit {
+            color: #666;
+            font-size: 0.8rem;
+            text-align: left;
+            margin-top: 5px;
+        }
+        
+        /* ======================== نهاية تحسينات قسم الملاحظات ======================== */
+        
+        /* منع الزوم على iOS */
+        @supports (-webkit-touch-callout: none) {
+            input, textarea {
+                font-size: 16px !important;
+            }
+        }
+        
+        /* تحسينات للأجهزة الصغيرة */
+        @media (max-width: 375px) {
+            .cat-chip {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+            
+            .item-card {
+                padding: 12px;
+            }
+            
+            .item-info h3 {
+                font-size: 0.9rem;
+            }
+            
+            .tabs {
+                margin: 8px;
+            }
+            
+            .tab-btn {
+                padding: 10px;
+                font-size: 0.85rem;
+            }
+            
+            .customer-details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .customer-stats {
+                flex-wrap: wrap;
+            }
+            
+            .stat-item {
+                flex: 0 0 calc(50% - 5px);
+                margin-bottom: 10px;
+            }
+            
+            /* تحسينات الملاحظات للشاشات الصغيرة */
+            .notes-section {
+                padding: 15px;
+                margin: 10px;
+            }
+            
+            .notes-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .add-note-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .note-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .note-actions {
+                align-self: flex-end;
+                margin-right: 0;
+            }
+            
+            .note-content {
+                padding-left: 0;
+                width: 100%;
+            }
+            
+            .note-content::before {
+                display: none;
+            }
+            
+            .note-input-actions {
+                flex-direction: column;
+            }
+            
+            .note-save-btn, .note-cancel-btn {
+                width: 100%;
+            }
+        }
+        
+        /* منع السلوك غير المرغوب في اللمس */
+        .no-zoom {
+            touch-action: pan-x pan-y;
+            -webkit-user-drag: none;
+        }
+        
+        /* تحسينات لشريط التمرير */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* تحسين شريط التمرير للملاحظات */
+        .notes-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .notes-container::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+        
+        .notes-container::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        /* إصلاح للـ Safari على iOS */
+        @media (hover: none) and (pointer: coarse) {
+            .item-card, .sent-order-card, .customer-card {
+                cursor: default;
+            }
+            
+            .qty-btn, .tab-btn, .time-btn, .payment-btn, .edit-btn, .delete-btn, .auto-fill-btn, .send-btn {
+                cursor: pointer;
+                -webkit-tap-highlight-color: rgba(255, 102, 0, 0.3);
+            }
+            
+            input, textarea, select {
+                cursor: pointer;
+            }
+            
+            .note-btn {
+                min-width: 44px;
+                min-height: 44px;
+            }
+        }
+        
+        /* تحسين لعرض الوقت على الجوال */
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            color: var(--primary);
+            opacity: 0.7;
+            cursor: pointer;
+        }
+        
+        input[type="time"]::-webkit-calendar-picker-indicator:hover {
+            opacity: 1;
+        }
+        
+        .time-input-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .time-input-label {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
         }
     </style>
 </head>
-<body>
+<body class="no-zoom">
 
     <div class="notification-overlay" id="notification-overlay" onclick="closeNotificationDropdown()"></div>
 
@@ -1169,7 +1754,10 @@
                     <button id="btn-now" class="time-btn active" onclick="setDeliveryMode('now')"><i class="fas fa-fire"></i> فوري</button>
                     <button id="btn-later" class="time-btn" onclick="setDeliveryMode('later')"><i class="fas fa-clock"></i> وقت محدد</button>
                 </div>
-                <input type="time" id="c-time" class="hidden-input">
+                <div class="time-input-wrapper">
+                    <div class="time-input-label">اختر الوقت المطلوب:</div>
+                    <input type="time" id="c-time" class="hidden-input">
+                </div>
             </div>
             
             <div class="input-group">
@@ -1301,7 +1889,7 @@
                 {id: 68, name: "مقلوبة لحم استرالي (صواني)", price: 20.000}, {id: 69, name: "مقلوبة لحم نعيمي (صواني)", price: 25.000},
                 {id: 70, name: "مشوي جدر لحم استرالي (صواني)", price: 20.000}, {id: 71, name: "مشوي جدر لحم نعيمي (صوانi)", price: 25.000},
                 {id: 72, name: "بريه لحم نعيمي (صواني)", price: 25.000}, {id: 73, name: "برياني لحم سفرة الدار استرالي (صواني)", price: 20.000},
-                {id: 74, name: "برياني لحم سفرة الدار نعيمي (صواني)", price: 25.000}, {id: 75, name: "شبزي استرالي (صواني)", price: 21.500},
+                {id: 74, name: "برياني لحم سفرة الدار نعيمي (صوانi)", price: 25.000}, {id: 75, name: "شبزي استرالي (صواني)", price: 21.500},
                 {id: 76, name: "شبزي نعيمي (صواني)", price: 26.500}
             ],
             "الذبايح": [ 
@@ -1349,6 +1937,30 @@
         let notesList = [];
         let editingNoteIndex = -1;
 
+        // منع الزوم عن طريق المستخدم
+        document.addEventListener('gesturestart', function (e) {
+            e.preventDefault();
+        });
+        
+        document.addEventListener('dblclick', function (e) {
+            e.preventDefault();
+        }, { passive: false });
+        
+        document.addEventListener('touchstart', function (e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (e) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
         function init() {
             const catContainer = document.getElementById('category-container');
             let isFirst = true;
@@ -1389,7 +2001,7 @@
                 editingNoteIndex = -1;
             } else {
                 inputContainer.classList.add('show');
-                noteInput.focus();
+                setTimeout(() => noteInput.focus(), 100);
             }
         }
 
@@ -1457,7 +2069,7 @@
             noteInput.value = notesList[index];
             editingNoteIndex = index;
             document.getElementById('note-input-container').classList.add('show');
-            noteInput.focus();
+            setTimeout(() => noteInput.focus(), 100);
         }
 
         function deleteNote(index) {
@@ -2759,12 +3371,8 @@
             } else {
                 setDeliveryMode('later');
                 if (order.pickupTime) {
-                    const [timePart, ampm] = order.pickupTime.split(' ');
-                    if (timePart) {
-                        let [h, m] = timePart.split(':').map(Number);
-                        if (ampm === 'PM' && h !== 12) h += 12;
-                        if (ampm === 'AM' && h === 12) h = 0;
-                        const timeString = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                    const timeString = convertTo24HourFormat(order.pickupTime);
+                    if (timeString) {
                         document.getElementById('c-time').value = timeString;
                     }
                 }
@@ -2787,6 +3395,38 @@
             });
         }
 
+        function convertTo24HourFormat(timeString) {
+            try {
+                if (!timeString || timeString === 'فوري') return '';
+                
+                if (timeString.includes('فوري')) {
+                    return '';
+                }
+                
+                const timeRegex = /(\d{1,2}):(\d{2})\s*(AM|PM)/i;
+                const match = timeString.match(timeRegex);
+                
+                if (match) {
+                    let hours = parseInt(match[1]);
+                    const minutes = parseInt(match[2]);
+                    const period = match[3].toUpperCase();
+                    
+                    if (period === 'PM' && hours !== 12) {
+                        hours += 12;
+                    } else if (period === 'AM' && hours === 12) {
+                        hours = 0;
+                    }
+                    
+                    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+                } else {
+                    return timeString;
+                }
+            } catch (e) {
+                console.error('خطأ في تحويل الوقت:', e);
+                return '';
+            }
+        }
+
         function openCheckout() {
             const modal = document.getElementById('checkout-modal');
             const summary = document.getElementById('bill-details');
@@ -2802,6 +3442,17 @@
             modal.style.display = 'flex';
             
             clearFieldErrors();
+            
+            // تعيين الوقت الافتراضي للساعة الحالية + ساعة واحدة
+            if (deliveryMode === 'later') {
+                const now = new Date();
+                now.setHours(now.getHours() + 1);
+                const defaultTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+                const timeInput = document.getElementById('c-time');
+                if (!timeInput.value) {
+                    timeInput.value = defaultTime;
+                }
+            }
         }
 
         function closeCheckout() { 
@@ -2823,6 +3474,14 @@
                 btnLater.classList.add('active');
                 btnNow.classList.remove('active');
                 timeInput.classList.add('show');
+                
+                // تعيين الوقت الافتراضي عندما يتم اختيار "وقت محدد"
+                if (!timeInput.value) {
+                    const now = new Date();
+                    now.setHours(now.getHours() + 1);
+                    const defaultTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+                    timeInput.value = defaultTime;
+                }
             }
         }
 
@@ -2913,6 +3572,17 @@
                 errorMessages.push('رابط الموقع');
             }
             
+            if (deliveryMode === 'later') {
+                const timeVal = document.getElementById('c-time').value;
+                if (!timeVal) {
+                    showFieldError('c-time', 'يجب اختيار الوقت المحدد للتجهيز');
+                    isValid = false;
+                    errorMessages.push('توقيت التجهيز');
+                } else {
+                    removeFieldError('c-time');
+                }
+            }
+            
             if (!isValid) {
                 const errorList = errorMessages.map((field, index) => `${index + 1}. ${field}`).join('<br>');
                 
@@ -2941,17 +3611,14 @@
             let pickupTime = 'فوري';
             if(deliveryMode === 'later') {
                 const timeVal = document.getElementById('c-time').value;
-                if(!timeVal && !editingOrderId) { 
-                    if(!timeVal) { 
-                        Swal.fire('تنبيه', 'حدد الوقت', 'warning'); 
-                        return; 
-                    }
-                }
                 if(timeVal) {
                     const [hours, minutes] = timeVal.split(':');
                     const suffix = hours >= 12 ? "PM" : "AM";
                     const h = (hours % 12) || 12;
                     pickupTime = `${h}:${minutes} ${suffix}`;
+                } else {
+                    Swal.fire('تنبيه', 'حدد الوقت', 'warning'); 
+                    return; 
                 }
             }
 
@@ -3158,6 +3825,30 @@
                         saveNote();
                     }
                 });
+            }
+            
+            // إضافة حقل خطأ للوقت
+            const timeInput = document.getElementById('c-time');
+            if (timeInput) {
+                timeInput.addEventListener('change', function() {
+                    if (this.value) {
+                        removeFieldError('c-time');
+                    }
+                });
+            }
+            
+            // إضافة حقل خطأ للوقت في CSS إذا لم يكن موجودًا
+            if (!document.getElementById('c-time-error')) {
+                const timeErrorDiv = document.createElement('div');
+                timeErrorDiv.className = 'field-error';
+                timeErrorDiv.id = 'c-time-error';
+                timeErrorDiv.textContent = 'يجب اختيار الوقت المحدد للتجهيز';
+                timeErrorDiv.style.display = 'none';
+                
+                const timeWrapper = document.querySelector('.time-input-wrapper');
+                if (timeWrapper) {
+                    timeWrapper.appendChild(timeErrorDiv);
+                }
             }
         });
 
