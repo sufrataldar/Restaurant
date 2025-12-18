@@ -1610,6 +1610,92 @@
             font-size: 0.9rem;
             margin-bottom: 5px;
         }
+
+        /* ==================== إضافة حقول التاريخ والوقت المتقدم ==================== */
+        .datetime-container {
+            display: none;
+            margin-top: 10px;
+            animation: fadeIn 0.3s;
+            width: 100%;
+        }
+        
+        .datetime-container.show {
+            display: block;
+        }
+        
+        .datetime-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        
+        .datetime-field {
+            flex: 1;
+            min-width: 0; /* لمنع التمدد الزائد */
+        }
+        
+        .datetime-field label {
+            display: block;
+            margin-bottom: 5px;
+            color: #aaa;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        
+        .datetime-field input {
+            width: 100%;
+            padding: 15px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 10px;
+            color: #fff;
+            outline: none;
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .datetime-field input:focus {
+            border-color: var(--primary);
+        }
+        
+        .datetime-display {
+            background: rgba(51, 181, 229, 0.1);
+            border: 1px solid #33b5e5;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            text-align: center;
+            color: #33b5e5;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        .datetime-display.hijri {
+            background: rgba(76, 175, 80, 0.1);
+            border-color: #4CAF50;
+            color: #4CAF50;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+        
+        /* تحسينات للأجهزة الصغيرة لحقول التاريخ والوقت */
+        @media (max-width: 480px) {
+            .datetime-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .datetime-field {
+                width: 100%;
+            }
+            
+            .datetime-field input {
+                padding: 12px;
+                font-size: 15px;
+            }
+        }
     </style>
 </head>
 <body class="no-zoom">
@@ -1754,10 +1840,72 @@
                     <button id="btn-now" class="time-btn active" onclick="setDeliveryMode('now')"><i class="fas fa-fire"></i> فوري</button>
                     <button id="btn-later" class="time-btn" onclick="setDeliveryMode('later')"><i class="fas fa-clock"></i> وقت محدد</button>
                 </div>
-                <div class="time-input-wrapper">
-                    <div class="time-input-label">اختر الوقت المطلوب:</div>
-                    <input type="time" id="c-time" class="hidden-input">
+                
+                <!-- حقل الوقت البسيط القديم (مخفي) -->
+                <input type="time" id="c-time" class="hidden-input">
+                
+                <!-- قسم التاريخ والوقت المتقدم -->
+                <div class="datetime-container" id="datetime-container">
+                    <div class="datetime-row">
+                        <div class="datetime-field">
+                            <label for="c-date">التاريخ</label>
+                            <input type="date" id="c-date">
+                        </div>
+                        <div class="datetime-field">
+                            <label for="c-hour">الساعة</label>
+                            <select id="c-hour" class="datetime-select">
+                                <option value="">اختر الساعة</option>
+                                <option value="01">01</option><option value="02">02</option><option value="03">03</option>
+                                <option value="04">04</option><option value="05">05</option><option value="06">06</option>
+                                <option value="07">07</option><option value="08">08</option><option value="09">09</option>
+                                <option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                                <option value="13">13</option><option value="14">14</option><option value="15">15</option>
+                                <option value="16">16</option><option value="17">17</option><option value="18">18</option>
+                                <option value="19">19</option><option value="20">20</option><option value="21">21</option>
+                                <option value="22">22</option><option value="23">23</option><option value="00">00</option>
+                            </select>
+                        </div>
+                        <div class="datetime-field">
+                            <label for="c-minute">الدقيقة</label>
+                            <select id="c-minute" class="datetime-select">
+                                <option value="">اختر الدقيقة</option>
+                                <option value="00">00</option><option value="05">05</option><option value="10">10</option>
+                                <option value="15">15</option><option value="20">20</option><option value="25">25</option>
+                                <option value="30">30</option><option value="35">35</option><option value="40">40</option>
+                                <option value="45">45</option><option value="50">50</option><option value="55">55</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="datetime-row">
+                        <div class="datetime-field">
+                            <label for="c-am-pm">الفترة</label>
+                            <select id="c-am-pm" class="datetime-select">
+                                <option value="AM">صباحاً</option>
+                                <option value="PM">مساءً</option>
+                            </select>
+                        </div>
+                        <div class="datetime-field">
+                            <label for="c-day">اليوم</label>
+                            <select id="c-day" class="datetime-select">
+                                <option value="">اختر اليوم</option>
+                                <option value="الأحد">الأحد</option>
+                                <option value="الإثنين">الإثنين</option>
+                                <option value="الثلاثاء">الثلاثاء</option>
+                                <option value="الأربعاء">الأربعاء</option>
+                                <option value="الخميس">الخميس</option>
+                                <option value="الجمعة">الجمعة</option>
+                                <option value="السبت">السبت</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="datetime-display" id="datetime-display">
+                        لم يتم تحديد تاريخ ووقت بعد
+                    </div>
+                   
                 </div>
+                
+                <div class="field-error" id="datetime-error">يجب تحديد التاريخ والوقت المطلوب</div>
             </div>
             
             <div class="input-group">
@@ -1951,6 +2099,35 @@
         let notesList = [];
         let editingNoteIndex = -1;
 
+        // إضافة CSS إضافي لحقول التاريخ والوقت
+        const style = document.createElement('style');
+        style.textContent = `
+            .datetime-select {
+                width: 100%;
+                padding: 15px;
+                background: #1a1a1a;
+                border: 1px solid #333;
+                border-radius: 10px;
+                color: #fff;
+                outline: none;
+                font-family: 'Cairo', sans-serif;
+                font-size: 16px;
+                text-align: center;
+                cursor: pointer;
+            }
+            
+            .datetime-select:focus {
+                border-color: var(--primary);
+            }
+            
+            .datetime-select option {
+                background: #1a1a1a;
+                color: #fff;
+                padding: 10px;
+            }
+        `;
+        document.head.appendChild(style);
+
         // منع الزوم عن طريق المستخدم
         document.addEventListener('gesturestart', function (e) {
             e.preventDefault();
@@ -2003,8 +2180,95 @@
             loadStoredNotifications();
             
             updateNotificationDisplay();
+            
+            // تهيئة حقول التاريخ والوقت
+            initializeDateTimeFields();
         }
 
+        function initializeDateTimeFields() {
+            // تعيين التاريخ الافتراضي (اليوم)
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            document.getElementById('c-date').value = formattedDate;
+            document.getElementById('c-date').min = formattedDate;
+            
+            // تعيين الوقت الافتراضي (الساعة الحالية + ساعة)
+            const nextHour = new Date(today.getTime() + 60 * 60 * 1000);
+            let hour = nextHour.getHours();
+            let minute = Math.ceil(nextHour.getMinutes() / 5) * 5;
+            
+            if (minute === 60) {
+                minute = 0;
+                hour = (hour + 1) % 24;
+            }
+            
+            // تحويل إلى 12 ساعة
+            let displayHour = hour % 12;
+            if (displayHour === 0) displayHour = 12;
+            
+            const amPm = hour >= 12 ? 'PM' : 'AM';
+            
+            document.getElementById('c-hour').value = hour.toString().padStart(2, '0');
+            document.getElementById('c-minute').value = minute.toString().padStart(2, '0');
+            document.getElementById('c-am-pm').value = amPm;
+            
+            // تعيين اليوم الحالي
+            const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            const todayIndex = today.getDay();
+            document.getElementById('c-day').value = days[todayIndex];
+            
+            // تحديث العرض
+            updateDateTimeDisplay();
+            
+            // إضافة مستمعين للأحداث
+            document.getElementById('c-date').addEventListener('change', updateDateTimeDisplay);
+            document.getElementById('c-hour').addEventListener('change', updateDateTimeDisplay);
+            document.getElementById('c-minute').addEventListener('change', updateDateTimeDisplay);
+            document.getElementById('c-am-pm').addEventListener('change', updateDateTimeDisplay);
+            document.getElementById('c-day').addEventListener('change', updateDateTimeDisplay);
+        }
+
+        function updateDateTimeDisplay() {
+            const date = document.getElementById('c-date').value;
+            const hour = document.getElementById('c-hour').value;
+            const minute = document.getElementById('c-minute').value;
+            const amPm = document.getElementById('c-am-pm').value;
+            const day = document.getElementById('c-day').value;
+            
+            if (!date || !hour || !minute) {
+                document.getElementById('datetime-display').textContent = 'لم يتم تحديد تاريخ ووقت بعد';
+                document.getElementById('hijri-display').textContent = 'التاريخ الهجري: سيظهر هنا';
+                return;
+            }
+            
+            // تحويل التاريخ
+            const dateObj = new Date(date);
+            const dayOfMonth = dateObj.getDate();
+            const month = dateObj.getMonth() + 1;
+            const year = dateObj.getFullYear();
+            
+            // تحويل الوقت إلى 12 ساعة للعرض
+            let displayHour = parseInt(hour);
+            let displayAmPm = amPm;
+            
+            if (displayHour > 12) {
+                displayHour = displayHour - 12;
+                displayAmPm = 'PM';
+            } else if (displayHour === 0) {
+                displayHour = 12;
+                displayAmPm = 'AM';
+            } else if (displayHour === 12) {
+                displayAmPm = 'PM';
+            }
+            
+            const arabicDate = `${dayOfMonth}/${month}/${year}`;
+            const displayText = `${day} ${arabicDate} - الساعة ${displayHour}:${minute} ${displayAmPm}`;
+            
+            document.getElementById('datetime-display').textContent = displayText;
+           
+        }
+
+      
         function toggleNoteInput() {
             const inputContainer = document.getElementById('note-input-container');
             const noteInput = document.getElementById('note-input');
@@ -3384,12 +3648,61 @@
                 setDeliveryMode('now');
             } else {
                 setDeliveryMode('later');
-                if (order.pickupTime) {
-                    const timeString = convertTo24HourFormat(order.pickupTime);
-                    if (timeString) {
-                        document.getElementById('c-time').value = timeString;
+                
+                // محاولة تحليل التاريخ والوقت من نص الطلب القديم
+                try {
+                    const pickupText = order.pickupTime;
+                    if (pickupText && pickupText.includes('-')) {
+                        const parts = pickupText.split('-').map(p => p.trim());
+                        if (parts.length >= 2) {
+                            // محاولة استخراج اليوم والتاريخ
+                            const dayPart = parts[0];
+                            const dateTimePart = parts[1];
+                            
+                            // البحث عن اليوم
+                            const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+                            for (const day of days) {
+                                if (dayPart.includes(day)) {
+                                    document.getElementById('c-day').value = day;
+                                    break;
+                                }
+                            }
+                            
+                            // البحث عن التاريخ والوقت
+                            const dateMatch = dateTimePart.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+                            const timeMatch = dateTimePart.match(/الساعة (\d{1,2}):(\d{2}) (صباحاً|مساءً)/);
+                            
+                            if (dateMatch) {
+                                const day = dateMatch[1];
+                                const month = dateMatch[2];
+                                const year = dateMatch[3];
+                                const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+                                document.getElementById('c-date').value = formattedDate;
+                            }
+                            
+                            if (timeMatch) {
+                                let hour = parseInt(timeMatch[1]);
+                                const minute = timeMatch[2];
+                                const period = timeMatch[3];
+                                
+                                if (period === 'مساءً' && hour < 12) {
+                                    hour += 12;
+                                } else if (period === 'صباحاً' && hour === 12) {
+                                    hour = 0;
+                                }
+                                
+                                document.getElementById('c-hour').value = hour.toString().padStart(2, '0');
+                                document.getElementById('c-minute').value = minute;
+                                document.getElementById('c-am-pm').value = period === 'صباحاً' ? 'AM' : 'PM';
+                            }
+                        }
                     }
+                } catch (e) {
+                    console.log('تعذر تحليل التاريخ القديم، سيتم استخدام التاريخ الحالي');
+                    initializeDateTimeFields();
                 }
+                
+                updateDateTimeDisplay();
             }
 
             switchTab('new');
@@ -3409,38 +3722,6 @@
             });
         }
 
-        function convertTo24HourFormat(timeString) {
-            try {
-                if (!timeString || timeString === 'فوري') return '';
-                
-                if (timeString.includes('فوري')) {
-                    return '';
-                }
-                
-                const timeRegex = /(\d{1,2}):(\d{2})\s*(AM|PM)/i;
-                const match = timeString.match(timeRegex);
-                
-                if (match) {
-                    let hours = parseInt(match[1]);
-                    const minutes = parseInt(match[2]);
-                    const period = match[3].toUpperCase();
-                    
-                    if (period === 'PM' && hours !== 12) {
-                        hours += 12;
-                    } else if (period === 'AM' && hours === 12) {
-                        hours = 0;
-                    }
-                    
-                    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-                } else {
-                    return timeString;
-                }
-            } catch (e) {
-                console.error('خطأ في تحويل الوقت:', e);
-                return '';
-            }
-        }
-
         function openCheckout() {
             const modal = document.getElementById('checkout-modal');
             const summary = document.getElementById('bill-details');
@@ -3457,15 +3738,9 @@
             
             clearFieldErrors();
             
-            // تعيين الوقت الافتراضي للساعة الحالية + ساعة واحدة
+            // تحديث التاريخ والوقت الافتراضي
             if (deliveryMode === 'later') {
-                const now = new Date();
-                now.setHours(now.getHours() + 1);
-                const defaultTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-                const timeInput = document.getElementById('c-time');
-                if (!timeInput.value) {
-                    timeInput.value = defaultTime;
-                }
+                initializeDateTimeFields();
             }
         }
 
@@ -3478,24 +3753,23 @@
             const btnNow = document.getElementById('btn-now');
             const btnLater = document.getElementById('btn-later');
             const timeInput = document.getElementById('c-time');
+            const datetimeContainer = document.getElementById('datetime-container');
 
             if(mode === 'now') {
                 btnNow.classList.add('active');
                 btnLater.classList.remove('active');
                 timeInput.classList.remove('show');
-                timeInput.value = ''; 
+                datetimeContainer.classList.remove('show');
+                timeInput.value = '';
+                removeFieldError('datetime');
             } else {
                 btnLater.classList.add('active');
                 btnNow.classList.remove('active');
-                timeInput.classList.add('show');
+                timeInput.classList.remove('show');
+                datetimeContainer.classList.add('show');
                 
-                // تعيين الوقت الافتراضي عندما يتم اختيار "وقت محدد"
-                if (!timeInput.value) {
-                    const now = new Date();
-                    now.setHours(now.getHours() + 1);
-                    const defaultTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-                    timeInput.value = defaultTime;
-                }
+                // تحديث التاريخ والوقت الافتراضي
+                initializeDateTimeFields();
             }
         }
 
@@ -3547,6 +3821,7 @@
             removeFieldError('payment');
             removeFieldError('c-phone');
             removeFieldError('c-loc');
+            removeFieldError('datetime');
         }
 
         function validateAndSubmitOrder() {
@@ -3587,13 +3862,16 @@
             }
             
             if (deliveryMode === 'later') {
-                const timeVal = document.getElementById('c-time').value;
-                if (!timeVal) {
-                    showFieldError('c-time', 'يجب اختيار الوقت المحدد للتجهيز');
+                const date = document.getElementById('c-date').value;
+                const hour = document.getElementById('c-hour').value;
+                const minute = document.getElementById('c-minute').value;
+                
+                if (!date || !hour || !minute) {
+                    showFieldError('datetime', 'يجب تحديد التاريخ والوقت المطلوب');
                     isValid = false;
                     errorMessages.push('توقيت التجهيز');
                 } else {
-                    removeFieldError('c-time');
+                    removeFieldError('datetime');
                 }
             }
             
@@ -3623,15 +3901,38 @@
             const details = document.getElementById('c-details').value;
             
             let pickupTime = 'فوري';
+            
             if(deliveryMode === 'later') {
-                const timeVal = document.getElementById('c-time').value;
-                if(timeVal) {
-                    const [hours, minutes] = timeVal.split(':');
-                    const suffix = hours >= 12 ? "PM" : "AM";
-                    const h = (hours % 12) || 12;
-                    pickupTime = `${h}:${minutes} ${suffix}`;
+                const date = document.getElementById('c-date').value;
+                const hour = document.getElementById('c-hour').value;
+                const minute = document.getElementById('c-minute').value;
+                const amPm = document.getElementById('c-am-pm').value;
+                const day = document.getElementById('c-day').value;
+                
+                if(date && hour && minute) {
+                    // تحويل التاريخ
+                    const dateObj = new Date(date);
+                    const dayOfMonth = dateObj.getDate();
+                    const month = dateObj.getMonth() + 1;
+                    const year = dateObj.getFullYear();
+                    
+                    // تحويل الوقت إلى 12 ساعة للعرض
+                    let displayHour = parseInt(hour);
+                    let displayAmPm = amPm;
+                    
+                    if (displayHour > 12) {
+                        displayHour = displayHour - 12;
+                        displayAmPm = 'PM';
+                    } else if (displayHour === 0) {
+                        displayHour = 12;
+                        displayAmPm = 'AM';
+                    } else if (displayHour === 12) {
+                        displayAmPm = 'PM';
+                    }
+                    
+                    pickupTime = `${day} - ${dayOfMonth}/${month}/${year} - الساعة ${displayHour}:${minute} ${displayAmPm}`;
                 } else {
-                    Swal.fire('تنبيه', 'حدد الوقت', 'warning'); 
+                    Swal.fire('تنبيه', 'حدد التاريخ والوقت', 'warning'); 
                     return; 
                 }
             }
@@ -3675,6 +3976,15 @@
             params.append('notes', notesText);
             
             params.append('paymentMethod', paymentMethod);
+            
+            // إضافة معلومات التاريخ والوقت المتقدم
+            if (deliveryMode === 'later') {
+                params.append('deliveryDate', document.getElementById('c-date').value);
+                params.append('deliveryHour', document.getElementById('c-hour').value);
+                params.append('deliveryMinute', document.getElementById('c-minute').value);
+                params.append('deliveryAmPm', document.getElementById('c-am-pm').value);
+                params.append('deliveryDay', document.getElementById('c-day').value);
+            }
             
             try {
                 const response = await fetch(API_URL, {
@@ -3839,30 +4149,6 @@
                         saveNote();
                     }
                 });
-            }
-            
-            // إضافة حقل خطأ للوقت
-            const timeInput = document.getElementById('c-time');
-            if (timeInput) {
-                timeInput.addEventListener('change', function() {
-                    if (this.value) {
-                        removeFieldError('c-time');
-                    }
-                });
-            }
-            
-            // إضافة حقل خطأ للوقت في CSS إذا لم يكن موجودًا
-            if (!document.getElementById('c-time-error')) {
-                const timeErrorDiv = document.createElement('div');
-                timeErrorDiv.className = 'field-error';
-                timeErrorDiv.id = 'c-time-error';
-                timeErrorDiv.textContent = 'يجب اختيار الوقت المحدد للتجهيز';
-                timeErrorDiv.style.display = 'none';
-                
-                const timeWrapper = document.querySelector('.time-input-wrapper');
-                if (timeWrapper) {
-                    timeWrapper.appendChild(timeErrorDiv);
-                }
             }
         });
 
