@@ -67,6 +67,7 @@
             --notification-updated: #aa00ff;
             --notification-cancelled: #ff4444;
             --notification-unread: #ff4444;
+            --delivery-color: #00bcd4;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
@@ -1696,6 +1697,115 @@
                 font-size: 15px;
             }
         }
+        
+        /* ==================== إضافة خيارات سعر التوصيل ==================== */
+        .delivery-price-container {
+            margin-bottom: 25px;
+        }
+        
+        .delivery-price-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: #ddd;
+            font-weight: bold;
+        }
+        
+        .delivery-price-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .delivery-price-btn {
+            flex: 1;
+            min-width: calc(50% - 4px);
+            padding: 15px 10px;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+            font-family: 'Cairo';
+            font-weight: bold;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .delivery-price-btn.active {
+            background: var(--delivery-color);
+            color: #000;
+            border-color: var(--delivery-color);
+            box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
+        }
+        
+        .delivery-price-btn:hover:not(.active) {
+            background: #333;
+            border-color: var(--delivery-color);
+        }
+        
+        .delivery-price-display {
+            background: rgba(0, 188, 212, 0.1);
+            border: 1px solid var(--delivery-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            text-align: center;
+            color: var(--delivery-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .delivery-price-value {
+            font-size: 1.3rem;
+            color: #fff;
+        }
+        
+        .field-error.delivery-error {
+            margin-top: 5px;
+        }
+        
+        /* تحسينات للأجهزة الصغيرة */
+        @media (max-width: 480px) {
+            .delivery-price-btn {
+                min-width: calc(50% - 4px);
+                padding: 12px 8px;
+                font-size: 0.85rem;
+            }
+            
+            .delivery-price-display {
+                font-size: 1rem;
+                padding: 10px;
+            }
+            
+            .delivery-price-value {
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* إضافة سعر التوصيل في ملخص الفاتورة */
+        .delivery-row {
+            color: var(--delivery-color);
+            font-weight: bold;
+        }
+        
+        .final-total-row {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-top: 2px solid #333;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body class="no-zoom">
@@ -1921,6 +2031,42 @@
                 <div class="field-error" id="payment-error">يجب اختيار طريقة الدفع</div>
             </div>
             
+            <!-- قسم سعر التوصيل الجديد -->
+            <div class="delivery-price-container">
+                <label class="delivery-price-label">سعر التوصيل *</label>
+                <div class="delivery-price-selector" id="delivery-price-selector">
+                    <button class="delivery-price-btn" data-price="0.000" onclick="setDeliveryPrice('0.000')">
+                        0.000 KD
+                    </button>
+                    <button class="delivery-price-btn" data-price="0.250" onclick="setDeliveryPrice('0.250')">
+                        0.250 KD
+                    </button>
+                    <button class="delivery-price-btn" data-price="0.500" onclick="setDeliveryPrice('0.500')">
+                        0.500 KD
+                    </button>
+                    <button class="delivery-price-btn" data-price="1.000" onclick="setDeliveryPrice('1.000')">
+                        1.000 KD
+                    </button>
+                    <button class="delivery-price-btn" data-price="2.000" onclick="setDeliveryPrice('2.000')">
+                        2.000 KD
+                    </button>
+                    <button class="delivery-price-btn" data-price="3.000" onclick="setDeliveryPrice('3.000')">
+                        3.000 KD
+                    </button>
+                    <button class="delivery-price-btn" data-price="4.000" onclick="setDeliveryPrice('4.000')">
+                        4.000 KD
+                    </button>
+                    <button class="delivery-price-btn" data-price="5.000" onclick="setDeliveryPrice('5.000')">
+                        5.000 KD
+                    </button>
+                </div>
+                <div class="delivery-price-display">
+                    <span>سعر التوصيل المحدد:</span>
+                    <span class="delivery-price-value" id="delivery-price-value">0.000 KD</span>
+                </div>
+                <div class="field-error delivery-error" id="delivery-error">يجب تحديد سعر التوصيل</div>
+            </div>
+            
             <div class="input-group">
                 <label for="c-phone">رقم الهاتف (8 أرقام) *</label>
                 <div class="phone-input-container"> 
@@ -2100,6 +2246,7 @@
         
         let notesList = [];
         let editingNoteIndex = -1;
+        let deliveryPrice = '0.000'; // سعر التوصيل الافتراضي
 
         // إضافة CSS إضافي لحقول التاريخ والوقت
         const style = document.createElement('style');
@@ -2185,6 +2332,9 @@
             
             // تهيئة حقول التاريخ والوقت
             initializeDateTimeFields();
+            
+            // تعيين سعر التوصيل الافتراضي
+            setDeliveryPrice('0.000');
         }
 
         function initializeDateTimeFields() {
@@ -2270,7 +2420,33 @@
            
         }
 
-      
+        // دالة لتعيين سعر التوصيل
+        function setDeliveryPrice(price) {
+            deliveryPrice = price;
+            
+            // إزالة النشاط من جميع الأزرار
+            document.querySelectorAll('.delivery-price-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // إضافة النشاط للزر المحدد
+            const selectedBtn = document.querySelector(`.delivery-price-btn[data-price="${price}"]`);
+            if (selectedBtn) {
+                selectedBtn.classList.add('active');
+            }
+            
+            // تحديث العرض
+            document.getElementById('delivery-price-value').textContent = `${deliveryPrice} KD`;
+            
+            // إزالة خطأ الحقل إذا تم تحديد سعر
+            removeFieldError('delivery');
+            
+            // تحديث ملخص الفاتورة إذا كان مفتوحاً
+            if (document.getElementById('checkout-modal').style.display === 'flex') {
+                updateBillSummary();
+            }
+        }
+
         function toggleNoteInput() {
             const inputContainer = document.getElementById('note-input-container');
             const noteInput = document.getElementById('note-input');
@@ -3629,6 +3805,13 @@
                 document.getElementById('btn-link').classList.remove('active');
             }
             
+            // تعيين سعر التوصيل إذا كان موجوداً في الطلب
+            if (order.deliveryPrice) {
+                setDeliveryPrice(order.deliveryPrice);
+            } else {
+                setDeliveryPrice('0.000');
+            }
+            
             const rawPhone = order.phone.replace('+965', '').trim();
             document.getElementById('c-phone').value = rawPhone;
 
@@ -3726,16 +3909,7 @@
 
         function openCheckout() {
             const modal = document.getElementById('checkout-modal');
-            const summary = document.getElementById('bill-details');
-            summary.innerHTML = '';
-            let total = 0;
-            for(const id in cart) {
-                const i = cart[id];
-                const itemTotal = i.qty * i.price;
-                total += itemTotal;
-                summary.innerHTML += `<div class="bill-row"><span>${i.name} (x${i.qty})</span><span>${itemTotal.toFixed(3)} KD</span></div>`;
-            }
-            summary.innerHTML += `<div class="bill-row" style="border:none; margin-top:10px; color:#ff6600; font-weight:bold;"><span>المجموع</span><span>${total.toFixed(3)} KD</span></div>`;
+            updateBillSummary();
             modal.style.display = 'flex';
             
             clearFieldErrors();
@@ -3744,6 +3918,29 @@
             if (deliveryMode === 'later') {
                 initializeDateTimeFields();
             }
+        }
+
+        function updateBillSummary() {
+            const summary = document.getElementById('bill-details');
+            summary.innerHTML = '';
+            let subtotal = 0;
+            for(const id in cart) {
+                const i = cart[id];
+                const itemTotal = i.qty * i.price;
+                subtotal += itemTotal;
+                summary.innerHTML += `<div class="bill-row"><span>${i.name} (x${i.qty})</span><span>${itemTotal.toFixed(3)} KD</span></div>`;
+            }
+            
+            // حساب الإجمالي النهائي
+            const deliveryPriceNum = parseFloat(deliveryPrice);
+            const finalTotal = subtotal + deliveryPriceNum;
+            
+            // إضافة سعر التوصيل والإجمالي النهائي
+            summary.innerHTML += `
+                <div class="bill-row"><span>المجموع الجزئي</span><span>${subtotal.toFixed(3)} KD</span></div>
+                <div class="bill-row delivery-row"><span>سعر التوصيل</span><span>${deliveryPrice} KD</span></div>
+                <div class="bill-row final-total-row"><span>الإجمالي النهائي</span><span>${finalTotal.toFixed(3)} KD</span></div>
+            `;
         }
 
         function closeCheckout() { 
@@ -3824,6 +4021,7 @@
             removeFieldError('c-phone');
             removeFieldError('c-loc');
             removeFieldError('datetime');
+            removeFieldError('delivery');
         }
 
         function validateAndSubmitOrder() {
@@ -3843,6 +4041,13 @@
                 showFieldError('payment', 'يجب اختيار طريقة الدفع (Cash أو Link)');
                 isValid = false;
                 errorMessages.push('طريقة الدفع');
+            }
+            
+            // التحقق من سعر التوصيل
+            if (!deliveryPrice || deliveryPrice === '0.000') {
+                showFieldError('delivery', 'يجب تحديد سعر التوصيل');
+                isValid = false;
+                errorMessages.push('سعر التوصيل');
             }
             
             const phone = document.getElementById('c-phone').value;
@@ -3945,13 +4150,17 @@
             btn.disabled = true;
 
             let itemsArr = [];
-            let total = 0;
+            let subtotal = 0;
             for(const id in cart) {
                 const item = cart[id];
                 const itemTotal = item.qty * item.price;
                 itemsArr.push(`${item.name} (x${item.qty}) - ${itemTotal.toFixed(3)} KD`);
-                total += itemTotal;
+                subtotal += itemTotal;
             }
+
+            // حساب الإجمالي النهائي مع سعر التوصيل
+            const deliveryPriceNum = parseFloat(deliveryPrice);
+            const finalTotal = subtotal + deliveryPriceNum;
 
             const params = new URLSearchParams();
             
@@ -3969,7 +4178,9 @@
             params.append('details', details);
             params.append('pickupTime', pickupTime); 
             params.append('items', itemsArr.join(' + '));
-            params.append('total', total.toFixed(3));
+            params.append('subtotal', subtotal.toFixed(3));
+            params.append('deliveryPrice', deliveryPrice);
+            params.append('total', finalTotal.toFixed(3));
             
             let notesText = '';
             if (notesList.length > 0) {
@@ -4029,8 +4240,10 @@
                     
                     cart = {};
                     notesList = [];
+                    deliveryPrice = '0.000';
                     updateUI();
                     renderNotes();
+                    setDeliveryPrice('0.000');
                     document.querySelectorAll('.qty-display').forEach(d => d.innerText = '0');
                     closeCheckout();
                     
