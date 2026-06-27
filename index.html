@@ -12,7 +12,6 @@
     <link rel="apple-touch-icon" href="https://iili.io/fj31YHN.md.png">
     <link rel="icon" href="https://iili.io/fj31YHN.md.png">
     <style>
-        /* منع الزوم على جميع المتصفحات */
         html, body {
             touch-action: manipulation;
             -webkit-touch-callout: none;
@@ -26,7 +25,6 @@
             position: fixed;
             height: 100%;
         }
-        
         * {
             -webkit-text-size-adjust: 100%;
             -moz-text-size-adjust: 100%;
@@ -35,23 +33,15 @@
             max-height: 1000000px;
             -webkit-tap-highlight-color: transparent;
         }
-        
-        /* منع الزوم المزدوج على iOS Safari */
         input, textarea, select {
             font-size: 16px !important;
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
         }
-        
         @media screen and (-webkit-min-device-pixel-ratio:0) {
-            select,
-            textarea,
-            input {
-                font-size: 16px !important;
-            }
+            select, textarea, input { font-size: 16px !important; }
         }
-        
         :root { 
             --primary: #ff6600; 
             --dark: #121212; 
@@ -80,624 +70,109 @@
             -webkit-overflow-scrolling: touch;
             height: 100%;
         }
-        
-        /* تحسينات للجوال فقط */
         @media (min-width: 768px) {
-            body {
-                max-width: 500px;
-                margin: 0 auto;
-                border-left: 1px solid #333;
-                border-right: 1px solid #333;
-                box-shadow: 0 0 30px rgba(0,0,0,0.5);
-                position: relative;
-            }
-            
-            .app-header {
-                max-width: 500px;
-                margin: 0 auto;
-                left: 0;
-                right: 0;
-            }
-            
-            .floating-bar {
-                max-width: 450px;
-                left: 50%;
-                transform: translateX(-50%) translateY(150%);
-            }
-            
-            .floating-bar.show {
-                transform: translateX(-50%) translateY(0);
-            }
-            
-            .checkout-modal {
-                max-width: 500px;
-                margin: 0 auto;
-                left: 0;
-                right: 0;
-            }
-            
-            .notification-dropdown {
-                width: 350px;
-                right: 10px;
-            }
-            
-            .admin-notification-container {
-                width: 350px;
-                right: 10px;
-            }
+            body { max-width: 500px; margin: 0 auto; border-left: 1px solid #333; border-right: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.5); position: relative; }
+            .app-header { max-width: 500px; margin: 0 auto; left: 0; right: 0; }
+            .floating-bar { max-width: 450px; left: 50%; transform: translateX(-50%) translateY(150%); }
+            .floating-bar.show { transform: translateX(-50%) translateY(0); }
+            .checkout-modal { max-width: 500px; margin: 0 auto; left: 0; right: 0; }
+            .notification-dropdown { width: 350px; right: 10px; }
+            .admin-notification-container { width: 350px; right: 10px; }
         }
-        
-        .app-header { 
-            position: sticky; 
-            top: 0; 
-            background: rgba(18, 18, 18, 0.95); 
-            padding: 10px 15px; 
-            z-index: 100; 
-            border-bottom: 1px solid #333; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            width: 100%;
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-        }
-        .logo { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            font-size: 1.1rem; 
-            font-weight: 800; 
-            color: #fff; 
-        }
-        .logo img { 
-            height: 45px; 
-            width: 45px; 
-            border-radius: 50%; 
-            border: 2px solid var(--primary); 
-            object-fit: cover; 
-        }
-
+        .app-header { position: sticky; top: 0; background: rgba(18, 18, 18, 0.95); padding: 10px 15px; z-index: 100; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; width: 100%; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 800; color: #fff; }
+        .logo img { height: 45px; width: 45px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
         .header-right { display: flex; align-items: center; gap: 20px; }
-        
-        .notification-bell {
-            position: relative;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: all 0.3s;
-        }
-        
-        .notification-bell:hover {
-            background: rgba(255, 102, 0, 0.1);
-            transform: scale(1.1);
-        }
-        
-        .notification-bell.active {
-            color: var(--primary);
-        }
-        
-        .notification-badge {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: var(--notification-unread);
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            border: 2px solid var(--dark);
-            box-shadow: 0 0 5px rgba(255, 68, 68, 0.5);
-            animation: pulse 2s infinite;
-        }
-        
-        .notification-dropdown {
-            position: fixed;
-            top: 60px;
-            right: 15px;
-            width: 90%;
-            max-width: 400px;
-            max-height: 80vh;
-            background: var(--dark);
-            border: 1px solid #333;
-            border-radius: 10px;
-            z-index: 1002;
-            display: none;
-            flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            overflow: hidden;
-        }
-        
-        .notification-dropdown.show {
-            display: flex;
-        }
-        
-        .notification-header {
-            padding: 15px;
-            background: #1a1a1a;
-            border-bottom: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .notification-header h3 {
-            margin: 0;
-            color: var(--primary);
-            font-size: 1.2rem;
-        }
-        
-        .notification-clear {
-            background: transparent;
-            border: 1px solid #333;
-            color: #888;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: 0.3s;
-        }
-        
-        .notification-clear:hover {
-            background: var(--danger);
-            color: white;
-            border-color: var(--danger);
-        }
-        
-        .notification-list {
-            flex: 1;
-            overflow-y: auto;
-            max-height: 60vh;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .notification-item {
-            padding: 15px;
-            border-bottom: 1px solid #333;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-        }
-        
-        .notification-item:hover {
-            background: #1a1a1a;
-        }
-        
-        .notification-item.unread {
-            background: rgba(255, 68, 68, 0.05);
-            border-right: 3px solid var(--notification-unread);
-        }
-        
-        .notification-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-        
-        .notification-icon.received {
-            background: rgba(51, 181, 229, 0.2);
-            color: var(--notification-received);
-        }
-        
-        .notification-icon.updated {
-            background: rgba(170, 0, 255, 0.2);
-            color: var(--notification-updated);
-        }
-        
-        .notification-icon.cancelled {
-            background: rgba(255, 68, 68, 0.2);
-            color: var(--notification-cancelled);
-        }
-        
-        .notification-content {
-            flex: 1;
-        }
-        
-        .notification-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-size: 1rem;
-        }
-        
-        .notification-time {
-            color: #888;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .notification-message {
-            color: #ccc;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-        
-        .notification-footer {
-            padding: 10px 15px;
-            background: #1a1a1a;
-            border-top: 1px solid #333;
-            text-align: center;
-        }
-        
-        .notification-footer a {
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-        
-        .notification-footer a:hover {
-            text-decoration: underline;
-        }
-        
-        .notification-empty {
-            text-align: center;
-            padding: 30px;
-            color: #666;
-        }
-        
-        .notification-empty i {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            opacity: 0.5;
-        }
-        
-        .permission-request {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-            border: 2px solid var(--primary);
-            border-radius: 10px;
-            padding: 20px;
-            z-index: 2000;
-            max-width: 90%;
-            width: 400px;
-            box-shadow: 0 10px 30px rgba(255, 102, 0, 0.3);
-            display: none;
-            animation: slideDown 0.5s ease;
-        }
-        
-        .permission-request.show {
-            display: block;
-        }
-        
-        .permission-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            color: var(--primary);
-        }
-        
-        .permission-body {
-            margin-bottom: 20px;
-            color: #ccc;
-            line-height: 1.5;
-        }
-        
-        .permission-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .permission-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Cairo';
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        
-        .permission-btn.allow {
-            background: var(--primary);
-            color: #000;
-        }
-        
-        .permission-btn.allow:hover {
-            background: #ff8c00;
-        }
-        
-        .permission-btn.deny {
-            background: #333;
-            color: #ccc;
-            border: 1px solid #444;
-        }
-        
-        .permission-btn.deny:hover {
-            background: #444;
-        }
-        
-        .permission-steps {
-            background: rgba(255, 102, 0, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-            font-size: 0.85rem;
-        }
-        
-        .permission-step {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .permission-step:last-child {
-            margin-bottom: 0;
-        }
-        
-        .step-number {
-            background: var(--primary);
-            color: #000;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .tabs { 
-            display: flex; 
-            background: #1e1e1e; 
-            margin: 10px; 
-            border-radius: 10px; 
-            overflow: hidden; 
-            border: 1px solid #333; 
-        }
-        .tab-btn { 
-            flex: 1; 
-            padding: 12px; 
-            background: transparent; 
-            border: none; 
-            color: #888; 
-            font-family: 'Cairo'; 
-            font-weight: bold; 
-            cursor: pointer; 
-            transition: 0.3s;
-            font-size: 0.9rem;
-        }
+        .notification-bell { position: relative; cursor: pointer; padding: 8px; border-radius: 50%; transition: all 0.3s; }
+        .notification-bell:hover { background: rgba(255, 102, 0, 0.1); transform: scale(1.1); }
+        .notification-bell.active { color: var(--primary); }
+        .notification-badge { position: absolute; top: 0; right: 0; background: var(--notification-unread); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid var(--dark); box-shadow: 0 0 5px rgba(255, 68, 68, 0.5); animation: pulse 2s infinite; }
+        .notification-dropdown { position: fixed; top: 60px; right: 15px; width: 90%; max-width: 400px; max-height: 80vh; background: var(--dark); border: 1px solid #333; border-radius: 10px; z-index: 1002; display: none; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden; }
+        .notification-dropdown.show { display: flex; }
+        .notification-header { padding: 15px; background: #1a1a1a; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .notification-header h3 { margin: 0; color: var(--primary); font-size: 1.2rem; }
+        .notification-clear { background: transparent; border: 1px solid #333; color: #888; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; transition: 0.3s; }
+        .notification-clear:hover { background: var(--danger); color: white; border-color: var(--danger); }
+        .notification-list { flex: 1; overflow-y: auto; max-height: 60vh; -webkit-overflow-scrolling: touch; }
+        .notification-item { padding: 15px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.3s; display: flex; gap: 12px; align-items: flex-start; }
+        .notification-item:hover { background: #1a1a1a; }
+        .notification-item.unread { background: rgba(255, 68, 68, 0.05); border-right: 3px solid var(--notification-unread); }
+        .notification-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+        .notification-icon.received { background: rgba(51, 181, 229, 0.2); color: var(--notification-received); }
+        .notification-icon.updated { background: rgba(170, 0, 255, 0.2); color: var(--notification-updated); }
+        .notification-icon.cancelled { background: rgba(255, 68, 68, 0.2); color: var(--notification-cancelled); }
+        .notification-content { flex: 1; }
+        .notification-title { font-weight: bold; margin-bottom: 5px; font-size: 1rem; }
+        .notification-time { color: #888; font-size: 0.8rem; display: flex; align-items: center; gap: 5px; }
+        .notification-message { color: #ccc; font-size: 0.9rem; line-height: 1.4; }
+        .notification-footer { padding: 10px 15px; background: #1a1a1a; border-top: 1px solid #333; text-align: center; }
+        .notification-footer a { color: var(--primary); text-decoration: none; font-size: 0.9rem; }
+        .notification-footer a:hover { text-decoration: underline; }
+        .notification-empty { text-align: center; padding: 30px; color: #666; }
+        .notification-empty i { font-size: 2rem; margin-bottom: 10px; opacity: 0.5; }
+        .permission-request { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); border: 2px solid var(--primary); border-radius: 10px; padding: 20px; z-index: 2000; max-width: 90%; width: 400px; box-shadow: 0 10px 30px rgba(255, 102, 0, 0.3); display: none; animation: slideDown 0.5s ease; }
+        .permission-request.show { display: block; }
+        .permission-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; color: var(--primary); }
+        .permission-body { margin-bottom: 20px; color: #ccc; line-height: 1.5; }
+        .permission-actions { display: flex; gap: 10px; }
+        .permission-btn { flex: 1; padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; }
+        .permission-btn.allow { background: var(--primary); color: #000; }
+        .permission-btn.allow:hover { background: #ff8c00; }
+        .permission-btn.deny { background: #333; color: #ccc; border: 1px solid #444; }
+        .permission-btn.deny:hover { background: #444; }
+        .permission-steps { background: rgba(255, 102, 0, 0.1); border-radius: 8px; padding: 15px; margin-top: 15px; font-size: 0.85rem; }
+        .permission-step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+        .permission-step:last-child { margin-bottom: 0; }
+        .step-number { background: var(--primary); color: #000; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+        .tabs { display: flex; background: #1e1e1e; margin: 10px; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+        .tab-btn { flex: 1; padding: 12px; background: transparent; border: none; color: #888; font-family: 'Cairo'; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
         .tab-btn.active { background: var(--primary); color: #000; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        
-        .category-scroll { 
-            display: flex; 
-            overflow-x: auto; 
-            padding: 15px 10px; 
-            gap: 10px; 
-            scrollbar-width: none; 
-            -webkit-overflow-scrolling: touch;
-            -ms-overflow-style: none;
-        }
-        .category-scroll::-webkit-scrollbar {
-            display: none;
-        }
-        .cat-chip { 
-            background: #2a2a2a; 
-            color: #fff; 
-            padding: 8px 20px; 
-            border-radius: 50px; 
-            white-space: nowrap; 
-            border: 1px solid #333; 
-            cursor: pointer; 
-            font-size: 0.9rem;
-        }
+        .category-scroll { display: flex; overflow-x: auto; padding: 15px 10px; gap: 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; -ms-overflow-style: none; }
+        .category-scroll::-webkit-scrollbar { display: none; }
+        .cat-chip { background: #2a2a2a; color: #fff; padding: 8px 20px; border-radius: 50px; white-space: nowrap; border: 1px solid #333; cursor: pointer; font-size: 0.9rem; }
         .cat-chip.active { background: var(--primary); color: #000; font-weight: bold; }
-        
         .menu-list { padding: 10px; }
-        .item-card { 
-            background: var(--card); 
-            border-radius: 15px; 
-            padding: 15px; 
-            margin-bottom: 15px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border: 1px solid #333; 
-        }
+        .item-card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
         .item-info h3 { margin: 0 0 5px 0; font-size: 0.95rem; }
         .item-price { color: var(--primary); font-weight: 700; font-size: 0.9rem; }
-        
         .qty-control { display: flex; align-items: center; background: #2a2a2a; border-radius: 12px; padding: 5px; }
-        .qty-btn { 
-            width: 35px; 
-            height: 35px; 
-            border-radius: 8px; 
-            border: none; 
-            background: #333; 
-            color: #fff; 
-            font-size: 1.2rem; 
-            cursor: pointer; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .qty-btn { width: 35px; height: 35px; border-radius: 8px; border: none; background: #333; color: #fff; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .qty-btn.add { background: var(--primary); color: #000; }
         .qty-display { width: 30px; text-align: center; font-weight: bold; }
-
-        .floating-bar { 
-            position: fixed; 
-            bottom: 20px; 
-            left: 5%; 
-            width: 90%; 
-            background: var(--primary); 
-            border-radius: 20px; 
-            padding: 15px 25px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            box-shadow: 0 10px 30px rgba(255,102,0,0.4); 
-            z-index: 1000; 
-            color: #000; 
-            font-weight: bold; 
-            transform: translateY(150%); 
-            transition: 0.3s; 
-            cursor: pointer;
-            font-size: 0.95rem;
-        }
+        .floating-bar { position: fixed; bottom: 20px; left: 5%; width: 90%; background: var(--primary); border-radius: 20px; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(255,102,0,0.4); z-index: 1000; color: #000; font-weight: bold; transform: translateY(150%); transition: 0.3s; cursor: pointer; font-size: 0.95rem; }
         .floating-bar.show { transform: translateY(0); }
-
-        .checkout-modal { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: var(--dark); 
-            z-index: 2000; 
-            display: none; 
-            flex-direction: column; 
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .modal-header { 
-            padding: 20px; 
-            border-bottom: 1px solid #333; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            position: sticky;
-            top: 0;
-            background: var(--dark);
-            z-index: 1;
-        }
-        .modal-body { 
-            padding: 20px; 
-            flex: 1; 
-            overflow-y: auto;
-            padding-bottom: 100px;
-        }
-        
+        .checkout-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 2000; display: none; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .modal-header { padding: 20px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--dark); z-index: 1; }
+        .modal-body { padding: 20px; flex: 1; overflow-y: auto; padding-bottom: 100px; }
         .input-group { margin-bottom: 25px; }
         .input-group label { display: block; margin-bottom: 10px; font-size: 0.95rem; color: #ddd; font-weight: bold; }
-        .input-group input, .input-group select, .input-group textarea { 
-            width: 100%; 
-            padding: 15px; 
-            background: #1a1a1a; 
-            border: 1px solid #333; 
-            border-radius: 10px; 
-            color: #fff; 
-            outline: none; 
-            font-family: 'Cairo', sans-serif; 
-            transition: border-color 0.3s; 
-            font-size: 16px;
-        }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; outline: none; font-family: 'Cairo', sans-serif; transition: border-color 0.3s; font-size: 16px; }
         .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--primary); }
         .input-group textarea { resize: vertical; min-height: 80px; }
-        
         .required-field { border: 2px solid var(--danger) !important; }
         .field-error { color: var(--danger); font-size: 0.85rem; margin-top: 5px; display: none; }
         .field-error.show { display: block; }
-
         .time-selector { display: flex; gap: 10px; margin-bottom: 10px; }
-        .time-btn { 
-            flex: 1; 
-            padding: 15px; 
-            background: #2a2a2a; 
-            border: 1px solid #333; 
-            color: #fff; 
-            border-radius: 10px; 
-            cursor: pointer; 
-            font-family: 'Cairo'; 
-            font-weight: bold; 
-            transition: 0.3s; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 8px;
-            font-size: 0.9rem;
-        }
+        .time-btn { flex: 1; padding: 15px; background: #2a2a2a; border: 1px solid #333; color: #fff; border-radius: 10px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.9rem; }
         .time-btn.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 10px rgba(255,102,0,0.3); }
-        
         .payment-selector { display: flex; gap: 10px; margin-bottom: 10px; }
-        .payment-btn { 
-            flex: 1; 
-            padding: 15px; 
-            background: #2a2a2a; 
-            border: 1px solid #333; 
-            color: #fff; 
-            border-radius: 10px; 
-            cursor: pointer; 
-            font-family: 'Cairo'; 
-            font-weight: bold; 
-            transition: 0.3s; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 8px;
-            font-size: 0.9rem;
-        }
+        .payment-btn { flex: 1; padding: 15px; background: #2a2a2a; border: 1px solid #333; color: #fff; border-radius: 10px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.9rem; }
         .payment-btn.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 10px rgba(255,102,0,0.3); }
         .payment-btn.cash { border-color: #4CAF50; }
         .payment-btn.cash.active { background: #4CAF50; color: #000; border-color: #4CAF50; box-shadow: 0 0 10px rgba(76, 175, 80, 0.3); }
         .payment-btn.link { border-color: #2196F3; }
         .payment-btn.link.active { background: #2196F3; color: #000; border-color: #2196F3; box-shadow: 0 0 10px rgba(33, 150, 243, 0.3); }
-        
-        .hidden-input { 
-            display: none; 
-            margin-top: 10px; 
-            animation: fadeIn 0.3s;
-            width: 100%;
-        }
-        .hidden-input.show { 
-            display: block; 
-        }
-        
-        /* تحسين حقل الوقت ليكون أكثر وضوحًا */
-        #c-time {
-            padding: 15px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 10px;
-            color: #fff;
-            font-family: 'Cairo', sans-serif;
-            font-size: 16px;
-            text-align: center;
-            width: 100%;
-        }
-        
-        #c-time:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
-        
+        .hidden-input { display: none; margin-top: 10px; animation: fadeIn 0.3s; width: 100%; }
+        .hidden-input.show { display: block; }
+        #c-time { padding: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; font-family: 'Cairo', sans-serif; font-size: 16px; text-align: center; width: 100%; }
+        #c-time:focus { border-color: var(--primary); outline: none; }
         @keyframes fadeIn { from {opacity:0; transform:translateY(-5px);} to {opacity:1; transform:translateY(0);} }
-
         .bill-summary { background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
         .bill-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; font-size: 0.9rem; }
-        .send-btn { 
-            width: 100%; 
-            padding: 18px; 
-            background: var(--primary); 
-            color: #000; 
-            font-weight: 900; 
-            border: none; 
-            border-radius: 15px; 
-            cursor: pointer; 
-            font-size: 1rem; 
-            margin-bottom: 20px;
-        }
+        .send-btn { width: 100%; padding: 18px; background: var(--primary); color: #000; font-weight: 900; border: none; border-radius: 15px; cursor: pointer; font-size: 1rem; margin-bottom: 20px; }
         .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
         .sent-orders-list { padding: 10px; }
         .sent-order-card { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 15px; margin-bottom: 15px; position: relative; }
         .sent-header { display: flex; justify-content: space-between; border-bottom: 1px dashed #333; padding-bottom: 10px; margin-bottom: 10px; }
@@ -705,1106 +180,199 @@
         .sent-status { font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; background: #333; }
         .sent-body p { margin: 5px 0; color: #ccc; font-size: 0.85rem; }
         .edit-btn { background: #33b5e5; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; margin-top: 10px; width: 100%; font-family: 'Cairo'; font-weight: bold; font-size: 0.9rem; }
-        .delete-btn {
-            background: #ff4444;
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 5px;
-            width: 100%;
-            font-family: 'Cairo';
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
+        .delete-btn { background: #ff4444; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; margin-top: 5px; width: 100%; font-family: 'Cairo'; font-weight: bold; font-size: 0.9rem; }
         .edit-badge { background: var(--primary); color: black; padding: 5px 10px; border-radius: 5px; font-weight: bold; display:none; margin-bottom: 10px; text-align: center; font-size: 0.9rem;}
-        
-        .phone-input-container {
-            display: flex;
-            align-items: center;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 10px;
-            transition: border-color 0.3s;
+        .phone-input-container { display: flex; align-items: center; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; transition: border-color 0.3s; }
+        .phone-input-container:focus-within { border-color: var(--primary); }
+        .country-code { padding: 15px 10px; background: #2a2a2a; color: var(--primary); font-weight: bold; border-top-right-radius: 9px; border-bottom-right-radius: 9px; white-space: nowrap; user-select: none; border-left: 1px solid #333; font-size: 0.9rem; }
+        .phone-input-container input#c-phone { flex-grow: 1; width: auto; padding: 15px; background: transparent; border: none; border-radius: 0; text-align: right; min-width: 0; font-size: 16px; }
+        .phone-input-container input#c-phone:focus { border-color: transparent; }
+        .customer-notification { background: rgba(255, 152, 0, 0.15); border: 2px solid var(--old-customer); border-radius: 10px; padding: 15px; margin: 15px; margin-bottom: 20px; display: none; animation: slideDown 0.5s ease; position: relative; overflow: hidden; }
+        .customer-notification.show { display: block; }
+        .customer-notification.new-customer { background: rgba(76, 175, 80, 0.15); border-color: var(--new-customer); }
+        .customer-notification.old-customer { background: rgba(255, 152, 0, 0.2); border-color: var(--old-customer); box-shadow: 0 0 15px rgba(255, 152, 0, 0.3); }
+        .customer-notification-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .customer-notification-title { font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
+        .customer-notification-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+        .badge-new { background: var(--new-customer); color: #000; }
+        .badge-old { background: var(--old-customer); color: #000; animation: pulse 2s infinite; }
+        .customer-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .customer-detail-item { background: rgba(255, 255, 255, 0.08); padding: 10px; border-radius: 8px; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.05); }
+        .customer-detail-label { color: #aaa; font-size: 0.8rem; margin-bottom: 5px; font-weight: 600; }
+        .customer-detail-value { font-weight: bold; color: #fff; font-size: 0.85rem; }
+        .customer-history { background: rgba(255, 152, 0, 0.1); border: 1px solid rgba(255, 152, 0, 0.3); border-radius: 8px; padding: 12px; margin-top: 15px; text-align: center; font-weight: bold; font-size: 0.85rem; }
+        .customer-history i { color: var(--old-customer); margin-left: 8px; }
+        .auto-fill-btn { background: linear-gradient(135deg, var(--primary) 0%, #ff8c00 100%); color: #000; border: none; padding: 12px 15px; border-radius: 8px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; margin-top: 15px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.95rem; transition: all 0.3s; }
+        .auto-fill-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 102, 0, 0.4); }
+        .customer-icon { position: absolute; top: 15px; left: 15px; font-size: 2rem; opacity: 0.1; }
+        .old-customer-icon { color: var(--old-customer); }
+        .new-customer-icon { color: var(--new-customer); }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        .customer-card { background: var(--card); border-radius: 10px; padding: 15px; margin: 15px; border: 1px solid #333; }
+        .customer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #333; }
+        .customer-id { color: var(--info); font-weight: bold; font-size: 1rem; }
+        .customer-phone { font-family: monospace; color: #aaa; font-size: 0.85rem; }
+        .customer-stats { display: flex; gap: 10px; margin-top: 10px; }
+        .stat-item { text-align: center; flex: 1; }
+        .stat-value { font-size: 1.1rem; font-weight: bold; color: var(--primary); }
+        .stat-label { font-size: 0.75rem; color: #aaa; }
+        .close-notification-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 1.2rem; transition: color 0.3s; }
+        .close-notification-btn:hover { color: #fff; }
+        .admin-notification-container { position: fixed; top: 80px; right: 15px; width: 90%; max-width: 350px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .admin-notification { background: #1e1e1e; border-radius: 10px; padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); border-left: 5px solid var(--primary); animation: slideInRight 0.3s ease forwards; opacity: 0; transform: translateX(100px); pointer-events: auto; transition: all 0.3s; position: relative; }
+        .admin-notification.received { border-left-color: var(--notification-received); background: linear-gradient(135deg, #1e1e1e 0%, #1a2b3c 100%); }
+        .admin-notification.updated { border-left-color: var(--notification-updated); background: linear-gradient(135deg, #1e1e1e 0%, #2a1b3c 100%); }
+        .admin-notification.cancelled { border-left-color: var(--notification-cancelled); background: linear-gradient(135deg, #1e1e1e 0%, #3c1b1b 100%); }
+        .admin-notification-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .admin-notification-title { font-weight: bold; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+        .admin-notification-time { font-size: 0.75rem; color: #888; }
+        .admin-notification-body { font-size: 0.85rem; color: #ccc; }
+        .close-admin-notification { background: none; border: none; color: #888; cursor: pointer; font-size: 0.9rem; padding: 5px; }
+        .admin-notification-progress { height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 10px; overflow: hidden; }
+        .admin-notification-progress-bar { height: 100%; background: var(--primary); width: 100%; transition: width 0.1s linear; }
+        .admin-notification.received .admin-notification-progress-bar { background: var(--notification-received); }
+        .admin-notification.updated .admin-notification-progress-bar { background: var(--notification-updated); }
+        .admin-notification.cancelled .admin-notification-progress-bar { background: var(--notification-cancelled); }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+        .admin-notification.removing { animation: slideOutRight 0.3s ease forwards; }
+        @keyframes slideOutRight { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(100px); } }
+        .notification-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1001; display: none; }
+        .notification-overlay.show { display: block; }
+        .notes-section { background: linear-gradient(135deg, #1a1a1a 0%, #252525 100%); border-radius: 15px; padding: 18px; margin-bottom: 20px; border: 1px solid #444; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .notes-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 2px solid rgba(255, 102, 0, 0.3); }
+        .notes-title { font-weight: bold; font-size: 1.1rem; color: var(--primary); display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+        .add-note-btn { background: linear-gradient(135deg, var(--primary) 0%, #ff8c00 100%); color: #000; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: 0.3s; font-size: 0.9rem; box-shadow: 0 4px 8px rgba(255, 102, 0, 0.2); }
+        .add-note-btn:hover { background: linear-gradient(135deg, #ff8c00 0%, #ff6600 100%); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(255, 102, 0, 0.3); }
+        .notes-container { max-height: 250px; overflow-y: auto; margin-bottom: 15px; -webkit-overflow-scrolling: touch; border-radius: 10px; background: rgba(0,0,0,0.2); padding: 12px; }
+        .notes-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+        .note-item { background: linear-gradient(135deg, #2a2a2a 0%, #333333 100%); border: 1px solid #444; border-radius: 12px; padding: 14px; display: flex; justify-content: space-between; align-items: flex-start; animation: fadeIn 0.3s ease; transition: all 0.3s; position: relative; overflow: hidden; }
+        .note-item:hover { transform: translateX(-5px); border-color: var(--primary); box-shadow: 0 5px 15px rgba(255, 102, 0, 0.1); }
+        .note-item:last-child { margin-bottom: 0; }
+        .note-content { flex: 1; padding-left: 20px; position: relative; min-width: 0; }
+        .note-content::before { content: "📝"; position: absolute; right: -20px; top: 0; font-size: 1.2rem; opacity: 0.5; }
+        .note-text { color: #fff; font-size: 0.9rem; line-height: 1.6; word-break: break-word; overflow-wrap: break-word; padding: 5px 0; }
+        .note-actions { display: flex; gap: 8px; flex-shrink: 0; margin-right: 10px; }
+        .note-btn { background: transparent; border: none; color: #888; cursor: pointer; font-size: 0.95rem; padding: 8px; border-radius: 6px; transition: 0.2s; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+        .note-btn.edit { background: rgba(51, 181, 229, 0.1); color: var(--info); border: 1px solid rgba(51, 181, 229, 0.3); }
+        .note-btn.edit:hover { background: rgba(51, 181, 229, 0.2); color: #fff; transform: scale(1.1); }
+        .note-btn.delete { background: rgba(255, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(255, 68, 68, 0.3); }
+        .note-btn.delete:hover { background: rgba(255, 68, 68, 0.2); color: #fff; transform: scale(1.1); }
+        .empty-notes { text-align: center; padding: 40px 20px; color: #666; font-size: 0.9rem; background: rgba(255,255,255,0.03); border-radius: 10px; border: 2px dashed #444; }
+        .empty-notes i { font-size: 2.5rem; margin-bottom: 15px; opacity: 0.3; color: var(--primary); }
+        .note-input-container { display: none; margin-top: 18px; animation: slideDown 0.3s ease; }
+        .note-input-container.show { display: block; }
+        .note-input-wrapper { display: flex; flex-direction: column; gap: 12px; }
+        .note-input { flex: 1; padding: 16px; background: #2a2a2a; border: 2px solid #444; border-radius: 10px; color: #fff; font-family: 'Cairo'; font-size: 0.95rem; outline: none; transition: border-color 0.3s; line-height: 1.5; min-height: 60px; resize: vertical; }
+        .note-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.2); }
+        .note-input::placeholder { color: #888; font-size: 0.9rem; }
+        .note-input-actions { display: flex; gap: 10px; justify-content: flex-end; }
+        .note-save-btn { background: linear-gradient(135deg, var(--success) 0%, #00a842 100%); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; min-width: 100px; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 8px rgba(0, 200, 81, 0.2); }
+        .note-save-btn:hover { background: linear-gradient(135deg, #00a842 0%, #009933 100%); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 200, 81, 0.3); }
+        .note-cancel-btn { background: linear-gradient(135deg, #444 0%, #555 100%); color: #ccc; border: 1px solid #555; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-family: 'Cairo'; transition: 0.3s; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .note-cancel-btn:hover { background: linear-gradient(135deg, #555 0%, #666 100%); color: #fff; transform: translateY(-2px); }
+        .notes-count { background: var(--primary); color: #000; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-right: 5px; box-shadow: 0 2px 4px rgba(255, 102, 0, 0.3); }
+        .note-counter { position: absolute; bottom: 8px; left: 16px; font-size: 0.8rem; color: #666; }
+        .note-char-limit { color: #666; font-size: 0.8rem; text-align: left; margin-top: 5px; }
+        @supports (-webkit-touch-callout: none) { input, textarea { font-size: 16px !important; } }
+        @media (max-width: 375px) {
+            .cat-chip { padding: 8px 15px; font-size: 0.8rem; }
+            .item-card { padding: 12px; }
+            .item-info h3 { font-size: 0.9rem; }
+            .tabs { margin: 8px; }
+            .tab-btn { padding: 10px; font-size: 0.85rem; }
+            .customer-details-grid { grid-template-columns: 1fr; }
+            .customer-stats { flex-wrap: wrap; }
+            .stat-item { flex: 0 0 calc(50% - 5px); margin-bottom: 10px; }
+            .notes-section { padding: 15px; margin: 10px; }
+            .notes-header { flex-direction: column; gap: 10px; align-items: flex-start; }
+            .add-note-btn { width: 100%; justify-content: center; }
+            .note-item { flex-direction: column; gap: 10px; }
+            .note-actions { align-self: flex-end; margin-right: 0; }
+            .note-content { padding-left: 0; width: 100%; }
+            .note-content::before { display: none; }
+            .note-input-actions { flex-direction: column; }
+            .note-save-btn, .note-cancel-btn { width: 100%; }
         }
-        .phone-input-container:focus-within { 
-            border-color: var(--primary);
+        .no-zoom { touch-action: pan-x pan-y; -webkit-user-drag: none; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        .notes-container::-webkit-scrollbar { width: 4px; }
+        .notes-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+        .notes-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        @media (hover: none) and (pointer: coarse) {
+            .item-card, .sent-order-card, .customer-card { cursor: default; }
+            .qty-btn, .tab-btn, .time-btn, .payment-btn, .edit-btn, .delete-btn, .auto-fill-btn, .send-btn { cursor: pointer; -webkit-tap-highlight-color: rgba(255, 102, 0, 0.3); }
+            input, textarea, select { cursor: pointer; }
+            .note-btn { min-width: 44px; min-height: 44px; }
         }
-        .country-code {
-            padding: 15px 10px;
-            background: #2a2a2a;
-            color: var(--primary);
-            font-weight: bold;
-            border-top-right-radius: 9px; 
-            border-bottom-right-radius: 9px;
-            white-space: nowrap;
-            user-select: none;
-            border-left: 1px solid #333;
-            font-size: 0.9rem;
+        input[type="time"]::-webkit-calendar-picker-indicator { background: transparent; color: var(--primary); opacity: 0.7; cursor: pointer; }
+        input[type="time"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+        .time-input-wrapper { display: flex; flex-direction: column; gap: 10px; }
+        .time-input-label { color: #aaa; font-size: 0.9rem; margin-bottom: 5px; }
+        .datetime-container { display: none; margin-top: 10px; animation: fadeIn 0.3s; width: 100%; }
+        .datetime-container.show { display: block; }
+        .datetime-row { display: flex; gap: 10px; margin-bottom: 10px; width: 100%; }
+        .datetime-field { flex: 1; min-width: 0; }
+        .datetime-field label { display: block; margin-bottom: 5px; color: #aaa; font-size: 0.85rem; font-weight: bold; }
+        .datetime-field input { width: 100%; padding: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; outline: none; font-family: 'Cairo', sans-serif; font-size: 16px; text-align: center; }
+        .datetime-field input:focus { border-color: var(--primary); }
+        .datetime-display { background: rgba(51, 181, 229, 0.1); border: 1px solid #33b5e5; border-radius: 8px; padding: 15px; margin-top: 10px; text-align: center; color: #33b5e5; font-weight: bold; font-size: 1rem; }
+        .datetime-display.hijri { background: rgba(76, 175, 80, 0.1); border-color: #4CAF50; color: #4CAF50; margin-top: 5px; font-size: 0.9rem; }
+        @media (max-width: 480px) {
+            .datetime-row { flex-direction: column; gap: 8px; }
+            .datetime-field { width: 100%; }
+            .datetime-field input { padding: 12px; font-size: 15px; }
         }
-        .phone-input-container input#c-phone {
-            flex-grow: 1;
-            width: auto;
-            padding: 15px;
-            background: transparent;
-            border: none;
-            border-radius: 0;
-            text-align: right;
-            min-width: 0; 
-            font-size: 16px;
+        .delivery-price-container { margin-bottom: 25px; }
+        .delivery-price-label { display: block; margin-bottom: 10px; font-size: 0.95rem; color: #ddd; font-weight: bold; }
+        .delivery-price-selector { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        .delivery-price-btn { flex: 1; min-width: calc(50% - 4px); padding: 15px 10px; background: #2a2a2a; border: 1px solid #333; border-radius: 10px; color: #fff; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.9rem; text-align: center; }
+        .delivery-price-btn.active { background: var(--delivery-color); color: #000; border-color: var(--delivery-color); box-shadow: 0 0 10px rgba(0, 188, 212, 0.3); }
+        .delivery-price-btn:hover:not(.active) { background: #333; border-color: var(--delivery-color); }
+        .delivery-price-display { background: rgba(0, 188, 212, 0.1); border: 1px solid var(--delivery-color); border-radius: 8px; padding: 12px; margin-top: 10px; text-align: center; color: var(--delivery-color); font-weight: bold; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; }
+        .delivery-price-value { font-size: 1.3rem; color: #fff; }
+        .field-error.delivery-error { margin-top: 5px; }
+        @media (max-width: 480px) {
+            .delivery-price-btn { min-width: calc(50% - 4px); padding: 12px 8px; font-size: 0.85rem; }
+            .delivery-price-display { font-size: 1rem; padding: 10px; }
+            .delivery-price-value { font-size: 1.1rem; }
         }
-        .phone-input-container input#c-phone:focus {
-            border-color: transparent; 
-        }
-        
-        .customer-notification {
-            background: rgba(255, 152, 0, 0.15);
-            border: 2px solid var(--old-customer);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px;
-            margin-bottom: 20px;
-            display: none;
-            animation: slideDown 0.5s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .customer-notification.show {
-            display: block;
-        }
-        
-        .customer-notification.new-customer {
-            background: rgba(76, 175, 80, 0.15);
-            border-color: var(--new-customer);
-        }
-        
-        .customer-notification.old-customer {
-            background: rgba(255, 152, 0, 0.2);
-            border-color: var(--old-customer);
-            box-shadow: 0 0 15px rgba(255, 152, 0, 0.3);
-        }
-        
-        .customer-notification-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .customer-notification-title {
-            font-weight: bold;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .customer-notification-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-        
-        .badge-new {
-            background: var(--new-customer);
-            color: #000;
-        }
-        
-        .badge-old {
-            background: var(--old-customer);
-            color: #000;
-            animation: pulse 2s infinite;
-        }
-        
-        .customer-details-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .customer-detail-item {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        
-        .customer-detail-label {
-            color: #aaa;
-            font-size: 0.8rem;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-        
-        .customer-detail-value {
-            font-weight: bold;
-            color: #fff;
-            font-size: 0.85rem;
-        }
-        
-        .customer-history {
-            background: rgba(255, 152, 0, 0.1);
-            border: 1px solid rgba(255, 152, 0, 0.3);
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 15px;
+        .delivery-row { color: var(--delivery-color); font-weight: bold; }
+        .final-total-row { color: var(--primary); font-weight: bold; font-size: 1.1rem; border-top: 2px solid #333; padding-top: 10px; margin-top: 10px; }
+
+        /* ===== Menu Loading State (NEW) ===== */
+        .menu-loading-state {
             text-align: center;
-            font-weight: bold;
-            font-size: 0.85rem;
-        }
-        
-        .customer-history i {
-            color: var(--old-customer);
-            margin-left: 8px;
-        }
-        
-        .auto-fill-btn {
-            background: linear-gradient(135deg, var(--primary) 0%, #ff8c00 100%);
-            color: #000;
-            border: none;
-            padding: 12px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Cairo';
-            font-weight: bold;
-            margin-top: 15px;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 0.95rem;
-            transition: all 0.3s;
-        }
-        
-        .auto-fill-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.4);
-        }
-        
-        .customer-icon {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            font-size: 2rem;
-            opacity: 0.1;
-        }
-        
-        .old-customer-icon {
-            color: var(--old-customer);
-        }
-        
-        .new-customer-icon {
-            color: var(--new-customer);
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-        
-        .customer-card {
-            background: var(--card);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px;
-            border: 1px solid #333;
-        }
-        
-        .customer-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #333;
-        }
-        
-        .customer-id {
-            color: var(--info);
-            font-weight: bold;
-            font-size: 1rem;
-        }
-        
-        .customer-phone {
-            font-family: monospace;
-            color: #aaa;
-            font-size: 0.85rem;
-        }
-        
-        .customer-stats {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .stat-item {
-            text-align: center;
-            flex: 1;
-        }
-        
-        .stat-value {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--primary);
-        }
-        
-        .stat-label {
-            font-size: 0.75rem;
-            color: #aaa;
-        }
-        
-        .close-notification-btn {
-            background: none;
-            border: none;
-            color: #aaa;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: color 0.3s;
-        }
-        
-        .close-notification-btn:hover {
-            color: #fff;
-        }
-        
-        .admin-notification-container {
-            position: fixed;
-            top: 80px;
-            right: 15px;
-            width: 90%;
-            max-width: 350px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            pointer-events: none;
-        }
-        
-        .admin-notification {
-            background: #1e1e1e;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            border-left: 5px solid var(--primary);
-            animation: slideInRight 0.3s ease forwards;
-            opacity: 0;
-            transform: translateX(100px);
-            pointer-events: auto;
-            transition: all 0.3s;
-            position: relative;
-        }
-        
-        .admin-notification.received {
-            border-left-color: var(--notification-received);
-            background: linear-gradient(135deg, #1e1e1e 0%, #1a2b3c 100%);
-        }
-        
-        .admin-notification.updated {
-            border-left-color: var(--notification-updated);
-            background: linear-gradient(135deg, #1e1e1e 0%, #2a1b3c 100%);
-        }
-        
-        .admin-notification.cancelled {
-            border-left-color: var(--notification-cancelled);
-            background: linear-gradient(135deg, #1e1e1e 0%, #3c1b1b 100%);
-        }
-        
-        .admin-notification-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .admin-notification-title {
-            font-weight: bold;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .admin-notification-time {
-            font-size: 0.75rem;
+            padding: 60px 20px;
             color: #888;
         }
-        
-        .admin-notification-body {
-            font-size: 0.85rem;
-            color: #ccc;
+        .menu-loading-state .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid #333;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 16px;
         }
-        
-        .close-admin-notification {
-            background: none;
-            border: none;
-            color: #888;
-            cursor: pointer;
-            font-size: 0.9rem;
-            padding: 5px;
-        }
-        
-        .admin-notification-progress {
-            height: 3px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-        
-        .admin-notification-progress-bar {
-            height: 100%;
-            background: var(--primary);
-            width: 100%;
-            transition: width 0.1s linear;
-        }
-        
-        .admin-notification.received .admin-notification-progress-bar {
-            background: var(--notification-received);
-        }
-        
-        .admin-notification.updated .admin-notification-progress-bar {
-            background: var(--notification-updated);
-        }
-        
-        .admin-notification.cancelled .admin-notification-progress-bar {
-            background: var(--notification-cancelled);
-        }
-        
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        .admin-notification.removing {
-            animation: slideOutRight 0.3s ease forwards;
-        }
-        
-        @keyframes slideOutRight {
-            from {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-        }
-        
-        .notification-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1001;
-            display: none;
-        }
-        
-        .notification-overlay.show {
-            display: block;
-        }
-        
-        /* ======================== تحسينات قسم الملاحظات ======================== */
-        .notes-section {
-            background: linear-gradient(135deg, #1a1a1a 0%, #252525 100%);
-            border-radius: 15px;
-            padding: 18px;
-            margin-bottom: 20px;
-            border: 1px solid #444;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .notes-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid rgba(255, 102, 0, 0.3);
-        }
-        
-        .notes-title {
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 5px 0;
-        }
-        
-        .add-note-btn {
-            background: linear-gradient(135deg, var(--primary) 0%, #ff8c00 100%);
-            color: #000;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Cairo';
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.3s;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 8px rgba(255, 102, 0, 0.2);
-        }
-        
-        .add-note-btn:hover {
-            background: linear-gradient(135deg, #ff8c00 0%, #ff6600 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(255, 102, 0, 0.3);
-        }
-        
-        .notes-container {
-            max-height: 250px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-            -webkit-overflow-scrolling: touch;
-            border-radius: 10px;
-            background: rgba(0,0,0,0.2);
-            padding: 12px;
-        }
-        
-        .notes-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .note-item {
-            background: linear-gradient(135deg, #2a2a2a 0%, #333333 100%);
-            border: 1px solid #444;
-            border-radius: 12px;
-            padding: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            animation: fadeIn 0.3s ease;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .note-item:hover {
-            transform: translateX(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.1);
-        }
-        
-        .note-item:last-child {
-            margin-bottom: 0;
-        }
-        
-        .note-content {
-            flex: 1;
-            padding-left: 20px;
-            position: relative;
-            min-width: 0; /* لمنع التمدد الزائد */
-        }
-        
-        .note-content::before {
-            content: "📝";
-            position: absolute;
-            right: -20px;
-            top: 0;
-            font-size: 1.2rem;
-            opacity: 0.5;
-        }
-        
-        .note-text {
-            color: #fff;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            word-break: break-word;
-            overflow-wrap: break-word;
-            padding: 5px 0;
-        }
-        
-        .note-actions {
-            display: flex;
-            gap: 8px;
-            flex-shrink: 0;
-            margin-right: 10px;
-        }
-        
-        .note-btn {
-            background: transparent;
-            border: none;
-            color: #888;
-            cursor: pointer;
-            font-size: 0.95rem;
-            padding: 8px;
-            border-radius: 6px;
-            transition: 0.2s;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .note-btn.edit {
-            background: rgba(51, 181, 229, 0.1);
-            color: var(--info);
-            border: 1px solid rgba(51, 181, 229, 0.3);
-        }
-        
-        .note-btn.edit:hover {
-            background: rgba(51, 181, 229, 0.2);
-            color: #fff;
-            transform: scale(1.1);
-        }
-        
-        .note-btn.delete {
-            background: rgba(255, 68, 68, 0.1);
-            color: var(--danger);
-            border: 1px solid rgba(255, 68, 68, 0.3);
-        }
-        
-        .note-btn.delete:hover {
-            background: rgba(255, 68, 68, 0.2);
-            color: #fff;
-            transform: scale(1.1);
-        }
-        
-        .empty-notes {
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .menu-error-state {
             text-align: center;
             padding: 40px 20px;
-            color: #666;
-            font-size: 0.9rem;
-            background: rgba(255,255,255,0.03);
-            border-radius: 10px;
-            border: 2px dashed #444;
+            color: var(--danger);
         }
-        
-        .empty-notes i {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            opacity: 0.3;
-            color: var(--primary);
-        }
-        
-        .note-input-container {
-            display: none;
-            margin-top: 18px;
-            animation: slideDown 0.3s ease;
-        }
-        
-        .note-input-container.show {
-            display: block;
-        }
-        
-        .note-input-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .note-input {
-            flex: 1;
-            padding: 16px;
-            background: #2a2a2a;
-            border: 2px solid #444;
-            border-radius: 10px;
-            color: #fff;
-            font-family: 'Cairo';
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.3s;
-            line-height: 1.5;
-            min-height: 60px;
-            resize: vertical;
-        }
-        
-        .note-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.2);
-        }
-        
-        .note-input::placeholder {
-            color: #888;
-            font-size: 0.9rem;
-        }
-        
-        .note-input-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-        
-        .note-save-btn {
-            background: linear-gradient(135deg, var(--success) 0%, #00a842 100%);
-            color: white;
+        .menu-error-state button {
+            margin-top: 12px;
+            background: var(--primary);
+            color: #000;
             border: none;
-            padding: 12px 25px;
+            padding: 10px 20px;
             border-radius: 8px;
-            cursor: pointer;
             font-family: 'Cairo';
             font-weight: bold;
-            transition: 0.3s;
-            min-width: 100px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 8px rgba(0, 200, 81, 0.2);
-        }
-        
-        .note-save-btn:hover {
-            background: linear-gradient(135deg, #00a842 0%, #009933 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 200, 81, 0.3);
-        }
-        
-        .note-cancel-btn {
-            background: linear-gradient(135deg, #444 0%, #555 100%);
-            color: #ccc;
-            border: 1px solid #555;
-            padding: 12px 20px;
-            border-radius: 8px;
             cursor: pointer;
-            font-family: 'Cairo';
-            transition: 0.3s;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .note-cancel-btn:hover {
-            background: linear-gradient(135deg, #555 0%, #666 100%);
-            color: #fff;
-            transform: translateY(-2px);
-        }
-        
-        .notes-count {
-            background: var(--primary);
-            color: #000;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-right: 5px;
-            box-shadow: 0 2px 4px rgba(255, 102, 0, 0.3);
-        }
-        
-        .note-counter {
-            position: absolute;
-            bottom: 8px;
-            left: 16px;
-            font-size: 0.8rem;
-            color: #666;
-        }
-        
-        .note-char-limit {
-            color: #666;
-            font-size: 0.8rem;
-            text-align: left;
-            margin-top: 5px;
-        }
-        
-        /* ======================== نهاية تحسينات قسم الملاحظات ======================== */
-        
-        /* منع الزوم على iOS */
-        @supports (-webkit-touch-callout: none) {
-            input, textarea {
-                font-size: 16px !important;
-            }
-        }
-        
-        /* تحسينات للأجهزة الصغيرة */
-        @media (max-width: 375px) {
-            .cat-chip {
-                padding: 8px 15px;
-                font-size: 0.8rem;
-            }
-            
-            .item-card {
-                padding: 12px;
-            }
-            
-            .item-info h3 {
-                font-size: 0.9rem;
-            }
-            
-            .tabs {
-                margin: 8px;
-            }
-            
-            .tab-btn {
-                padding: 10px;
-                font-size: 0.85rem;
-            }
-            
-            .customer-details-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .customer-stats {
-                flex-wrap: wrap;
-            }
-            
-            .stat-item {
-                flex: 0 0 calc(50% - 5px);
-                margin-bottom: 10px;
-            }
-            
-            /* تحسينات الملاحظات للشاشات الصغيرة */
-            .notes-section {
-                padding: 15px;
-                margin: 10px;
-            }
-            
-            .notes-header {
-                flex-direction: column;
-                gap: 10px;
-                align-items: flex-start;
-            }
-            
-            .add-note-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .note-item {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .note-actions {
-                align-self: flex-end;
-                margin-right: 0;
-            }
-            
-            .note-content {
-                padding-left: 0;
-                width: 100%;
-            }
-            
-            .note-content::before {
-                display: none;
-            }
-            
-            .note-input-actions {
-                flex-direction: column;
-            }
-            
-            .note-save-btn, .note-cancel-btn {
-                width: 100%;
-            }
-        }
-        
-        /* منع السلوك غير المرغوب في اللمس */
-        .no-zoom {
-            touch-action: pan-x pan-y;
-            -webkit-user-drag: none;
-        }
-        
-        /* تحسينات لشريط التمرير */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #1a1a1a;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #444;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-        
-        /* تحسين شريط التمرير للملاحظات */
-        .notes-container::-webkit-scrollbar {
-            width: 4px;
-        }
-        
-        .notes-container::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
-        }
-        
-        .notes-container::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-        
-        /* إصلاح للـ Safari على iOS */
-        @media (hover: none) and (pointer: coarse) {
-            .item-card, .sent-order-card, .customer-card {
-                cursor: default;
-            }
-            
-            .qty-btn, .tab-btn, .time-btn, .payment-btn, .edit-btn, .delete-btn, .auto-fill-btn, .send-btn {
-                cursor: pointer;
-                -webkit-tap-highlight-color: rgba(255, 102, 0, 0.3);
-            }
-            
-            input, textarea, select {
-                cursor: pointer;
-            }
-            
-            .note-btn {
-                min-width: 44px;
-                min-height: 44px;
-            }
-        }
-        
-        /* تحسين لعرض الوقت على الجوال */
-        input[type="time"]::-webkit-calendar-picker-indicator {
-            background: transparent;
-            color: var(--primary);
-            opacity: 0.7;
-            cursor: pointer;
-        }
-        
-        input[type="time"]::-webkit-calendar-picker-indicator:hover {
-            opacity: 1;
-        }
-        
-        .time-input-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .time-input-label {
-            color: #aaa;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-
-        /* ==================== إضافة حقول التاريخ والوقت المتقدم ==================== */
-        .datetime-container {
-            display: none;
-            margin-top: 10px;
-            animation: fadeIn 0.3s;
-            width: 100%;
-        }
-        
-        .datetime-container.show {
-            display: block;
-        }
-        
-        .datetime-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            width: 100%;
-        }
-        
-        .datetime-field {
-            flex: 1;
-            min-width: 0; /* لمنع التمدد الزائد */
-        }
-        
-        .datetime-field label {
-            display: block;
-            margin-bottom: 5px;
-            color: #aaa;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-        
-        .datetime-field input {
-            width: 100%;
-            padding: 15px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 10px;
-            color: #fff;
-            outline: none;
-            font-family: 'Cairo', sans-serif;
-            font-size: 16px;
-            text-align: center;
-        }
-        
-        .datetime-field input:focus {
-            border-color: var(--primary);
-        }
-        
-        .datetime-display {
-            background: rgba(51, 181, 229, 0.1);
-            border: 1px solid #33b5e5;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 10px;
-            text-align: center;
-            color: #33b5e5;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-        
-        .datetime-display.hijri {
-            background: rgba(76, 175, 80, 0.1);
-            border-color: #4CAF50;
-            color: #4CAF50;
-            margin-top: 5px;
-            font-size: 0.9rem;
-        }
-        
-        /* تحسينات للأجهزة الصغيرة لحقول التاريخ والوقت */
-        @media (max-width: 480px) {
-            .datetime-row {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            .datetime-field {
-                width: 100%;
-            }
-            
-            .datetime-field input {
-                padding: 12px;
-                font-size: 15px;
-            }
-        }
-        
-        /* ==================== إضافة خيارات سعر التوصيل ==================== */
-        .delivery-price-container {
-            margin-bottom: 25px;
-        }
-        
-        .delivery-price-label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-            color: #ddd;
-            font-weight: bold;
-        }
-        
-        .delivery-price-selector {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-        
-        .delivery-price-btn {
-            flex: 1;
-            min-width: calc(50% - 4px);
-            padding: 15px 10px;
-            background: #2a2a2a;
-            border: 1px solid #333;
-            border-radius: 10px;
-            color: #fff;
-            cursor: pointer;
-            font-family: 'Cairo';
-            font-weight: bold;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-        
-        .delivery-price-btn.active {
-            background: var(--delivery-color);
-            color: #000;
-            border-color: var(--delivery-color);
-            box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
-        }
-        
-        .delivery-price-btn:hover:not(.active) {
-            background: #333;
-            border-color: var(--delivery-color);
-        }
-        
-        .delivery-price-display {
-            background: rgba(0, 188, 212, 0.1);
-            border: 1px solid var(--delivery-color);
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 10px;
-            text-align: center;
-            color: var(--delivery-color);
-            font-weight: bold;
-            font-size: 1.1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .delivery-price-value {
-            font-size: 1.3rem;
-            color: #fff;
-        }
-        
-        .field-error.delivery-error {
-            margin-top: 5px;
-        }
-        
-        /* تحسينات للأجهزة الصغيرة */
-        @media (max-width: 480px) {
-            .delivery-price-btn {
-                min-width: calc(50% - 4px);
-                padding: 12px 8px;
-                font-size: 0.85rem;
-            }
-            
-            .delivery-price-display {
-                font-size: 1rem;
-                padding: 10px;
-            }
-            
-            .delivery-price-value {
-                font-size: 1.1rem;
-            }
-        }
-        
-        /* إضافة سعر التوصيل في ملخص الفاتورة */
-        .delivery-row {
-            color: var(--delivery-color);
-            font-weight: bold;
-        }
-        
-        .final-total-row {
-            color: var(--primary);
-            font-weight: bold;
-            font-size: 1.1rem;
-            border-top: 2px solid #333;
-            padding-top: 10px;
-            margin-top: 10px;
         }
     </style>
 </head>
@@ -1825,7 +393,6 @@
                 <li>الحصول على إشعارات عند إلغاء الطلبات</li>
             </ul>
         </div>
-        
         <div class="permission-steps">
             <div class="permission-step">
                 <div class="step-number">1</div>
@@ -1840,7 +407,6 @@
                 <div>في حالة الآيفون، انتقل إلى الإعدادات → سفرة الدار → الإشعارات → تفعيل الإشعارات</div>
             </div>
         </div>
-        
         <div class="permission-actions">
             <button class="permission-btn deny" onclick="denyPermission()">لاحقاً</button>
             <button class="permission-btn allow" onclick="requestNotificationPermission()">السماح بالإشعارات</button>
@@ -1951,10 +517,8 @@
                     <button id="btn-later" class="time-btn" onclick="setDeliveryMode('later')"><i class="fas fa-clock"></i> وقت محدد</button>
                 </div>
                 
-                <!-- حقل الوقت البسيط القديم (مخفي) -->
                 <input type="time" id="c-time" class="hidden-input">
                 
-                <!-- قسم التاريخ والوقت المتقدم -->
                 <div class="datetime-container" id="datetime-container">
                     <div class="datetime-row">
                         <div class="datetime-field">
@@ -2012,7 +576,6 @@
                     <div class="datetime-display" id="datetime-display">
                         لم يتم تحديد تاريخ ووقت بعد
                     </div>
-                   
                 </div>
                 
                 <div class="field-error" id="datetime-error">يجب تحديد التاريخ والوقت المطلوب</div>
@@ -2031,34 +594,17 @@
                 <div class="field-error" id="payment-error">يجب اختيار طريقة الدفع</div>
             </div>
             
-            <!-- قسم سعر التوصيل الجديد -->
             <div class="delivery-price-container">
                 <label class="delivery-price-label">سعر التوصيل *</label>
                 <div class="delivery-price-selector" id="delivery-price-selector">
-                    <button class="delivery-price-btn" data-price="0.000" onclick="setDeliveryPrice('0.000')">
-                        0.000 KD
-                    </button>
-                    <button class="delivery-price-btn" data-price="0.250" onclick="setDeliveryPrice('0.250')">
-                        0.250 KD
-                    </button>
-                    <button class="delivery-price-btn" data-price="0.500" onclick="setDeliveryPrice('0.500')">
-                        0.500 KD
-                    </button>
-                    <button class="delivery-price-btn" data-price="1.000" onclick="setDeliveryPrice('1.000')">
-                        1.000 KD
-                    </button>
-                    <button class="delivery-price-btn" data-price="2.000" onclick="setDeliveryPrice('2.000')">
-                        2.000 KD
-                    </button>
-                    <button class="delivery-price-btn" data-price="3.000" onclick="setDeliveryPrice('3.000')">
-                        3.000 KD
-                    </button>
-                    <button class="delivery-price-btn" data-price="4.000" onclick="setDeliveryPrice('4.000')">
-                        4.000 KD
-                    </button>
-                    <button class="delivery-price-btn" data-price="5.000" onclick="setDeliveryPrice('5.000')">
-                        5.000 KD
-                    </button>
+                    <button class="delivery-price-btn" data-price="0.000" onclick="setDeliveryPrice('0.000')">0.000 KD</button>
+                    <button class="delivery-price-btn" data-price="0.250" onclick="setDeliveryPrice('0.250')">0.250 KD</button>
+                    <button class="delivery-price-btn" data-price="0.500" onclick="setDeliveryPrice('0.500')">0.500 KD</button>
+                    <button class="delivery-price-btn" data-price="1.000" onclick="setDeliveryPrice('1.000')">1.000 KD</button>
+                    <button class="delivery-price-btn" data-price="2.000" onclick="setDeliveryPrice('2.000')">2.000 KD</button>
+                    <button class="delivery-price-btn" data-price="3.000" onclick="setDeliveryPrice('3.000')">3.000 KD</button>
+                    <button class="delivery-price-btn" data-price="4.000" onclick="setDeliveryPrice('4.000')">4.000 KD</button>
+                    <button class="delivery-price-btn" data-price="5.000" onclick="setDeliveryPrice('5.000')">5.000 KD</button>
                 </div>
                 <div class="delivery-price-display">
                     <span>سعر التوصيل المحدد:</span>
@@ -2137,105 +683,17 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbywDlpq9ZHxL1wF0NIGElc8VUS28EDGuS_8doWg7IgLseOBb-Ngrz6fNsUxeQ-FBS9d/exec';
-        
-        const menuData = {
-            "اللحم العربي": [ 
-                {id: 1, name: "مجبوس لحم (عربي)", price: 7.000}, {id: 2, name: "مقلوبة لحم (عربي)", price: 7.000}, 
-                {id: 3, name: "مشوي جدر لحم (عربي)", price: 7.000}, {id: 4, name: "مرق سبزي (عربي)", price: 7.500}, 
-                {id: 5, name: "بريه لحم (عربي)", price: 7.000}, {id: 6, name: "برياني لحم (عربي)", price: 7.000},
-                {id: 77, name: "مموش لحم (عربي)", price: 7.000} 
-            ],
-            "اللحم الاسترالي": [ 
-                {id: 7, name: "مجبوس لحم (استرالي)", price: 4.500}, {id: 8, name: "مقلوبة لحم (استرالي)", price: 5.000}, 
-                {id: 9, name: "مشوي جدر لحم (استرالي)", price: 5.000}, {id: 10, name: "مرق سبزي (استرالي)", price: 5.000}, 
-                {id: 11, name: "برياني لحم (استرالي)", price: 5.000},
-                {id: 78, name: "مموش لحم (استرالي)", price: 5.000}
-            ],
-            "الدجاج": [ 
-                {id: 12, name: "مجبوس دجاج", price: 2.750}, {id: 13, name: "دجاج 65", price: 2.750}, 
-                {id: 14, name: "بخاري دجاج", price: 3.000}, {id: 15, name: "برياني دجاج", price: 3.000}, 
-                {id: 16, name: "مقلوبة دجاج", price: 3.500}, {id: 17, name: "بتر جكن", price: 3.000}, 
-                {id: 18, name: "برياني الديره", price: 3.500},
-                {id: 79, name: "مرق دجاج", price: 2.750},
-                {id: 80, name: "مشوي جدر دجاج", price: 3.500},
-                {id: 87, name: "دجاج تركي بالفرن", price: 3.500}
-            ],
-            "الأطباق الجانبية": [
-                {id: 43, name: "تشريبه دجاج", price: 1.500}, {id: 44, name: "مرقوق لحم", price: 2.500},
-                {id: 45, name: "تشريبه لحم", price: 2.500}, {id: 46, name: "هريس", price: 1.500},
-                {id: 47, name: "جريش", price: 1.500},
-                {id: 88, name: "رز أبيض", price: 1.000},
-                {id: 89, name: "رز مجبوس", price: 1.000},
-                {id: 90, name: "رز برياني", price: 1.500},
-                {id: 91, name: "مرق بطاط", price: 0.250},
-                {id: 92, name: "دقوس", price: 0.250},
-                {id: 93, name: "شوربة عدس", price: 0.500},
-                {id: 94, name: "مرقوق لحم نعيمي", price: 3.500},
-                {id: 101, name: "مرقوق خضار", price: 1.500},
-                {id: 108, name: "برياني خضار", price: 2.000},
-                {id: 109, name: "مقلوبة خضار", price: 2.500}
-            ],
-            "الصواني (بحري)": [
-                {id: 48, name: "مربين (صواني)", price: 20.000}, {id: 49, name: "برياني ربيان (صواني)", price: 20.000},
-                {id: 50, name: "مطبق سيباس (صواني)", price: 28.000}, {id: 51, name: "سيباس مشوي (صواني)", price: 28.000},
-                {id: 52, name: "مطبق هامور (صواني)", price: 26.000}, {id: 53, name: "مرق هامور (صواني)", price: 26.000},
-                {id: 54, name: "مكس مطبق بحري", price: 35.000}, {id: 55, name: "زبيدي (صواني)", price: 30.000},
-                {id: 56, name: "زبيدي ملكي مع ربيان (صواني)", price: 35.000},
-                {id: 103, name: "مطبق هامور ملكي (صواني)", price: 30.000}
-            ],
-            "الصواني (دجاج)": [
-                {id: 57, name: "دجاج 65 (صواني)", price: 13.000}, {id: 58, name: "مجبوس الدجاج (صواني)", price: 13.000},
-                {id: 59, name: "برياني دجاج (صواني)", price: 14.000}, {id: 60, name: "بخاري دجاج (صواني)", price: 14.000},
-                {id: 61, name: "برياني الديره (صواني)", price: 15.000}, {id: 62, name: "بتر جكن (صواني)", price: 14.000},
-                {id: 63, name: "مقلوبة دجاج (صواني)", price: 15.000},
-                {id: 95, name: "دجاج تركي بالفرن (صواني)", price: 15.000}
-            ],
-            "الصواني (لحم)": [
-                {id: 64, name: "مجبوس لحم استرالي (صواني)", price: 18.000}, {id: 65, name: "مجبوس لحم نعيمي (صواني)", price: 25.000},
-                {id: 66, name: "برياني لحم استرالي (صواني)", price: 20.000}, {id: 67, name: "برياني لحم نعيمي (صواني)", price: 25.000},
-                {id: 68, name: "مقلوبة لحم استرالي (صواني)", price: 20.000}, {id: 69, name: "مقلوبة لحم نعيمي (صواني)", price: 25.000},
-                {id: 70, name: "مشوي جدر لحم استرالي (صواني)", price: 20.000}, {id: 71, name: "مشوي جدر لحم نعيمي (صواني)", price: 25.000},
-                {id: 72, name: "بريه لحم نعيمي (صواني)", price: 25.000}, {id: 73, name: "برياني لحم سفرة الدار استرالي (صواني)", price: 20.000},
-                {id: 74, name: "برياني لحم سفرة الدار نعيمي (صواني)", price: 25.000}, {id: 75, name: "شبزي استرالي (صواني)", price: 21.500},
-                {id: 76, name: "شبزي نعيمي (صواني)", price: 26.500},
-                {id: 96, name: "مموش لحم نعيمي (صواني)", price: 26.500},
-                {id: 97, name: "مموش لحم استرالي (صواني)", price: 21.500}
-            ],
-            "الذبايح": [ 
-                {id: 19, name: "ربع خروف (استرالي)", price: 30.000}, {id: 20, name: "نصف خروف (استرالي)", price: 60.000}, 
-                {id: 21, name: "خروف كامل (استرالي)", price: 120.000}, {id: 22, name: "ربع خروف (عربي)", price: 40.000}, 
-                {id: 23, name: "نصف خروف (عربي)", price: 80.000}, {id: 24, name: "خروف كامل (عربي)", price: 145.000},
-                {id: 98, name: "طبخ ذبيحة", price: 30.000}
-            ],
-            "السمك": [ 
-                {id: 25, name: "مطبق زبيدي", price: 7.000}, {id: 26, name: "سيباس مشوي", price: 6.500}, 
-                {id: 27, name: "مطبق زبيدي ملكي", price: 8.000}, {id: 28, name: "برياني ربيان", price: 4.500}, 
-                {id: 29, name: "مرق هامور", price: 5.500}, {id: 30, name: "مربين", price: 4.500}, 
-                {id: 31, name: "مموش ربيان", price: 4.500}, {id: 32, name: "مطبق سيباس", price: 6.500},
-                {id: 99, name: "مطبق سيباس ملكي", price: 7.500},
-                {id: 100, name: "سيباس مشوي ملكي", price: 7.500},
-                {id: 102, name: "مطبق هامور", price: 5.500},
-                {id: 104, name: "مطبق هامور ملكي", price: 6.500}
-            ],
-            "السلطات": [ 
-                {id: 33, name: "سلطة خضراء", price: 0.750}, {id: 34, name: "سلطة ججرير رمان", price: 1.000}, 
-                {id: 35, name: "ورق عنب", price: 1.500}, {id: 36, name: "روب وخيار", price: 0.750}, 
-                {id: 37, name: "تبولة", price: 1.000}, {id: 38, name: "فتوش", price: 1.000},
-                {id: 86, name: "روب", price: 0.200}
-            ],
-            "المشروبات": [ 
-                {id: 39, name: "لبن", price: 0.150}, {id: 40, name: "لبن نعناع", price: 0.150}, 
-                {id: 81, name: "بيبسي", price: 0.150}, 
-                {id: 82, name: "سفن اب", price: 0.150},
-                {id: 83, name: "ميرندا", price: 0.150},
-                {id: 42, name: "ماء صغير", price: 0.150},
-                {id: 84, name: "بيبسي (دايت)", price: 0.150},
-                {id: 85, name: "سفن اب (دايت)", price: 0.150},
-                {id: 105, name: "كينزا أزرق", price: 0.150},
-                {id: 106, name: "كينزا أخضر", price: 0.150},
-                {id: 107, name: "ديو", price: 0.150}  <!-- تمت إضافة المشروب الجديد هنا -->
-            ]
-        };
+
+        // ============================================================
+        // === رابط سيرفر المنيو الجديد (Menu Apps Script) - NEW ===
+        // ضع هنا نفس الرابط المستخدم في Admin Panel الخاص بالمنيو
+        // ============================================================
+        const MENU_API_URL = 'https://script.google.com/macros/s/AKfycbw_-ElaqxlIaBvR8NNgz6wnGnuVtbz1P4uPf0S1Zj4ATl1SNpZfClkwoRmzEbyPaH8u/exec';
+
+        // كانت هذه قائمة ثابتة (hardcoded)، أصبحت الآن تُعبأ ديناميكياً
+        // عبر دالة fetchMenuData() عند تحميل الصفحة.
+        let menuData = {};
+        let menuLoaded = false;
 
         let cart = {};
         let deliveryMode = 'now';
@@ -2253,9 +711,8 @@
         
         let notesList = [];
         let editingNoteIndex = -1;
-        let deliveryPrice = '0.000'; // سعر التوصيل الافتراضي
+        let deliveryPrice = '0.000';
 
-        // إضافة CSS إضافي لحقول التاريخ والوقت
         const style = document.createElement('style');
         style.textContent = `
             .datetime-select {
@@ -2271,47 +728,85 @@
                 text-align: center;
                 cursor: pointer;
             }
-            
-            .datetime-select:focus {
-                border-color: var(--primary);
-            }
-            
-            .datetime-select option {
-                background: #1a1a1a;
-                color: #fff;
-                padding: 10px;
-            }
+            .datetime-select:focus { border-color: var(--primary); }
+            .datetime-select option { background: #1a1a1a; color: #fff; padding: 10px; }
         `;
         document.head.appendChild(style);
 
-        // منع الزوم عن طريق المستخدم
-        document.addEventListener('gesturestart', function (e) {
-            e.preventDefault();
-        });
-        
-        document.addEventListener('dblclick', function (e) {
-            e.preventDefault();
-        }, { passive: false });
-        
+        document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+        document.addEventListener('dblclick', function (e) { e.preventDefault(); }, { passive: false });
         document.addEventListener('touchstart', function (e) {
-            if (e.touches.length > 1) {
-                e.preventDefault();
-            }
+            if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
         
         let lastTouchEnd = 0;
         document.addEventListener('touchend', function (e) {
             const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) {
-                e.preventDefault();
-            }
+            if (now - lastTouchEnd <= 300) e.preventDefault();
             lastTouchEnd = now;
         }, false);
 
-        function init() {
+        // ============================================================
+        // === جلب المنيو من سيرفر Google Sheets تلقائياً (NEW) ===
+        // ============================================================
+        async function fetchMenuData() {
+            const menuContainer = document.getElementById('menu-container');
             const catContainer = document.getElementById('category-container');
+
+            menuContainer.innerHTML = `
+                <div class="menu-loading-state">
+                    <div class="spinner"></div>
+                    <p>جاري تحميل المنيو...</p>
+                </div>`;
+
+            try {
+                const res = await fetch(`${MENU_API_URL}?action=getMenu`);
+                const data = await res.json();
+
+                if (data.result === 'success') {
+                    // فلترة الأصناف المتاحة فقط للعرض في الكاشير
+                    const filteredMenu = {};
+                    Object.entries(data.menu).forEach(([cat, items]) => {
+                        const availableItems = items.filter(i => i.available !== false);
+                        if (availableItems.length > 0) {
+                            filteredMenu[cat] = availableItems;
+                        }
+                    });
+
+                    menuData = filteredMenu;
+                    menuLoaded = true;
+                    buildCategoryTabs();
+                } else {
+                    throw new Error(data.message || 'فشل تحميل المنيو');
+                }
+            } catch (error) {
+                console.error('خطأ في تحميل المنيو:', error);
+                menuContainer.innerHTML = `
+                    <div class="menu-error-state">
+                        <i class="fas fa-exclamation-triangle" style="font-size:2rem;"></i>
+                        <p>فشل تحميل المنيو. تأكد من الاتصال بالإنترنت.</p>
+                        <button onclick="fetchMenuData()">إعادة المحاولة</button>
+                    </div>`;
+            }
+        }
+
+        function buildCategoryTabs() {
+            const catContainer = document.getElementById('category-container');
+            catContainer.innerHTML = '';
+
+            const categoryNames = Object.keys(menuData);
+
+            if (categoryNames.length === 0) {
+                document.getElementById('menu-container').innerHTML = `
+                    <div class="menu-error-state">
+                        <i class="fas fa-utensils" style="font-size:2rem;"></i>
+                        <p>لا توجد أصناف متاحة حالياً في المنيو</p>
+                    </div>`;
+                return;
+            }
+
             let isFirst = true;
-            for(const cat in menuData) {
+            categoryNames.forEach(cat => {
                 const chip = document.createElement('div');
                 chip.className = `cat-chip ${isFirst ? 'active' : ''}`;
                 chip.innerText = cat;
@@ -2321,37 +816,31 @@
                     renderMenu(cat);
                 };
                 catContainer.appendChild(chip);
-                if(isFirst) renderMenu(cat);
+                if (isFirst) renderMenu(cat);
                 isFirst = false;
-            }
+            });
+        }
+
+        function init() {
+            // جلب المنيو ديناميكياً بدل البناء من قائمة ثابتة
+            fetchMenuData();
             
             startNotificationPolling();
-            
             initNotificationSounds();
-            
             checkNotificationPermission();
-            
             registerServiceWorker();
-            
             loadStoredNotifications();
-            
             updateNotificationDisplay();
-            
-            // تهيئة حقول التاريخ والوقت
             initializeDateTimeFields();
-            
-            // تعيين سعر التوصيل الافتراضي
             setDeliveryPrice('0.000');
         }
 
         function initializeDateTimeFields() {
-            // تعيين التاريخ الافتراضي (اليوم)
             const today = new Date();
             const formattedDate = today.toISOString().split('T')[0];
             document.getElementById('c-date').value = formattedDate;
             document.getElementById('c-date').min = formattedDate;
             
-            // تعيين الوقت الافتراضي (الساعة الحالية + ساعة)
             const nextHour = new Date(today.getTime() + 60 * 60 * 1000);
             let hour = nextHour.getHours();
             let minute = Math.ceil(nextHour.getMinutes() / 5) * 5;
@@ -2361,7 +850,6 @@
                 hour = (hour + 1) % 24;
             }
             
-            // تحويل إلى 12 ساعة
             let displayHour = hour % 12;
             if (displayHour === 0) displayHour = 12;
             
@@ -2371,15 +859,12 @@
             document.getElementById('c-minute').value = minute.toString().padStart(2, '0');
             document.getElementById('c-am-pm').value = amPm;
             
-            // تعيين اليوم الحالي
             const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
             const todayIndex = today.getDay();
             document.getElementById('c-day').value = days[todayIndex];
             
-            // تحديث العرض
             updateDateTimeDisplay();
             
-            // إضافة مستمعين للأحداث
             document.getElementById('c-date').addEventListener('change', updateDateTimeDisplay);
             document.getElementById('c-hour').addEventListener('change', updateDateTimeDisplay);
             document.getElementById('c-minute').addEventListener('change', updateDateTimeDisplay);
@@ -2396,17 +881,14 @@
             
             if (!date || !hour || !minute) {
                 document.getElementById('datetime-display').textContent = 'لم يتم تحديد تاريخ ووقت بعد';
-                document.getElementById('hijri-display').textContent = 'التاريخ الهجري: سيظهر هنا';
                 return;
             }
             
-            // تحويل التاريخ
             const dateObj = new Date(date);
             const dayOfMonth = dateObj.getDate();
             const month = dateObj.getMonth() + 1;
             const year = dateObj.getFullYear();
             
-            // تحويل الوقت إلى 12 ساعة للعرض
             let displayHour = parseInt(hour);
             let displayAmPm = amPm;
             
@@ -2424,31 +906,21 @@
             const displayText = `${day} ${arabicDate} - الساعة ${displayHour}:${minute} ${displayAmPm}`;
             
             document.getElementById('datetime-display').textContent = displayText;
-           
         }
 
-        // دالة لتعيين سعر التوصيل
         function setDeliveryPrice(price) {
             deliveryPrice = price;
             
-            // إزالة النشاط من جميع الأزرار
             document.querySelectorAll('.delivery-price-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             
-            // إضافة النشاط للزر المحدد
             const selectedBtn = document.querySelector(`.delivery-price-btn[data-price="${price}"]`);
-            if (selectedBtn) {
-                selectedBtn.classList.add('active');
-            }
+            if (selectedBtn) selectedBtn.classList.add('active');
             
-            // تحديث العرض
             document.getElementById('delivery-price-value').textContent = `${deliveryPrice} KD`;
-            
-            // إزالة خطأ الحقل إذا تم تحديد سعر
             removeFieldError('delivery');
             
-            // تحديث ملخص الفاتورة إذا كان مفتوحاً
             if (document.getElementById('checkout-modal').style.display === 'flex') {
                 updateBillSummary();
             }
@@ -2473,48 +945,19 @@
             const noteText = noteInput.value.trim();
             
             if (!noteText) {
-                Swal.fire({
-                    toast: true,
-                    position: 'top-start',
-                    icon: 'warning',
-                    title: 'الملاحظة فارغة',
-                    text: 'يرجى كتابة ملاحظة قبل الحفظ',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    background: '#222',
-                    color: '#fff'
-                });
+                Swal.fire({ toast: true, position: 'top-start', icon: 'warning', title: 'الملاحظة فارغة', text: 'يرجى كتابة ملاحظة قبل الحفظ', showConfirmButton: false, timer: 2000, background: '#222', color: '#fff' });
                 return;
             }
             
             if (editingNoteIndex > -1) {
                 notesList[editingNoteIndex] = noteText;
-                Swal.fire({
-                    toast: true,
-                    position: 'top-start',
-                    icon: 'success',
-                    title: 'تم تعديل الملاحظة',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    background: '#222',
-                    color: '#fff'
-                });
+                Swal.fire({ toast: true, position: 'top-start', icon: 'success', title: 'تم تعديل الملاحظة', showConfirmButton: false, timer: 1500, background: '#222', color: '#fff' });
             } else {
                 notesList.push(noteText);
-                Swal.fire({
-                    toast: true,
-                    position: 'top-start',
-                    icon: 'success',
-                    title: 'تم إضافة الملاحظة',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    background: '#222',
-                    color: '#fff'
-                });
+                Swal.fire({ toast: true, position: 'top-start', icon: 'success', title: 'تم إضافة الملاحظة', showConfirmButton: false, timer: 1500, background: '#222', color: '#fff' });
             }
             
             renderNotes();
-            
             noteInput.value = '';
             editingNoteIndex = -1;
             document.getElementById('note-input-container').classList.remove('show');
@@ -2537,31 +980,14 @@
 
         function deleteNote(index) {
             Swal.fire({
-                title: 'حذف الملاحظة',
-                text: 'هل أنت متأكد من حذف هذه الملاحظة؟',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#ff4444',
-                cancelButtonColor: '#33b5e5',
-                confirmButtonText: 'نعم، احذف',
-                cancelButtonText: 'إلغاء',
-                background: '#222',
-                color: '#fff'
+                title: 'حذف الملاحظة', text: 'هل أنت متأكد من حذف هذه الملاحظة؟', icon: 'warning',
+                showCancelButton: true, confirmButtonColor: '#ff4444', cancelButtonColor: '#33b5e5',
+                confirmButtonText: 'نعم، احذف', cancelButtonText: 'إلغاء', background: '#222', color: '#fff'
             }).then((result) => {
                 if (result.isConfirmed) {
                     notesList.splice(index, 1);
                     renderNotes();
-                    
-                    Swal.fire({
-                        toast: true,
-                        position: 'top-start',
-                        icon: 'success',
-                        title: 'تم حذف الملاحظة',
-                        showConfirmButton: false,
-                        timer: 1500,
-                        background: '#222',
-                        color: '#fff'
-                    });
+                    Swal.fire({ toast: true, position: 'top-start', icon: 'success', title: 'تم حذف الملاحظة', showConfirmButton: false, timer: 1500, background: '#222', color: '#fff' });
                 }
             });
         }
@@ -2585,19 +1011,12 @@
             notesList.forEach((note, index) => {
                 html += `
                     <li class="note-item">
-                        <div class="note-content">
-                            <div class="note-text">${note}</div>
-                        </div>
+                        <div class="note-content"><div class="note-text">${note}</div></div>
                         <div class="note-actions">
-                            <button class="note-btn edit" onclick="editNote(${index})" title="تعديل">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="note-btn delete" onclick="deleteNote(${index})" title="حذف">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                            <button class="note-btn edit" onclick="editNote(${index})" title="تعديل"><i class="fas fa-edit"></i></button>
+                            <button class="note-btn delete" onclick="deleteNote(${index})" title="حذف"><i class="fas fa-trash"></i></button>
                         </div>
-                    </li>
-                `;
+                    </li>`;
             });
             
             notesListElement.innerHTML = html;
@@ -2614,44 +1033,29 @@
         function checkNotificationPermission() {
             if ('Notification' in window) {
                 notificationPermission = Notification.permission;
-                
                 if (notificationPermission === 'default') {
-                    setTimeout(() => {
-                        showPermissionRequest();
-                    }, 3000);
-                } else if (notificationPermission === 'granted') {
-                    console.log('صلاحية الإشعارات مفعلة بالفعل');
-                } else {
-                    console.log('تم رفض صلاحية الإشعارات');
+                    setTimeout(() => { showPermissionRequest(); }, 3000);
                 }
-            } else {
-                console.log('المتصفح لا يدعم إشعارات سطح المكتب');
             }
         }
 
         function showPermissionRequest() {
-            const permissionRequest = document.getElementById('permission-request');
-            permissionRequest.classList.add('show');
+            document.getElementById('permission-request').classList.add('show');
         }
 
         function hidePermissionRequest() {
-            const permissionRequest = document.getElementById('permission-request');
-            permissionRequest.classList.remove('show');
+            document.getElementById('permission-request').classList.remove('show');
         }
 
         function requestNotificationPermission() {
             if ('Notification' in window && Notification.permission === 'default') {
                 Notification.requestPermission().then((permission) => {
                     notificationPermission = permission;
-                    
                     if (permission === 'granted') {
-                        console.log('تم السماح بالإشعارات');
                         showNotification('تم تفعيل الإشعارات', 'سوف تتلقى إشعارات الطلبات الجديدة مباشرة على هاتفك.');
                         hidePermissionRequest();
-                        
                         registerServiceWorker();
                     } else if (permission === 'denied') {
-                        console.log('تم رفض الإشعارات');
                         hidePermissionRequest();
                         showPermissionInstructions();
                     }
@@ -2678,13 +1082,8 @@
                             <p>3. فعّل "السماح بالإشعارات"</p>
                             <p>4. فعّل "الأصوات" و"العناصر المنبثقة"</p>
                         </div>
-                        <p>يمكنك طلب السماح بالإشعارات مرة أخرى من خلال زر الجرس أعلى الشاشة</p>
-                    </div>
-                `,
-                icon: 'info',
-                confirmButtonText: 'حسناً',
-                background: '#222',
-                color: '#fff'
+                    </div>`,
+                icon: 'info', confirmButtonText: 'حسناً', background: '#222', color: '#fff'
             });
         }
 
@@ -2693,27 +1092,19 @@
                 try {
                     const registration = await navigator.serviceWorker.register('/service-worker.js');
                     serviceWorkerRegistration = registration;
-                    console.log('Service Worker registered successfully');
-                    
                     await subscribeToPushNotifications(registration);
-                    
                 } catch (error) {
                     console.log('Service Worker registration failed:', error);
                 }
-            } else {
-                console.log('Push notifications are not supported');
             }
         }
 
         async function subscribeToPushNotifications(registration) {
             try {
-                const subscription = await registration.pushManager.subscribe({
+                await registration.pushManager.subscribe({
                     userVisibleOnly: true,
                     applicationServerKey: urlBase64ToUint8Array('BOJp7YhFZRYCMQtJh8RY9iE9pp4m_H71NZMucxqDIZmSNAg78Jch_XxPO2UCS-Sm63owJ-43APh5D7ND8AjTBNQ')
                 });
-                
-                console.log('Subscribed to push notifications');
-                
             } catch (error) {
                 console.log('Failed to subscribe to push notifications:', error);
             }
@@ -2721,17 +1112,10 @@
 
         function urlBase64ToUint8Array(base64String) {
             const padding = '='.repeat((4 - base64String.length % 4) % 4);
-            const base64 = (base64String + padding)
-                .replace(/\-/g, '+')
-                .replace(/_/g, '/');
-            
+            const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
             const rawData = window.atob(base64);
             const outputArray = new Uint8Array(rawData.length);
-            
-            for (let i = 0; i < rawData.length; ++i) {
-                outputArray[i] = rawData.charCodeAt(i);
-            }
-            
+            for (let i = 0; i < rawData.length; ++i) outputArray[i] = rawData.charCodeAt(i);
             return outputArray;
         }
 
@@ -2739,7 +1123,6 @@
             event.stopPropagation();
             const dropdown = document.getElementById('notification-dropdown');
             const overlay = document.getElementById('notification-overlay');
-            
             if (dropdown.classList.contains('show')) {
                 dropdown.classList.remove('show');
                 overlay.classList.remove('show');
@@ -2751,10 +1134,8 @@
         }
 
         function closeNotificationDropdown() {
-            const dropdown = document.getElementById('notification-dropdown');
-            const overlay = document.getElementById('notification-overlay');
-            dropdown.classList.remove('show');
-            overlay.classList.remove('show');
+            document.getElementById('notification-dropdown').classList.remove('show');
+            document.getElementById('notification-overlay').classList.remove('show');
         }
 
         function refreshNotifications() {
@@ -2764,11 +1145,7 @@
 
         function loadStoredNotifications() {
             const stored = localStorage.getItem('admin_notifications');
-            if (stored) {
-                notificationsList = JSON.parse(stored);
-            } else {
-                notificationsList = [];
-            }
+            notificationsList = stored ? JSON.parse(stored) : [];
         }
 
         function saveNotifications() {
@@ -2780,7 +1157,6 @@
         function updateNotificationBadge() {
             const unreadCount = notificationsList.filter(n => !n.read).length;
             const badge = document.getElementById('notification-count');
-            
             if (unreadCount > 0) {
                 badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
                 badge.style.display = 'flex';
@@ -2791,55 +1167,32 @@
 
         function updateNotificationDisplay() {
             const notificationList = document.getElementById('notification-list');
-            
             if (notificationsList.length === 0) {
-                notificationList.innerHTML = `
-                    <div class="notification-empty">
-                        <i class="far fa-bell-slash"></i>
-                        <p>لا توجد إشعارات جديدة</p>
-                    </div>
-                `;
+                notificationList.innerHTML = `<div class="notification-empty"><i class="far fa-bell-slash"></i><p>لا توجد إشعارات جديدة</p></div>`;
                 return;
             }
             
             let html = '';
             notificationsList.forEach((notification, index) => {
-                const time = new Date(notification.timestamp).toLocaleTimeString('ar-SA', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
+                const time = new Date(notification.timestamp).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
                 const date = new Date(notification.timestamp).toLocaleDateString('ar-SA');
                 
-                let iconClass = 'received';
-                let icon = 'fa-check-circle';
-                let title = 'تم استلام الطلب';
-                
+                let iconClass = 'received', icon = 'fa-check-circle', title = 'تم استلام الطلب';
                 if (notification.status === 'Updated') {
-                    iconClass = 'updated';
-                    icon = 'fa-edit';
-                    title = 'تم استلام الطلب المعدل';
+                    iconClass = 'updated'; icon = 'fa-edit'; title = 'تم استلام الطلب المعدل';
                 } else if (notification.status === 'Cancelled') {
-                    iconClass = 'cancelled';
-                    icon = 'fa-times-circle';
-                    title = 'تم استلام إلغاء الطلب';
+                    iconClass = 'cancelled'; icon = 'fa-times-circle'; title = 'تم استلام إلغاء الطلب';
                 }
                 
                 html += `
                     <div class="notification-item ${notification.read ? '' : 'unread'}" onclick="markNotificationAsRead(${index})">
-                        <div class="notification-icon ${iconClass}">
-                            <i class="fas ${icon}"></i>
-                        </div>
+                        <div class="notification-icon ${iconClass}"><i class="fas ${icon}"></i></div>
                         <div class="notification-content">
                             <div class="notification-title">${title}</div>
                             <div class="notification-message">الطلب رقم <strong>#${notification.orderId}</strong> ${notification.status === 'Updated' ? '(معدل)' : ''} تم استلامه من قبل المطبخ</div>
-                            <div class="notification-time">
-                                <i class="far fa-clock"></i>
-                                ${time} - ${date}
-                            </div>
+                            <div class="notification-time"><i class="far fa-clock"></i> ${time} - ${date}</div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
             
             notificationList.innerHTML = html;
@@ -2849,72 +1202,33 @@
             if (index >= 0 && index < notificationsList.length) {
                 notificationsList[index].read = true;
                 saveNotifications();
-                
-                setTimeout(() => {
-                    const notificationElement = document.querySelector(`.notification-item:nth-child(${index + 1})`);
-                    if (notificationElement) {
-                        notificationElement.classList.remove('unread');
-                    }
-                }, 100);
             }
         }
 
         function clearAllNotifications() {
             Swal.fire({
-                title: 'مسح جميع الإشعارات',
-                text: 'هل أنت متأكد أنك تريد مسح جميع الإشعارات؟',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#ff4444',
-                cancelButtonColor: '#33b5e5',
-                confirmButtonText: 'نعم، امسح الكل',
-                cancelButtonText: 'إلغاء',
-                background: '#222',
-                color: '#fff'
+                title: 'مسح جميع الإشعارات', text: 'هل أنت متأكد أنك تريد مسح جميع الإشعارات؟', icon: 'warning',
+                showCancelButton: true, confirmButtonColor: '#ff4444', cancelButtonColor: '#33b5e5',
+                confirmButtonText: 'نعم، امسح الكل', cancelButtonText: 'إلغاء', background: '#222', color: '#fff'
             }).then((result) => {
                 if (result.isConfirmed) {
                     notificationsList = [];
                     saveNotifications();
-                    
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'تم المسح',
-                        text: 'تم مسح جميع الإشعارات بنجاح',
-                        timer: 1500,
-                        showConfirmButton: false,
-                        background: '#222',
-                        color: '#fff'
-                    });
+                    Swal.fire({ icon: 'success', title: 'تم المسح', text: 'تم مسح جميع الإشعارات بنجاح', timer: 1500, showConfirmButton: false, background: '#222', color: '#fff' });
                 }
             });
         }
 
         function showNotification(title, body, icon = null) {
-            const newNotification = {
-                id: Date.now(),
-                title: title,
-                body: body,
-                timestamp: Date.now(),
-                read: false
-            };
-            
-            notificationsList.unshift(newNotification);
+            notificationsList.unshift({ id: Date.now(), title, body, timestamp: Date.now(), read: false });
             saveNotifications();
             
             if ('Notification' in window && Notification.permission === 'granted') {
                 const notification = new Notification(title, {
-                    body: body,
-                    icon: icon || 'https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg',
-                    badge: 'https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg',
-                    tag: 'safrat-dar',
-                    requireInteraction: true,
-                    vibrate: [200, 100, 200]
+                    body, icon: icon || 'https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg',
+                    tag: 'safrat-dar', requireInteraction: true, vibrate: [200, 100, 200]
                 });
-                
-                notification.onclick = function() {
-                    window.focus();
-                    this.close();
-                };
+                notification.onclick = function() { window.focus(); this.close(); };
             }
         }
 
@@ -2924,36 +1238,23 @@
                 document.getElementById('admin-notification-sound-updated'),
                 document.getElementById('admin-notification-sound-cancelled')
             ];
-            
             sounds.forEach(sound => {
                 sound.volume = 0.3;
-                sound.play().then(() => {
-                    sound.pause();
-                    sound.currentTime = 0;
-                }).catch(e => console.log("Sound initialization:", e));
+                sound.play().then(() => { sound.pause(); sound.currentTime = 0; }).catch(e => console.log("Sound init:", e));
             });
         }
 
         function startNotificationPolling() {
             if (isNotificationPollingActive) return;
-            
             isNotificationPollingActive = true;
             lastPollTime = Date.now();
-            
             pollForNotifications();
-            
             notificationInterval = setInterval(pollForNotifications, 3000);
-            
-            console.log("تم تشغيل نظام استطلاع الإشعارات");
         }
 
         function stopNotificationPolling() {
-            if (notificationInterval) {
-                clearInterval(notificationInterval);
-                notificationInterval = null;
-            }
+            if (notificationInterval) { clearInterval(notificationInterval); notificationInterval = null; }
             isNotificationPollingActive = false;
-            console.log("تم إيقاف نظام استطلاع الإشعارات");
         }
 
         async function pollForNotifications() {
@@ -2966,16 +1267,12 @@
                 const data = await response.json();
                 
                 if (data.result === 'success' && data.notifications && data.notifications.length > 0) {
-                    console.log('تم استقبال إشعارات جديدة:', data.notifications.length);
-                    
                     data.notifications.forEach(notification => {
                         showAdminNotification(notification);
                         showDesktopNotification(notification);
                     });
-                    
                     lastPollTime = Date.now();
                 }
-                
             } catch (error) {
                 console.error('خطأ في استطلاع الإشعارات:', error);
             }
@@ -2985,120 +1282,64 @@
             const container = document.getElementById('admin-notification-container');
             const notificationId = 'notification-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
             
-            let notificationType = 'received';
-            let notificationTitle = 'تم استلام الطلب';
-            let notificationIcon = 'fas fa-check-circle';
+            let notificationType = 'received', notificationTitle = 'تم استلام الطلب', notificationIcon = 'fas fa-check-circle';
             let notificationMessage = `الطلب رقم <strong>#${notification.orderId}</strong> تم استلامه من قبل المطبخ`;
             
             if (notification.status === 'Updated') {
-                notificationType = 'updated';
-                notificationTitle = 'تم استلام الطلب المعدل';
-                notificationIcon = 'fas fa-edit';
+                notificationType = 'updated'; notificationTitle = 'تم استلام الطلب المعدل'; notificationIcon = 'fas fa-edit';
                 notificationMessage = `الطلب رقم <strong>#${notification.orderId}</strong> (معدل) تم استلامه من قبل المطبخ`;
             } else if (notification.status === 'Cancelled') {
-                notificationType = 'cancelled';
-                notificationTitle = 'تم استلام إلغاء الطلب';
-                notificationIcon = 'fas fa-times-circle';
+                notificationType = 'cancelled'; notificationTitle = 'تم استلام إلغاء الطلب'; notificationIcon = 'fas fa-times-circle';
                 notificationMessage = `تم استلام إلغاء الطلب رقم <strong>#${notification.orderId}</strong> من قبل المطبخ`;
             }
             
-            const currentTime = new Date().toLocaleTimeString('ar-SA', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            const currentTime = new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
             
             const notificationElement = document.createElement('div');
             notificationElement.className = `admin-notification ${notificationType}`;
             notificationElement.id = notificationId;
-            
             notificationElement.innerHTML = `
                 <div class="admin-notification-header">
-                    <div class="admin-notification-title">
-                        <i class="${notificationIcon}"></i>
-                        ${notificationTitle}
-                    </div>
+                    <div class="admin-notification-title"><i class="${notificationIcon}"></i>${notificationTitle}</div>
                     <div class="admin-notification-time">${currentTime}</div>
                 </div>
-                <div class="admin-notification-body">
-                    ${notificationMessage}
-                </div>
-                <div class="admin-notification-progress">
-                    <div class="admin-notification-progress-bar" id="progress-${notificationId}"></div>
-                </div>
-            `;
+                <div class="admin-notification-body">${notificationMessage}</div>
+                <div class="admin-notification-progress"><div class="admin-notification-progress-bar" id="progress-${notificationId}"></div></div>`;
             
             const closeButton = document.createElement('button');
             closeButton.className = 'close-admin-notification';
             closeButton.innerHTML = '<i class="fas fa-times"></i>';
             closeButton.onclick = () => removeNotification(notificationId);
-            
             notificationElement.querySelector('.admin-notification-header').appendChild(closeButton);
             
             container.appendChild(notificationElement);
-            
             playNotificationSound(notificationType);
-            
             updateNotificationBadge();
-            
             startProgressBar(notificationId);
             
-            adminNotifications.push({
-                id: notificationId,
-                element: notificationElement,
-                timeout: null
-            });
-            
-            const removeTimeout = setTimeout(() => {
-                removeNotification(notificationId);
-            }, 5000);
-            
+            adminNotifications.push({ id: notificationId, element: notificationElement, timeout: null });
+            const removeTimeout = setTimeout(() => removeNotification(notificationId), 5000);
             const notificationIndex = adminNotifications.findIndex(n => n.id === notificationId);
-            if (notificationIndex !== -1) {
-                adminNotifications[notificationIndex].timeout = removeTimeout;
-            }
+            if (notificationIndex !== -1) adminNotifications[notificationIndex].timeout = removeTimeout;
         }
 
         function showDesktopNotification(notification) {
-            let title = 'تم استلام الطلب';
-            let body = `الطلب رقم #${notification.orderId} تم استلامه من قبل المطبخ`;
-            
+            let title = 'تم استلام الطلب', body = `الطلب رقم #${notification.orderId} تم استلامه من قبل المطبخ`;
             if (notification.status === 'Updated') {
-                title = 'تم استلام الطلب المعدل';
-                body = `الطلب رقم #${notification.orderId} (معدل) تم استلامه من قبل المطبخ`;
+                title = 'تم استلام الطلب المعدل'; body = `الطلب رقم #${notification.orderId} (معدل) تم استلامه من قبل المطبخ`;
             } else if (notification.status === 'Cancelled') {
-                title = 'تم استلام إلغاء الطلب';
-                body = `تم استلام إلغاء الطلب رقم #${notification.orderId} من قبل المطبخ`;
+                title = 'تم استلام إلغاء الطلب'; body = `تم استلام إلغاء الطلب رقم #${notification.orderId} من قبل المطبخ`;
             }
             
-            notificationsList.unshift({
-                id: Date.now(),
-                orderId: notification.orderId,
-                status: notification.status,
-                title: title,
-                body: body,
-                timestamp: Date.now(),
-                read: false
-            });
-            
+            notificationsList.unshift({ id: Date.now(), orderId: notification.orderId, status: notification.status, title, body, timestamp: Date.now(), read: false });
             saveNotifications();
             
             if ('Notification' in window && Notification.permission === 'granted') {
-                const notificationOptions = {
-                    body: body,
-                    icon: 'https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg',
-                    badge: 'https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg',
-                    tag: 'safrat-dar',
-                    requireInteraction: false,
-                    vibrate: [200, 100, 200]
-                };
-                
-                const desktopNotification = new Notification(title, notificationOptions);
-                
-                desktopNotification.onclick = function() {
-                    window.focus();
-                    this.close();
-                };
-                
+                const desktopNotification = new Notification(title, {
+                    body, icon: 'https://archive.org/download/20251202_20251202_1107/%D8%B3%D9%81%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AF%D8%A7%D8%B1.jpg',
+                    tag: 'safrat-dar', requireInteraction: false, vibrate: [200, 100, 200]
+                });
+                desktopNotification.onclick = function() { window.focus(); this.close(); };
                 playNotificationSound(notification.status.toLowerCase());
             }
         }
@@ -3106,14 +1347,10 @@
         function startProgressBar(notificationId) {
             const progressBar = document.getElementById(`progress-${notificationId}`);
             if (!progressBar) return;
-            
             let width = 100;
             const interval = setInterval(() => {
                 width -= 1;
-                if (width <= 0) {
-                    clearInterval(interval);
-                    return;
-                }
+                if (width <= 0) { clearInterval(interval); return; }
                 progressBar.style.width = width + '%';
             }, 50);
         }
@@ -3121,39 +1358,25 @@
         function removeNotification(notificationId) {
             const notificationElement = document.getElementById(notificationId);
             if (!notificationElement) return;
-            
             notificationElement.classList.add('removing');
             
             const notificationIndex = adminNotifications.findIndex(n => n.id === notificationId);
             if (notificationIndex !== -1) {
-                if (adminNotifications[notificationIndex].timeout) {
-                    clearTimeout(adminNotifications[notificationIndex].timeout);
-                }
+                if (adminNotifications[notificationIndex].timeout) clearTimeout(adminNotifications[notificationIndex].timeout);
                 adminNotifications.splice(notificationIndex, 1);
             }
             
-            setTimeout(() => {
-                notificationElement.remove();
-                updateNotificationBadge();
-            }, 300);
+            setTimeout(() => { notificationElement.remove(); updateNotificationBadge(); }, 300);
         }
 
         function playNotificationSound(type) {
             let sound;
             switch(type) {
-                case 'received':
-                    sound = document.getElementById('admin-notification-sound-received');
-                    break;
-                case 'updated':
-                    sound = document.getElementById('admin-notification-sound-updated');
-                    break;
-                case 'cancelled':
-                    sound = document.getElementById('admin-notification-sound-cancelled');
-                    break;
-                default:
-                    return;
+                case 'received': sound = document.getElementById('admin-notification-sound-received'); break;
+                case 'updated': sound = document.getElementById('admin-notification-sound-updated'); break;
+                case 'cancelled': sound = document.getElementById('admin-notification-sound-cancelled'); break;
+                default: return;
             }
-            
             sound.currentTime = 0;
             sound.play().catch(e => console.log("Sound play error:", e));
         }
@@ -3161,9 +1384,11 @@
         function renderMenu(category) {
             const container = document.getElementById('menu-container');
             container.innerHTML = '';
+
+            if (!menuData[category]) return;
+
             menuData[category].forEach(item => {
                 const qty = cart[item.id] ? cart[item.id].qty : 0;
-                const totalPrice = (item.price * qty).toFixed(3);
                 container.innerHTML += `
                     <div class="item-card">
                         <div class="item-info">
@@ -3232,19 +1457,12 @@
         async function checkCustomerByPhone() {
             const phoneInput = document.getElementById('c-phone');
             const phone = phoneInput.value.trim();
-            
             const cleanPhone = phone.replace(/[^0-9]/g, '');
             
-            if (cleanPhone.length !== 8) {
-                hideCustomerNotification();
-                return;
-            }
+            if (cleanPhone.length !== 8) { hideCustomerNotification(); return; }
             
             phoneInput.value = cleanPhone;
-            
-            if (customerNotificationTimeout) {
-                clearTimeout(customerNotificationTimeout);
-            }
+            if (customerNotificationTimeout) clearTimeout(customerNotificationTimeout);
             
             customerNotificationTimeout = setTimeout(async () => {
                 try {
@@ -3288,13 +1506,7 @@
                 notificationText.innerHTML = '<i class="fas fa-crown"></i> عميل قديم';
                 typeBadge.textContent = 'Old CX';
                 typeBadge.className = 'customer-notification-badge badge-old';
-                
-                historyContainer.innerHTML = `
-                    <div class="customer-history">
-                        <i class="fas fa-history"></i>
-                        هذا العميل قام بـ ${customer.totalOrders} طلب سابق بإجمالي ${customer.totalSpent.toFixed(3)} د.ك
-                    </div>
-                `;
+                historyContainer.innerHTML = `<div class="customer-history"><i class="fas fa-history"></i> هذا العميل قام بـ ${customer.totalOrders} طلب سابق بإجمالي ${customer.totalSpent.toFixed(3)} د.ك</div>`;
             } else {
                 notification.className = 'customer-notification new-customer show';
                 mainIcon.className = 'fas fa-user-plus customer-icon new-customer-icon';
@@ -3302,62 +1514,28 @@
                 notificationText.innerHTML = '<i class="fas fa-user-plus"></i> عميل موجود';
                 typeBadge.textContent = 'New CX';
                 typeBadge.className = 'customer-notification-badge badge-new';
-                
-                historyContainer.innerHTML = `
-                    <div class="customer-history">
-                        <i class="fas fa-info-circle"></i>
-                        هذا العميل قام بطلب واحد سابق
-                    </div>
-                `;
+                historyContainer.innerHTML = `<div class="customer-history"><i class="fas fa-info-circle"></i> هذا العميل قام بطلب واحد سابق</div>`;
             }
             
-            const firstOrderDate = new Date(customer.firstOrder);
-            const lastOrderDate = new Date(customer.lastOrder);
-            const firstOrderFormatted = firstOrderDate.toLocaleDateString('ar-SA');
-            const lastOrderFormatted = lastOrderDate.toLocaleDateString('ar-SA');
+            const firstOrderFormatted = new Date(customer.firstOrder).toLocaleDateString('ar-SA');
+            const lastOrderFormatted = new Date(customer.lastOrder).toLocaleDateString('ar-SA');
             
             detailsContainer.innerHTML = `
                 <div class="customer-details-grid">
-                    <div class="customer-detail-item">
-                        <div class="customer-detail-label">رقم العميل</div>
-                        <div class="customer-detail-value">${customer.id}</div>
-                    </div>
-                    <div class="customer-detail-item">
-                        <div class="customer-detail-label">عدد الطلبات</div>
-                        <div class="customer-detail-value">${customer.totalOrders}</div>
-                    </div>
-                    <div class="customer-detail-item">
-                        <div class="customer-detail-label">إجمالي المشتريات</div>
-                        <div class="customer-detail-value">${customer.totalSpent.toFixed(3)} KD</div>
-                    </div>
-                    <div class="customer-detail-item">
-                        <div class="customer-detail-label">أول طلب</div>
-                        <div class="customer-detail-value">${firstOrderFormatted}</div>
-                    </div>
-                    <div class="customer-detail-item">
-                        <div class="customer-detail-label">آخر طلب</div>
-                        <div class="customer-detail-value">${lastOrderFormatted}</div>
-                    </div>
+                    <div class="customer-detail-item"><div class="customer-detail-label">رقم العميل</div><div class="customer-detail-value">${customer.id}</div></div>
+                    <div class="customer-detail-item"><div class="customer-detail-label">عدد الطلبات</div><div class="customer-detail-value">${customer.totalOrders}</div></div>
+                    <div class="customer-detail-item"><div class="customer-detail-label">إجمالي المشتريات</div><div class="customer-detail-value">${customer.totalSpent.toFixed(3)} KD</div></div>
+                    <div class="customer-detail-item"><div class="customer-detail-label">أول طلب</div><div class="customer-detail-value">${firstOrderFormatted}</div></div>
+                    <div class="customer-detail-item"><div class="customer-detail-label">آخر طلب</div><div class="customer-detail-value">${lastOrderFormatted}</div></div>
                 </div>
                 <div style="margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 5px;">
                     <div><strong>العنوان المسجل:</strong> ${customer.addressDetails || 'غير محدد'}</div>
                     <div><strong>الموقع المسجل:</strong> ${customer.location ? 'تم تسجيل موقع' : 'غير محدد'}</div>
-                </div>
-            `;
+                </div>`;
             
             if (isOldCustomer) {
                 setTimeout(() => {
-                    Swal.fire({
-                        toast: true,
-                        position: 'top-start',
-                        icon: 'info',
-                        title: 'عميل قديم تم التعرف عليه',
-                        text: `قام بـ ${customer.totalOrders} طلبات سابقة`,
-                        showConfirmButton: false,
-                        timer: 3000,
-                        background: '#222',
-                        color: '#fff'
-                    });
+                    Swal.fire({ toast: true, position: 'top-start', icon: 'info', title: 'عميل قديم تم التعرف عليه', text: `قام بـ ${customer.totalOrders} طلبات سابقة`, showConfirmButton: false, timer: 3000, background: '#222', color: '#fff' });
                 }, 500);
             }
         }
@@ -3378,49 +1556,25 @@
             typeBadge.textContent = 'New CX';
             typeBadge.className = 'customer-notification-badge badge-new';
             
-            detailsContainer.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <p style="font-size: 1.1rem; margin-bottom: 10px;">هذا العميل يطلب للمرة الأولى</p>
-                    <p style="color: #aaa;">سيتم حفظ بياناته بعد إتمام الطلب</p>
-                </div>
-            `;
-            
+            detailsContainer.innerHTML = `<div style="text-align: center; padding: 20px;"><p style="font-size: 1.1rem; margin-bottom: 10px;">هذا العميل يطلب للمرة الأولى</p><p style="color: #aaa;">سيتم حفظ بياناته بعد إتمام الطلب</p></div>`;
             historyContainer.innerHTML = '';
         }
 
         function hideCustomerNotification() {
-            const notification = document.getElementById('customer-notification');
-            notification.classList.remove('show');
+            document.getElementById('customer-notification').classList.remove('show');
             currentCustomer = null;
         }
 
-        function closeCustomerNotification() {
-            hideCustomerNotification();
-        }
+        function closeCustomerNotification() { hideCustomerNotification(); }
 
         function autoFillCustomerDetails() {
             if (!currentCustomer) {
-                Swal.fire({
-                    toast: true,
-                    position: 'top-start',
-                    icon: 'warning',
-                    title: 'لم يتم التعرف على عميل',
-                    text: 'الرجاء إدخال رقم هاتف صحيح أولاً',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    background: '#222',
-                    color: '#fff'
-                });
+                Swal.fire({ toast: true, position: 'top-start', icon: 'warning', title: 'لم يتم التعرف على عميل', text: 'الرجاء إدخال رقم هاتف صحيح أولاً', showConfirmButton: false, timer: 2000, background: '#222', color: '#fff' });
                 return;
             }
             
-            if (currentCustomer.location) {
-                document.getElementById('c-loc').value = currentCustomer.location;
-            }
-            
-            if (currentCustomer.addressDetails) {
-                document.getElementById('c-details').value = currentCustomer.addressDetails;
-            }
+            if (currentCustomer.location) document.getElementById('c-loc').value = currentCustomer.location;
+            if (currentCustomer.addressDetails) document.getElementById('c-details').value = currentCustomer.addressDetails;
             
             if (currentCustomer.totalOrders > 1) {
                 document.getElementById('c-type').value = 'Old CX';
@@ -3429,18 +1583,7 @@
             }
             
             hideCustomerNotification();
-            
-            Swal.fire({
-                toast: true,
-                position: 'top-start',
-                icon: 'success',
-                title: 'تم تعبئة بيانات العميل تلقائياً',
-                text: 'تم ملء جميع الحوافظ بالمعلومات المحفوظة',
-                showConfirmButton: false,
-                timer: 2500,
-                background: '#222',
-                color: '#fff'
-            });
+            Swal.fire({ toast: true, position: 'top-start', icon: 'success', title: 'تم تعبئة بيانات العميل تلقائياً', text: 'تم ملء جميع الحوافظ بالمعلومات المحفوظة', showConfirmButton: false, timer: 2500, background: '#222', color: '#fff' });
         }
 
         async function loadSentOrders() {
@@ -3474,10 +1617,7 @@
                                 let itemPrice = 0;
                                 for(const cat in menuData) {
                                     const found = menuData[cat].find(i => i.name === itemName);
-                                    if(found) { 
-                                        itemPrice = found.price; 
-                                        break; 
-                                    }
+                                    if(found) { itemPrice = found.price; break; }
                                 }
                                 
                                 const totalForItem = (itemPrice * qty).toFixed(3);
@@ -3491,23 +1631,17 @@
                     const customerInfo = order.customerId ? `<p><strong>رقم العميل:</strong> ${order.customerId}</p>` : '';
                     
                     div.innerHTML = `
-                        <div class="sent-header">
-                            <span class="sent-id">#${order.id}</span>
-                            <span class="sent-status">${order.status || 'New'}</span>
-                        </div>
+                        <div class="sent-header"><span class="sent-id">#${order.id}</span><span class="sent-status">${order.status || 'New'}</span></div>
                         <div class="sent-body">
                             <p><strong>العميل:</strong> ${order.phone} (${order.type})</p>
                             ${customerInfo}
                             ${paymentInfo}
                             <p><strong>الأصناف:</strong></p>
-                            <div style="margin-right: 15px; color: #aaa;">
-                                ${itemsWithPrices}
-                            </div>
+                            <div style="margin-right: 15px; color: #aaa;">${itemsWithPrices}</div>
                             <p><strong>المجموع:</strong> ${order.total} KD</p>
                             <button class="edit-btn" onclick='editOrder(${JSON.stringify(order)})'>تعديل الطلب <i class="fas fa-edit"></i></button>
                             <button class="delete-btn" onclick='deleteOrder(${JSON.stringify(order)})'>حذف الطلب <i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    `;
+                        </div>`;
                     container.appendChild(div);
                 });
 
@@ -3527,7 +1661,6 @@
                 
                 const response = await fetch(`${API_URL}?${params.toString()}`);
                 const customers = await response.json();
-                
                 document.getElementById('loading-customers').style.display = 'none';
 
                 if(customers.length === 0) {
@@ -3539,50 +1672,25 @@
                     const div = document.createElement('div');
                     div.className = 'customer-card';
                     
-                    const firstOrderDate = new Date(customer.firstOrder);
-                    const lastOrderDate = new Date(customer.lastOrder);
-                    const firstOrderFormatted = firstOrderDate.toLocaleDateString('ar-SA');
-                    const lastOrderFormatted = lastOrderDate.toLocaleDateString('ar-SA');
+                    const firstOrderFormatted = new Date(customer.firstOrder).toLocaleDateString('ar-SA');
+                    const lastOrderFormatted = new Date(customer.lastOrder).toLocaleDateString('ar-SA');
                     
                     div.innerHTML = `
                         <div class="customer-header">
-                            <div>
-                                <div class="customer-id">${customer.id}</div>
-                                <div class="customer-phone">${customer.phone}</div>
-                            </div>
-                            <span style="color: ${customer.type === 'Old CX' ? '#ff9800' : '#4CAF50'}; font-weight: bold;">
-                                ${customer.type}
-                            </span>
+                            <div><div class="customer-id">${customer.id}</div><div class="customer-phone">${customer.phone}</div></div>
+                            <span style="color: ${customer.type === 'Old CX' ? '#ff9800' : '#4CAF50'}; font-weight: bold;">${customer.type}</span>
                         </div>
-                        
                         <div><strong>الاسم:</strong> ${customer.name || 'غير محدد'}</div>
                         <div><strong>العنوان:</strong> ${customer.addressDetails || 'غير محدد'}</div>
                         ${customer.location ? `<div><strong>الموقع:</strong> <a href="${customer.location}" target="_blank" style="color:#33b5e5;">فتح الخريطة</a></div>` : ''}
                         ${customer.notes ? `<div><strong>ملاحظات:</strong> ${customer.notes}</div>` : ''}
-                        
                         <div class="customer-stats">
-                            <div class="stat-item">
-                                <div class="stat-value">${customer.totalOrders}</div>
-                                <div class="stat-label">عدد الطلبات</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">${customer.totalSpent.toFixed(3)}</div>
-                                <div class="stat-label">إجمالي المشتريات</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">${firstOrderFormatted}</div>
-                                <div class="stat-label">أول طلب</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">${lastOrderFormatted}</div>
-                                <div class="stat-label">آخر طلب</div>
-                            </div>
+                            <div class="stat-item"><div class="stat-value">${customer.totalOrders}</div><div class="stat-label">عدد الطلبات</div></div>
+                            <div class="stat-item"><div class="stat-value">${customer.totalSpent.toFixed(3)}</div><div class="stat-label">إجمالي المشتريات</div></div>
+                            <div class="stat-item"><div class="stat-value">${firstOrderFormatted}</div><div class="stat-label">أول طلب</div></div>
+                            <div class="stat-item"><div class="stat-value">${lastOrderFormatted}</div><div class="stat-label">آخر طلب</div></div>
                         </div>
-                        
-                        <button class="edit-btn" onclick="useCustomerForOrder('${customer.id}')" style="margin-top: 15px;">
-                            <i class="fas fa-shopping-cart"></i> استخدام هذا العميل لطلب جديد
-                        </button>
-                    `;
+                        <button class="edit-btn" onclick="useCustomerForOrder('${customer.id}')" style="margin-top: 15px;"><i class="fas fa-shopping-cart"></i> استخدام هذا العميل لطلب جديد</button>`;
                     container.appendChild(div);
                 });
 
@@ -3594,22 +1702,13 @@
 
         function useCustomerForOrder(customerId) {
             switchTab('new');
-            
             Swal.fire({
-                title: 'استخدام عميل محدد',
-                text: 'ارجو إدخال رقم هاتف العميل للبحث عنه',
-                input: 'text',
-                inputPlaceholder: 'رقم الهاتف (8 أرقام)',
-                showCancelButton: true,
-                confirmButtonText: 'بحث',
-                cancelButtonText: 'إلغاء',
-                background: '#222',
-                color: '#fff',
+                title: 'استخدام عميل محدد', text: 'ارجو إدخال رقم هاتف العميل للبحث عنه', input: 'text',
+                inputPlaceholder: 'رقم الهاتف (8 أرقام)', showCancelButton: true, confirmButtonText: 'بحث',
+                cancelButtonText: 'إلغاء', background: '#222', color: '#fff',
                 inputValidator: (value) => {
                     const cleanValue = value.replace(/[^0-9]/g, '');
-                    if (!cleanValue || cleanValue.length !== 8) {
-                        return 'الرجاء إدخال 8 أرقام صحيحة';
-                    }
+                    if (!cleanValue || cleanValue.length !== 8) return 'الرجاء إدخال 8 أرقام صحيحة';
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -3622,16 +1721,9 @@
 
         async function deleteOrder(order) {
             Swal.fire({
-                title: 'هل أنت متأكد؟',
-                text: `سيتم حذف الطلب رقم #${order.id} نهائياً. لا يمكن التراجع عن هذا الإجراء!`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#ff4444',
-                cancelButtonColor: '#33b5e5',
-                confirmButtonText: 'نعم، احذفه',
-                cancelButtonText: 'إلغاء',
-                background: '#222',
-                color: '#fff'
+                title: 'هل أنت متأكد؟', text: `سيتم حذف الطلب رقم #${order.id} نهائياً. لا يمكن التراجع عن هذا الإجراء!`, icon: 'warning',
+                showCancelButton: true, confirmButtonColor: '#ff4444', cancelButtonColor: '#33b5e5',
+                confirmButtonText: 'نعم، احذفه', cancelButtonText: 'إلغاء', background: '#222', color: '#fff'
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
@@ -3639,48 +1731,20 @@
                         params.append('action', 'delete');
                         params.append('id', order.id);
                         
-                        const response = await fetch(API_URL, {
-                            method: 'POST',
-                            headers: { 
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: params
-                        });
-                        
+                        const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
                         const result = await response.json();
                         
                         if (result.result === 'success') {
                             await sendCancelledNotification(order.id);
-                            
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'تم الحذف',
-                                text: `تم حذف الطلب رقم #${order.id} بنجاح`,
-                                background: '#222',
-                                color: '#fff',
-                                showConfirmButton: false,
-                                timer: 2000
-                            });
-                            
+                            Swal.fire({ icon: 'success', title: 'تم الحذف', text: `تم حذف الطلب رقم #${order.id} بنجاح`, background: '#222', color: '#fff', showConfirmButton: false, timer: 2000 });
                             loadSentOrders();
-                            
-                            showImmediateNotification({
-                                orderId: order.id,
-                                status: 'Cancelled'
-                            });
-                            
+                            showImmediateNotification({ orderId: order.id, status: 'Cancelled' });
                         } else {
                             throw new Error(result.message || 'فشل في حذف الطلب');
                         }
                     } catch (err) {
                         console.error('Error deleting order:', err);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'خطأ',
-                            text: 'فشل في حذف الطلب: ' + err.message,
-                            background: '#222',
-                            color: '#fff'
-                        });
+                        Swal.fire({ icon: 'error', title: 'خطأ', text: 'فشل في حذف الطلب: ' + err.message, background: '#222', color: '#fff' });
                     }
                 }
             });
@@ -3689,65 +1753,40 @@
         function showImmediateNotification(notification) {
             const notificationId = 'immediate-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
             
-            let notificationType = 'cancelled';
-            let notificationTitle = 'تم حذف الطلب';
-            let notificationIcon = 'fas fa-trash-alt';
+            let notificationType = 'cancelled', notificationTitle = 'تم حذف الطلب', notificationIcon = 'fas fa-trash-alt';
             let notificationMessage = `تم حذف الطلب رقم <strong>#${notification.orderId}</strong> بنجاح`;
             
             if (notification.status === 'Updated') {
-                notificationType = 'updated';
-                notificationTitle = 'تم تحديث الطلب';
-                notificationIcon = 'fas fa-edit';
+                notificationType = 'updated'; notificationTitle = 'تم تحديث الطلب'; notificationIcon = 'fas fa-edit';
                 notificationMessage = `تم تحديث الطلب رقم <strong>#${notification.orderId}</strong> بنجاح`;
             }
             
-            const currentTime = new Date().toLocaleTimeString('ar-SA', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-            
+            const currentTime = new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
             const container = document.getElementById('admin-notification-container');
             
             const notificationElement = document.createElement('div');
             notificationElement.className = `admin-notification ${notificationType}`;
             notificationElement.id = notificationId;
-            
             notificationElement.innerHTML = `
                 <div class="admin-notification-header">
-                    <div class="admin-notification-title">
-                        <i class="${notificationIcon}"></i>
-                        ${notificationTitle}
-                    </div>
+                    <div class="admin-notification-title"><i class="${notificationIcon}"></i>${notificationTitle}</div>
                     <div class="admin-notification-time">${currentTime}</div>
                 </div>
-                <div class="admin-notification-body">
-                    ${notificationMessage}
-                </div>
-                <div class="admin-notification-progress">
-                    <div class="admin-notification-progress-bar" id="progress-${notificationId}"></div>
-                </div>
-            `;
+                <div class="admin-notification-body">${notificationMessage}</div>
+                <div class="admin-notification-progress"><div class="admin-notification-progress-bar" id="progress-${notificationId}"></div></div>`;
             
             const closeButton = document.createElement('button');
             closeButton.className = 'close-admin-notification';
             closeButton.innerHTML = '<i class="fas fa-times"></i>';
             closeButton.onclick = () => removeNotification(notificationId);
-            
             notificationElement.querySelector('.admin-notification-header').appendChild(closeButton);
             
             container.appendChild(notificationElement);
-            
             playNotificationSound(notificationType);
             updateNotificationBadge();
             startProgressBar(notificationId);
             
-            adminNotifications.push({
-                id: notificationId,
-                element: notificationElement,
-                timeout: setTimeout(() => {
-                    removeNotification(notificationId);
-                }, 5000)
-            });
+            adminNotifications.push({ id: notificationId, element: notificationElement, timeout: setTimeout(() => removeNotification(notificationId), 5000) });
         }
 
         async function sendCancelledNotification(orderId) {
@@ -3758,15 +1797,7 @@
                 params.append('status', 'Cancelled');
                 params.append('kitchenReceived', 'false');
                 
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: params
-                });
-                
-                const result = await response.json();
-                
-                console.log('تم إرسال إشعار الإلغاء للطلب:', orderId, 'النتيجة:', result);
+                await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
             } catch (error) {
                 console.error('خطأ في إرسال إشعار الإلغاء:', error);
             }
@@ -3779,7 +1810,6 @@
             document.querySelector('.send-btn').innerText = `تحديث الطلب #${order.id} 🔄`;
 
             cart = {};
-            
             const itemsParts = order.items.split(' + ');
             itemsParts.forEach(part => {
                 const match = part.match(/(.+)\s+\(x(\d+)\)/);
@@ -3787,21 +1817,17 @@
                     const name = match[1].trim();
                     const qty = parseInt(match[2]);
                     
-                    let foundId = null;
-                    let foundPrice = 0;
+                    let foundId = null, foundPrice = 0;
                     for(const cat in menuData) {
                         const item = menuData[cat].find(i => i.name === name);
                         if(item) { foundId = item.id; foundPrice = item.price; break; }
                     }
 
-                    if(foundId) {
-                        cart[foundId] = { id: foundId, name: name, price: foundPrice, qty: qty };
-                    }
+                    if(foundId) cart[foundId] = { id: foundId, name: name, price: foundPrice, qty: qty };
                 }
             });
 
             updateUI();
-            
             document.getElementById('c-type').value = order.type;
             
             if (order.paymentMethod) {
@@ -3812,24 +1838,18 @@
                 document.getElementById('btn-link').classList.remove('active');
             }
             
-            // تعيين سعر التوصيل إذا كان موجوداً في الطلب
-            if (order.deliveryPrice) {
-                setDeliveryPrice(order.deliveryPrice);
-            } else {
-                setDeliveryPrice('0.000');
-            }
+            if (order.deliveryPrice) setDeliveryPrice(order.deliveryPrice);
+            else setDeliveryPrice('0.000');
             
             const rawPhone = order.phone.replace('+965', '').trim();
             document.getElementById('c-phone').value = rawPhone;
-
             document.getElementById('c-loc').value = order.location;
             document.getElementById('c-details').value = order.details;
             
             notesList = [];
             if (order.notes && order.notes.trim() !== "") {
                 if (order.notes.includes('•') || order.notes.includes('-') || order.notes.includes('*')) {
-                    const oldNotes = order.notes.split(/[•\-\*]/).filter(note => note.trim() !== "");
-                    notesList = oldNotes.map(note => note.trim());
+                    notesList = order.notes.split(/[•\-\*]/).filter(note => note.trim() !== "").map(note => note.trim());
                 } else {
                     notesList = [order.notes.trim()];
                 }
@@ -3840,48 +1860,30 @@
                 setDeliveryMode('now');
             } else {
                 setDeliveryMode('later');
-                
-                // محاولة تحليل التاريخ والوقت من نص الطلب القديم
                 try {
                     const pickupText = order.pickupTime;
                     if (pickupText && pickupText.includes('-')) {
                         const parts = pickupText.split('-').map(p => p.trim());
                         if (parts.length >= 2) {
-                            // محاولة استخراج اليوم والتاريخ
-                            const dayPart = parts[0];
-                            const dateTimePart = parts[1];
-                            
-                            // البحث عن اليوم
+                            const dayPart = parts[0], dateTimePart = parts[1];
                             const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
                             for (const day of days) {
-                                if (dayPart.includes(day)) {
-                                    document.getElementById('c-day').value = day;
-                                    break;
-                                }
+                                if (dayPart.includes(day)) { document.getElementById('c-day').value = day; break; }
                             }
                             
-                            // البحث عن التاريخ والوقت
                             const dateMatch = dateTimePart.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
                             const timeMatch = dateTimePart.match(/الساعة (\d{1,2}):(\d{2}) (صباحاً|مساءً)/);
                             
                             if (dateMatch) {
-                                const day = dateMatch[1];
-                                const month = dateMatch[2];
-                                const year = dateMatch[3];
-                                const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-                                document.getElementById('c-date').value = formattedDate;
+                                const [, day, month, year] = dateMatch;
+                                document.getElementById('c-date').value = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
                             }
                             
                             if (timeMatch) {
                                 let hour = parseInt(timeMatch[1]);
-                                const minute = timeMatch[2];
-                                const period = timeMatch[3];
-                                
-                                if (period === 'مساءً' && hour < 12) {
-                                    hour += 12;
-                                } else if (period === 'صباحاً' && hour === 12) {
-                                    hour = 0;
-                                }
+                                const minute = timeMatch[2], period = timeMatch[3];
+                                if (period === 'مساءً' && hour < 12) hour += 12;
+                                else if (period === 'صباحاً' && hour === 12) hour = 0;
                                 
                                 document.getElementById('c-hour').value = hour.toString().padStart(2, '0');
                                 document.getElementById('c-minute').value = minute;
@@ -3890,10 +1892,8 @@
                         }
                     }
                 } catch (e) {
-                    console.log('تعذر تحليل التاريخ القديم، سيتم استخدام التاريخ الحالي');
                     initializeDateTimeFields();
                 }
-                
                 updateDateTimeDisplay();
             }
 
@@ -3901,30 +1901,16 @@
             const activeChip = document.querySelector('.cat-chip.active');
             if(activeChip) renderMenu(activeChip.innerText);
 
-            setTimeout(() => {
-                checkCustomerByPhone();
-            }, 500);
+            setTimeout(() => { checkCustomerByPhone(); }, 500);
 
-            Swal.fire({
-                icon: 'info',
-                title: 'وضع التعديل',
-                text: 'تم استرجاع بيانات الطلب للتعديل.',
-                timer: 2000,
-                showConfirmButton: false
-            });
+            Swal.fire({ icon: 'info', title: 'وضع التعديل', text: 'تم استرجاع بيانات الطلب للتعديل.', timer: 2000, showConfirmButton: false });
         }
 
         function openCheckout() {
-            const modal = document.getElementById('checkout-modal');
             updateBillSummary();
-            modal.style.display = 'flex';
-            
+            document.getElementById('checkout-modal').style.display = 'flex';
             clearFieldErrors();
-            
-            // تحديث التاريخ والوقت الافتراضي
-            if (deliveryMode === 'later') {
-                initializeDateTimeFields();
-            }
+            if (deliveryMode === 'later') initializeDateTimeFields();
         }
 
         function updateBillSummary() {
@@ -3938,21 +1924,14 @@
                 summary.innerHTML += `<div class="bill-row"><span>${i.name} (x${i.qty})</span><span>${itemTotal.toFixed(3)} KD</span></div>`;
             }
             
-            // حساب الإجمالي النهائي
-            const deliveryPriceNum = parseFloat(deliveryPrice);
-            const finalTotal = subtotal + deliveryPriceNum;
-            
-            // إضافة سعر التوصيل والإجمالي النهائي
+            const finalTotal = subtotal + parseFloat(deliveryPrice);
             summary.innerHTML += `
                 <div class="bill-row"><span>المجموع الجزئي</span><span>${subtotal.toFixed(3)} KD</span></div>
                 <div class="bill-row delivery-row"><span>سعر التوصيل</span><span>${deliveryPrice} KD</span></div>
-                <div class="bill-row final-total-row"><span>الإجمالي النهائي</span><span>${finalTotal.toFixed(3)} KD</span></div>
-            `;
+                <div class="bill-row final-total-row"><span>الإجمالي النهائي</span><span>${finalTotal.toFixed(3)} KD</span></div>`;
         }
 
-        function closeCheckout() { 
-            document.getElementById('checkout-modal').style.display = 'none'; 
-        }
+        function closeCheckout() { document.getElementById('checkout-modal').style.display = 'none'; }
 
         function setDeliveryMode(mode) {
             deliveryMode = mode;
@@ -3973,8 +1952,6 @@
                 btnNow.classList.remove('active');
                 timeInput.classList.remove('show');
                 datetimeContainer.classList.add('show');
-                
-                // تحديث التاريخ والوقت الافتراضي
                 initializeDateTimeFields();
             }
         }
@@ -3985,41 +1962,24 @@
             const btnLink = document.getElementById('btn-link');
 
             if(method === 'cash') {
-                btnCash.classList.add('active');
-                btnLink.classList.remove('active');
-                removeFieldError('payment');
+                btnCash.classList.add('active'); btnLink.classList.remove('active'); removeFieldError('payment');
             } else if(method === 'link') {
-                btnLink.classList.add('active');
-                btnCash.classList.remove('active');
-                removeFieldError('payment');
+                btnLink.classList.add('active'); btnCash.classList.remove('active'); removeFieldError('payment');
             }
         }
 
         function showFieldError(fieldId, message) {
             const field = document.getElementById(fieldId);
             const errorElement = document.getElementById(fieldId + '-error');
-            
-            if (field) {
-                field.classList.add('required-field');
-            }
-            
-            if (errorElement) {
-                errorElement.textContent = message;
-                errorElement.classList.add('show');
-            }
+            if (field) field.classList.add('required-field');
+            if (errorElement) { errorElement.textContent = message; errorElement.classList.add('show'); }
         }
 
         function removeFieldError(fieldId) {
             const field = document.getElementById(fieldId);
             const errorElement = document.getElementById(fieldId + '-error');
-            
-            if (field) {
-                field.classList.remove('required-field');
-            }
-            
-            if (errorElement) {
-                errorElement.classList.remove('show');
-            }
+            if (field) field.classList.remove('required-field');
+            if (errorElement) errorElement.classList.remove('show');
         }
 
         function clearFieldErrors() {
@@ -4033,46 +1993,24 @@
 
         function validateAndSubmitOrder() {
             clearFieldErrors();
-            
             let isValid = true;
             let errorMessages = [];
             
             const type = document.getElementById('c-type').value;
-            if (!type) {
-                showFieldError('c-type', 'يجب اختيار نوع العميل (قديم/جديد)');
-                isValid = false;
-                errorMessages.push('نوع العميل');
-            }
+            if (!type) { showFieldError('c-type', 'يجب اختيار نوع العميل (قديم/جديد)'); isValid = false; errorMessages.push('نوع العميل'); }
             
-            if (!paymentMethod) {
-                showFieldError('payment', 'يجب اختيار طريقة الدفع (Cash أو Link)');
-                isValid = false;
-                errorMessages.push('طريقة الدفع');
-            }
-            
-            // التحقق من سعر التوصيل
-          //  if (!deliveryPrice || deliveryPrice === '0.000') {
-           //     showFieldError('delivery', 'يجب تحديد سعر التوصيل');
-              //  isValid = false;
-              //  errorMessages.push('سعر التوصيل');
-         //   }
+            if (!paymentMethod) { showFieldError('payment', 'يجب اختيار طريقة الدفع (Cash أو Link)'); isValid = false; errorMessages.push('طريقة الدفع'); }
             
             const phone = document.getElementById('c-phone').value;
-            if (!phone || phone.length !== 8) {
-                showFieldError('c-phone', 'يجب إدخال رقم هاتف صحيح مكون من 8 أرقام');
-                isValid = false;
-                errorMessages.push('رقم الهاتف');
-            }
+            if (!phone || phone.length !== 8) { showFieldError('c-phone', 'يجب إدخال رقم هاتف صحيح مكون من 8 أرقام'); isValid = false; errorMessages.push('رقم الهاتف'); }
             
             const location = document.getElementById('c-loc').value;
             if (!location) {
                 showFieldError('c-loc', 'رابط الموقع حقل إجباري. الرجاء إدخال رابط الموقع');
-                isValid = false;
-                errorMessages.push('رابط الموقع');
+                isValid = false; errorMessages.push('رابط الموقع');
             } else if (!location.startsWith('http')) {
                 showFieldError('c-loc', 'رابط الموقع غير صالح. يجب أن يبدأ بـ http أو https');
-                isValid = false;
-                errorMessages.push('رابط الموقع');
+                isValid = false; errorMessages.push('رابط الموقع');
             }
             
             if (deliveryMode === 'later') {
@@ -4082,8 +2020,7 @@
                 
                 if (!date || !hour || !minute) {
                     showFieldError('datetime', 'يجب تحديد التاريخ والوقت المطلوب');
-                    isValid = false;
-                    errorMessages.push('توقيت التجهيز');
+                    isValid = false; errorMessages.push('توقيت التجهيز');
                 } else {
                     removeFieldError('datetime');
                 }
@@ -4091,17 +2028,7 @@
             
             if (!isValid) {
                 const errorList = errorMessages.map((field, index) => `${index + 1}. ${field}`).join('<br>');
-                
-                Swal.fire({
-                    icon: 'error',
-                    title: 'حقول مطلوبة فارغة',
-                    html: `الرجاء تعبئة الحقول التالية قبل إرسال الطلب:<br><br>${errorList}`,
-                    background: '#222',
-                    color: '#fff',
-                    confirmButtonText: 'حسناً',
-                    confirmButtonColor: '#ff6600'
-                });
-                
+                Swal.fire({ icon: 'error', title: 'حقول مطلوبة فارغة', html: `الرجاء تعبئة الحقول التالية قبل إرسال الطلب:<br><br>${errorList}`, background: '#222', color: '#fff', confirmButtonText: 'حسناً', confirmButtonColor: '#ff6600' });
                 return;
             }
             
@@ -4124,25 +2051,13 @@
                 const day = document.getElementById('c-day').value;
                 
                 if(date && hour && minute) {
-                    // تحويل التاريخ
                     const dateObj = new Date(date);
-                    const dayOfMonth = dateObj.getDate();
-                    const month = dateObj.getMonth() + 1;
-                    const year = dateObj.getFullYear();
+                    const dayOfMonth = dateObj.getDate(), month = dateObj.getMonth() + 1, year = dateObj.getFullYear();
                     
-                    // تحويل الوقت إلى 12 ساعة للعرض
-                    let displayHour = parseInt(hour);
-                    let displayAmPm = amPm;
-                    
-                    if (displayHour > 12) {
-                        displayHour = displayHour - 12;
-                        displayAmPm = 'PM';
-                    } else if (displayHour === 0) {
-                        displayHour = 12;
-                        displayAmPm = 'AM';
-                    } else if (displayHour === 12) {
-                        displayAmPm = 'PM';
-                    }
+                    let displayHour = parseInt(hour), displayAmPm = amPm;
+                    if (displayHour > 12) { displayHour -= 12; displayAmPm = 'PM'; }
+                    else if (displayHour === 0) { displayHour = 12; displayAmPm = 'AM'; }
+                    else if (displayHour === 12) displayAmPm = 'PM';
                     
                     pickupTime = `${day} - ${dayOfMonth}/${month}/${year} - الساعة ${displayHour}:${minute} ${displayAmPm}`;
                 } else {
@@ -4156,8 +2071,7 @@
             btn.innerText = "جاري المعالجة...";
             btn.disabled = true;
 
-            let itemsArr = [];
-            let subtotal = 0;
+            let itemsArr = [], subtotal = 0;
             for(const id in cart) {
                 const item = cart[id];
                 const itemTotal = item.qty * item.price;
@@ -4165,18 +2079,11 @@
                 subtotal += itemTotal;
             }
 
-            // حساب الإجمالي النهائي مع سعر التوصيل
-            const deliveryPriceNum = parseFloat(deliveryPrice);
-            const finalTotal = subtotal + deliveryPriceNum;
-
+            const finalTotal = subtotal + parseFloat(deliveryPrice);
             const params = new URLSearchParams();
             
-            if (editingOrderId) {
-                params.append('action', 'update');
-                params.append('id', editingOrderId);
-            } else {
-                params.append('action', 'create');
-            }
+            if (editingOrderId) { params.append('action', 'update'); params.append('id', editingOrderId); }
+            else { params.append('action', 'create'); }
 
             params.append('type', type);
             params.append('name', 'عميل');
@@ -4189,15 +2096,10 @@
             params.append('deliveryPrice', deliveryPrice);
             params.append('total', finalTotal.toFixed(3));
             
-            let notesText = '';
-            if (notesList.length > 0) {
-                notesText = notesList.map(note => `• ${note}`).join('\n');
-            }
+            let notesText = notesList.length > 0 ? notesList.map(note => `• ${note}`).join('\n') : '';
             params.append('notes', notesText);
-            
             params.append('paymentMethod', paymentMethod);
             
-            // إضافة معلومات التاريخ والوقت المتقدم
             if (deliveryMode === 'later') {
                 params.append('deliveryDate', document.getElementById('c-date').value);
                 params.append('deliveryHour', document.getElementById('c-hour').value);
@@ -4207,42 +2109,21 @@
             }
             
             try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: params
-                });
-                
+                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
                 const result = await response.json();
                 
                 if (result.result === 'success') {
                     let message = editingOrderId ? 'تم تحديث بيانات الطلب بنجاح' : 'تم تسجيل الطلب الجديد';
                     
                     if (!editingOrderId && currentCustomer) {
-                        if (currentCustomer.totalOrders > 1) {
-                            message += ' - تم تحديث بيانات العميل القديم';
-                        } else {
-                            message += ' - تم إنشاء عميل جديد';
-                        }
+                        message += currentCustomer.totalOrders > 1 ? ' - تم تحديث بيانات العميل القديم' : ' - تم إنشاء عميل جديد';
                     }
                     
-                    Swal.fire({
-                        icon: 'success', 
-                        title: editingOrderId ? 'تم التحديث' : 'تم الإرسال',
-                        text: message,
-                        background: '#222', 
-                        color: '#fff',
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
+                    Swal.fire({ icon: 'success', title: editingOrderId ? 'تم التحديث' : 'تم الإرسال', text: message, background: '#222', color: '#fff', showConfirmButton: false, timer: 2000 });
                     
                     if (editingOrderId) {
                         await sendUpdatedNotification(editingOrderId);
-                        
-                        showImmediateNotification({
-                            orderId: editingOrderId,
-                            status: 'Updated'
-                        });
+                        showImmediateNotification({ orderId: editingOrderId, status: 'Updated' });
                     }
                     
                     cart = {};
@@ -4271,10 +2152,7 @@
                     btn.innerText = "إرسال للمطبخ 🚀"; 
                     btn.disabled = false;
                     
-                    setTimeout(() => {
-                        loadSentOrders();
-                        loadCustomers();
-                    }, 1000);
+                    setTimeout(() => { loadSentOrders(); loadCustomers(); }, 1000);
                     
                 } else {
                     throw new Error(result.message || 'فشل في إرسال الطلب');
@@ -4282,13 +2160,7 @@
                 
             } catch (err) {
                 console.error('Error submitting order:', err);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'خطأ',
-                    text: 'فشل في إرسال الطلب: ' + err.message,
-                    background: '#222',
-                    color: '#fff'
-                });
+                Swal.fire({ icon: 'error', title: 'خطأ', text: 'فشل في إرسال الطلب: ' + err.message, background: '#222', color: '#fff' });
                 btn.innerText = originalBtnText;
                 btn.disabled = false;
             }
@@ -4302,13 +2174,7 @@
                 params.append('status', 'Updated');
                 params.append('kitchenReceived', 'false');
                 
-                await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: params
-                });
-                
-                console.log('تم إرسال إشعار التحديث للطلب:', orderId);
+                await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
             } catch (error) {
                 console.error('خطأ في إرسال إشعار التحديث:', error);
             }
@@ -4317,17 +2183,12 @@
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('notification-dropdown');
             const bell = document.getElementById('notification-bell');
-            
-            if (dropdown.classList.contains('show') && 
-                !dropdown.contains(event.target) && 
-                !bell.contains(event.target)) {
+            if (dropdown.classList.contains('show') && !dropdown.contains(event.target) && !bell.contains(event.target)) {
                 closeNotificationDropdown();
             }
         });
 
-        document.getElementById('notification-dropdown')?.addEventListener('click', function(event) {
-            event.stopPropagation();
-        });
+        document.getElementById('notification-dropdown')?.addEventListener('click', function(event) { event.stopPropagation(); });
 
         init();
         
@@ -4336,47 +2197,34 @@
             if (phoneInput) {
                 phoneInput.oninput = function() {
                     this.value = this.value.replace(/[^0-9]/g, '');
-                    if (this.value.length > 8) {
-                        this.value = this.value.slice(0, 8);
-                    }
-                    if (this.value.length === 8) {
-                        removeFieldError('c-phone');
-                    }
+                    if (this.value.length > 8) this.value = this.value.slice(0, 8);
+                    if (this.value.length === 8) removeFieldError('c-phone');
                 };
             }
             
             const locationInput = document.getElementById('c-loc');
             if (locationInput) {
                 locationInput.addEventListener('input', function() {
-                    if (this.value.trim() !== '') {
-                        removeFieldError('c-loc');
-                    }
+                    if (this.value.trim() !== '') removeFieldError('c-loc');
                 });
             }
             
             const typeSelect = document.getElementById('c-type');
             if (typeSelect) {
                 typeSelect.addEventListener('change', function() {
-                    if (this.value) {
-                        removeFieldError('c-type');
-                    }
+                    if (this.value) removeFieldError('c-type');
                 });
             }
             
             const noteInput = document.getElementById('note-input');
             if (noteInput) {
                 noteInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        saveNote();
-                    }
+                    if (e.key === 'Enter') { e.preventDefault(); saveNote(); }
                 });
             }
         });
 
-        window.addEventListener('beforeunload', () => {
-            stopNotificationPolling();
-        });
+        window.addEventListener('beforeunload', () => { stopNotificationPolling(); });
     </script>
 </body>
 </html>
