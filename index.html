@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <link rel="preconnect" href="https://script.google.com">
+    <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -749,7 +751,42 @@
         // ============================================================
         // === جلب المنيو من سيرفر Google Sheets تلقائياً (NEW) ===
         // ============================================================
+        // جلب مع مهلة زمنية حتى لا تتعلّق الواجهة
+        async function fetchWithTimeout(url, options = {}, ms = 25000) {
+            const c = new AbortController();
+            const t = setTimeout(() => c.abort(), ms);
+            try { return await fetch(url, { ...options, signal: c.signal }); }
+            finally { clearTimeout(t); }
+        }
+        const MENU_CACHE_KEY = 'sf_menu_cache_v1';
         async function fetchMenuData() {
+            // عرض المنيو المحفوظ فورًا، ثم تحديثه بالخلفية
+            let usedCache = false;
+            try {
+                const cached = JSON.parse(localStorage.getItem(MENU_CACHE_KEY) || 'null');
+                if (cached && cached.menu && Object.keys(cached.menu).length && !menuLoaded) {
+                    menuData = cached.menu; menuLoaded = true; usedCache = true; buildCategoryTabs();
+                }
+            } catch (e) {}
+            if (usedCache) { refreshMenuInBackground(); return; }
+            return loadMenuFromServer();
+        }
+        async function refreshMenuInBackground() {
+            try {
+                const res = await fetchWithTimeout(`${MENU_API_URL}?action=getMenu`);
+                const data = await res.json();
+                if (data.result !== 'success') return;
+                const filteredMenu = {};
+                Object.entries(data.menu).forEach(([cat, items]) => {
+                    const av = items.filter(i => i.available !== false);
+                    if (av.length) filteredMenu[cat] = av;
+                });
+                const changed = JSON.stringify(filteredMenu) !== JSON.stringify(menuData);
+                localStorage.setItem(MENU_CACHE_KEY, JSON.stringify({ menu: filteredMenu, t: Date.now() }));
+                if (changed) { menuData = filteredMenu; buildCategoryTabs(); }
+            } catch (e) { console.warn('تعذر تحديث المنيو بالخلفية', e); }
+        }
+        async function loadMenuFromServer() {
             const menuContainer = document.getElementById('menu-container');
             const catContainer = document.getElementById('category-container');
 
@@ -760,7 +797,7 @@
                 </div>`;
 
             try {
-                const res = await fetch(`${MENU_API_URL}?action=getMenu`);
+                const res = await fetchWithTimeout(`${MENU_API_URL}?action=getMenu`);
                 const data = await res.json();
 
                 if (data.result === 'success') {
@@ -775,6 +812,7 @@
 
                     menuData = filteredMenu;
                     menuLoaded = true;
+                    try { localStorage.setItem(MENU_CACHE_KEY, JSON.stringify({ menu: filteredMenu, t: Date.now() })); } catch (e) {}
                     buildCategoryTabs();
                 } else {
                     throw new Error(data.message || 'فشل تحميل المنيو');
@@ -1248,33 +1286,57 @@
             if (isNotificationPollingActive) return;
             isNotificationPollingActive = true;
             lastPollTime = Date.now();
-            pollForNotifications();
-            notificationInterval = setInterval(pollForNotifications, 3000);
+            scheduleNextPoll(0);
         }
+        let pollInFlight = false, pollErrors = 0;
+        const seenNotifications = new Set();
+        function scheduleNextPoll(delay) {
+            if (!isNotificationPollingActive) return;
+            clearTimeout(notificationInterval);
+            notificationInterval = setTimeout(async () => {
+                await pollForNotifications();
+                // 3 ثوانٍ طبيعيًا، أبطأ عند الأخطاء أو عندما تكون الصفحة بالخلفية
+                const base = document.hidden ? 10000 : 3000;
+                scheduleNextPoll(pollErrors ? Math.min(30000, base * Math.pow(2, pollErrors)) : base);
+            }, delay);
+        }
+        document.addEventListener('visibilitychange', () => { if (!document.hidden && isNotificationPollingActive && !pollInFlight) scheduleNextPoll(0); });
+        window.addEventListener('online', () => { pollErrors = 0; if (isNotificationPollingActive && !pollInFlight) scheduleNextPoll(0); });
 
         function stopNotificationPolling() {
-            if (notificationInterval) { clearInterval(notificationInterval); notificationInterval = null; }
+            if (notificationInterval) { clearTimeout(notificationInterval); notificationInterval = null; }
             isNotificationPollingActive = false;
         }
 
         async function pollForNotifications() {
+            if (pollInFlight) return;
+            pollInFlight = true;
+            const requestStart = Date.now();
             try {
                 const params = new URLSearchParams();
                 params.append('action', 'getNotifications');
                 params.append('lastPoll', lastPollTime);
                 
-                const response = await fetch(`${API_URL}?${params.toString()}`);
+                const response = await fetchWithTimeout(`${API_URL}?${params.toString()}`);
                 const data = await response.json();
+                pollErrors = 0;
                 
                 if (data.result === 'success' && data.notifications && data.notifications.length > 0) {
                     data.notifications.forEach(notification => {
+                        const key = notification.orderId + '|' + notification.status + '|' + (notification.timestamp || '');
+                        if (seenNotifications.has(key)) return; // منع تكرار الإشعار
+                        seenNotifications.add(key);
                         showAdminNotification(notification);
                         showDesktopNotification(notification);
                     });
-                    lastPollTime = Date.now();
+                    // وقت بداية الطلب (وليس نهايته) حتى لا تضيع إشعارات وصلت أثناء الانتظار
+                    lastPollTime = requestStart;
                 }
             } catch (error) {
+                pollErrors++;
                 console.error('خطأ في استطلاع الإشعارات:', error);
+            } finally {
+                pollInFlight = false;
             }
         }
 
@@ -1470,7 +1532,7 @@
                     params.append('action', 'findCustomer');
                     params.append('phone', cleanPhone);
                     
-                    const response = await fetch(`${API_URL}?${params.toString()}`);
+                    const response = await fetchWithTimeout(`${API_URL}?${params.toString()}`);
                     const result = await response.json();
                     
                     if (result.result === 'success' && result.customer) {
@@ -1592,7 +1654,7 @@
             document.getElementById('loading-sent').style.display = 'block';
 
             try {
-                const res = await fetch(API_URL);
+                const res = await fetchWithTimeout(API_URL + '?t=' + Date.now(), { cache: 'no-store' });
                 const orders = await res.json();
                 document.getElementById('loading-sent').style.display = 'none';
 
@@ -1659,7 +1721,7 @@
                 const params = new URLSearchParams();
                 params.append('action', 'getCustomers');
                 
-                const response = await fetch(`${API_URL}?${params.toString()}`);
+                const response = await fetchWithTimeout(`${API_URL}?${params.toString()}`);
                 const customers = await response.json();
                 document.getElementById('loading-customers').style.display = 'none';
 
@@ -1731,7 +1793,7 @@
                         params.append('action', 'delete');
                         params.append('id', order.id);
                         
-                        const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
+                        const response = await fetchWithTimeout(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
                         const result = await response.json();
                         
                         if (result.result === 'success') {
@@ -1797,7 +1859,7 @@
                 params.append('status', 'Cancelled');
                 params.append('kitchenReceived', 'false');
                 
-                await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
+                await fetchWithTimeout(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
             } catch (error) {
                 console.error('خطأ في إرسال إشعار الإلغاء:', error);
             }
@@ -2109,7 +2171,7 @@
             }
             
             try {
-                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
+                const response = await fetchWithTimeout(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
                 const result = await response.json();
                 
                 if (result.result === 'success') {
@@ -2174,7 +2236,7 @@
                 params.append('status', 'Updated');
                 params.append('kitchenReceived', 'false');
                 
-                await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
+                await fetchWithTimeout(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params });
             } catch (error) {
                 console.error('خطأ في إرسال إشعار التحديث:', error);
             }
